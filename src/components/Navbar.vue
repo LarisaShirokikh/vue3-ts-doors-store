@@ -2,11 +2,14 @@
 <template>
     <nav class="bg-white p-2">
         <div class="container mx-auto flex items-center justify-between">
-            <router-link to="/" class="text-gray-700 text-xl font-semibold ml-4">Двери Эталон</router-link>
+            <router-link 
+            to="/" 
+            class="text-gray-700 text-xl font-semibold ml-4 hover:text-red-500">Двери Эталон</router-link>
             <template v-if="isLoggedIn">
           <div class="flex items-center space-x-4 ml-auto">
-
-              <router-link to="/favorites" class="text-gray-700">Избранное</router-link>
+            <img src="/foto/heart.png" alt="favorites" class="w-8 h-8" htef="/favorites">
+            <img src="/foto/kol.png" alt="favorites" class="w-8 h-8" htef="/favorites">
+            <img src="/foto/set.png" alt="favorites" class="w-8 h-8" htef="/favorites">
               <img src="https://avotar.ru/avatar/krutye/150/38.jpg" alt="User Avatar" class="w-8 h-8 rounded-full">
           </div>
           
@@ -14,12 +17,14 @@
         </template>
         <!-- Условный рендеринг для незалогиненного пользователя -->
         <template v-else>
-          <li>
-            <router-link to="/login" class="text-gray-700">Войти</router-link>
-          </li>
-          <li>
-            <router-link to="/register" class="text-gray-700">Регистрация</router-link>
-          </li>
+          <div class="flex items-center space-x-4 ml-auto text-gray-700 ">
+            <!-- <img src="/foto/heart.png" alt="favorites" class="w-8 h-8" htef="/favorites"> -->
+            <router-link to="/login" class="hover:text-red-500">Войти</router-link>
+            <span>/</span>
+            <!-- <img src="/foto/heart.png" alt="favorites" class="w-8 h-8" htef="/favorites"> -->
+            <router-link to="/register" class="hover:text-red-500">Регистрация</router-link>
+          </div>
+          
         </template>
         </div>
     </nav>
@@ -32,7 +37,7 @@
     name: 'NavbarView',
     data() {
     return {
-      isLoggedIn: true, // Предположим, что пользователь залогинен (вам нужно настроить логику)
+      isLoggedIn: false, // Предположим, что пользователь залогинен (вам нужно настроить логику)
     };
   },
   });

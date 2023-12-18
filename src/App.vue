@@ -4,6 +4,7 @@
     <main-navbar></main-navbar>
     <navbar-catalog></navbar-catalog>
     <router-view />
+    <futer-com />
   </div>
 </template>
 
@@ -12,15 +13,17 @@ import { defineComponent } from 'vue';
 import NavbarView from './components/Navbar.vue';
 import MainNavbar from './components/MainNavbar.vue';
 import NavbarCatalog from './components/NavbarCatalog.vue';
+import FuterCom from './components/FuterCom.vue';
 
 export default defineComponent({
   name: 'App',
   components: 
   {
-    NavbarView, 
+    NavbarView,
     MainNavbar,
-    NavbarCatalog
-  }
+    NavbarCatalog,
+    FuterCom
+}
 });
 </script>
 

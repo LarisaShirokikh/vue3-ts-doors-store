@@ -1,20 +1,29 @@
 <template>
   <vueSlickCarousel/>
-    <div>
-      <h1>Welcome to the Doors Store!</h1>
-      <router-link to="/doors">View Doors</router-link>
-    </div>
+  <advantages-blog />
+  <product-grid />
+  <delivery-blog/>
+  <product-grid-two/>
+    
   </template>
   
   <script lang="ts">
   import { defineComponent } from 'vue';
+  import AdvantagesBlog from '@/components/AdvantagesBlog.vue';
+import ProductGrid from '@/components/ProductGrid.vue';
   import vueSlickCarousel from '../components/BannersCarousel.vue'; 
+  import DeliveryBlog from '@/components/DeliveryBlog.vue';
+  import ProductGridTwo from '@/components/ProductGridTwo.vue';
   
   export default defineComponent({
     name: 'HomeView',
     components: 
     {
-      vueSlickCarousel
+      vueSlickCarousel,
+        AdvantagesBlog,
+        ProductGrid,
+        DeliveryBlog,
+        ProductGridTwo
     }
   });
   </script>
