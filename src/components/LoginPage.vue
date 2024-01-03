@@ -9,7 +9,9 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
               Логин:
             </label>
-            <input v-model="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Введите ваш логин">
+            <input v-model="email" 
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+            id="email" type="text" placeholder="Введите ваш логин">
           </div>
           <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
@@ -32,24 +34,43 @@
   
   <script>
   import { defineComponent } from 'vue';
+  import { authenticateWithEmailPassword } from '../server/auth'
+  import { toast } from 'vue3-toastify';
+
   export default defineComponent({
-    data() {
-      return {
-        username: '',
-        password: '',
-      };
-    },
-    methods: {
-      login() {
-        // Ваш код для обработки входа пользователя
-        console.log('Логин:', this.username);
-        console.log('Пароль:', this.password);
-  
-        // Пример редиректа после успешного входа
-        this.$router.push('/');
-      },
-    },
-  });
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    async login() {
+    try {
+        const userData = await authenticateWithEmailPassword(this.email, this.password);
+        console.log('userData',userData)
+        if (userData) {
+          sessionStorage.setItem('userToken', JSON.stringify(userData));
+          const storedToken = sessionStorage.getItem('userToken');
+    console.log('stored token', storedToken);
+            toast.success('Успешный вход', { theme: 'colored' });
+            console.log('Успешный вход:', this.username);
+            this.$router.push('/');
+        } else {
+            console.error('Токен не верифицирован');
+            toast.error('Такой пользователь не найден', { theme: 'colored' });
+            this.$router.push('/login');
+        }
+    } catch (error) {
+        console.error('Ошибка входа:', error);
+        if (error.response) {
+            console.log('Данные ответа сервера:', error.response.data);
+            console.log('Статус код:', error.response.status);
+        }
+    }
+  }
+}
+});
   </script>
   
   <style scoped>

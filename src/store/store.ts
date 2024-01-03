@@ -1,20 +1,44 @@
 import { createStore } from 'vuex';
 
-interface Door {
+interface User {
     id: number;
-    name: string;
-    price: number;
+    email: string;
+    token: string;
 }
 
 export default createStore({
     state: {
-        doors: [
-            { id: 1, name: 'Front Door', price: 500 },
-            { id: 2, name: 'Back Door', price: 400 },
-            { id: 3, name: 'Patio Door', price: 600 },
-        ] as Door[],
+        data: null as User | null,
     },
-    mutations: {},
-    actions: {},
-    modules: {},
+    mutations: {
+        setUser(state, userData: any) {
+            const user: User = {
+                id: userData.id,
+                email: userData.email,
+                token: userData.token,
+            };
+            state.data = user;
+            console.log('Мутация setUser вызвана', state.data);
+        },
+        clearUser(state) {
+            state.data = null;
+        },
+    },
+    actions: {
+        loginUser({ commit }, userData: any) {
+            commit('loginUser', userData);
+            console.log('Действие loginUser вызвано', userData);
+        },
+        logoutUser({ commit }) {
+            commit('clearUser');
+        },
+    },
+    getters: {
+        isAuthenticated(state) {
+            return !!state.data;
+        },
+        getUser(state) {
+            return state.data;
+        },
+    },
 });
