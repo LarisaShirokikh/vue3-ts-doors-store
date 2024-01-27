@@ -1,5 +1,9 @@
-export type Catalog = {
+export type Category = {
     id: string;
     name: string;
-    photo: File
+    photo: string;
+    price?: number;
+    popular?: boolean;
+    isHome?: boolean;
+    description?: string;
 }

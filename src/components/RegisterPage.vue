@@ -1,37 +1,37 @@
 <template>
-    <div class="flex items-center justify-center min-h-screen">
-      <div class="w-full max-w-md mb-8">
-        <form @submit.prevent="register" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+    <div class="f">
+      <div class="">
+        <form @submit.prevent="register" class="">
+          <div class="">
+            <label class="" for="email">
               Email
             </label>
-            <input v-model="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Введите ваш email">
+            <input v-model="email" class="" id="username" type="text" placeholder="Введите ваш email">
           </div>
           <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+            <label class="" for="password">
               Пароль (не менее 8 символов)
             </label>
-            <input v-model="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Введите ваш пароль">
+            <input v-model="password" class="" id="password" type="password" placeholder="Введите ваш пароль">
           </div>
           <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+            <label class="" for="password">
               Повторите пароль
             </label>
-            <input v-model="passwordConfirmation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+            <input v-model="passwordConfirmation" class="" 
             id="passwordConfirmation" type="password" placeholder="Введите ваш пароль">
           </div>
-          <div class="flex items-center justify-between">
-            <button class="bg-yellow-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+          <div class="">
+            <button class="" type="submit">
               Зарегистрироваться
             </button>
-            <router-link to="/register" class="inline-block align-baseline font-bold text-sm text-yellow-500 hover:text-red-800">
+            <router-link to="/register" class="">
               Войти
             </router-link>
           </div>
         </form>
         <div>
-            <img src="/foto/tb.jpg" alt="" class="rounded px-8 pt-6 pb-8 mb-4">
+            <img src="/foto/tb.jpg" alt="" class="">
         </div>
       </div>
     </div>

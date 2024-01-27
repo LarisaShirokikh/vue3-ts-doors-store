@@ -19,6 +19,7 @@ export const authenticateUser = async (token: string): Promise<boolean> => {
 };
 
 export const authenticateWithEmailPassword = async (email: string, password: string): Promise<any | null> => {
+    console.log('userDataServer', email, password)
     try {
         const response = await axios.post('http://localhost:3000/api/auth/login', {
             email,
@@ -33,11 +34,11 @@ export const authenticateWithEmailPassword = async (email: string, password: str
     }
 };
 
-export const getUserInfo = async (token: string) => {
+export const getUserInfo = async (email: string) => {
     try {
-        const response = await axios.get('http://localhost:3000/api/profile', {
-            headers: {
-                Authorization: `Bearer ${token}`,
+        const response = await axios.get('http://localhost:3000/api/user/email', {
+            params: {
+                email: email,
             },
         });
         console.log("response.data verify", response.data)

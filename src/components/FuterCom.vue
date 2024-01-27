@@ -1,14 +1,14 @@
 <template>
-    <footer class="bg-gray-900 text-white p-8">
-      <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+    <footer class="">
+      <div class="">
         <!-- Логотип или название компании -->
-        <div class="mb-4 md:mb-0">
-          <h1 class="text-2xl font-bold">Название вашей компании</h1>
-          <p class="text-sm">Описание компании</p>
+        <div class="">
+          <h1 class="">Название вашей компании</h1>
+          <p class="">Описание компании</p>
         </div>
   
         <!-- Навигация по сайту -->
-        <nav class="flex flex-wrap justify-center md:justify-end space-x-4">
+        <nav class="">
           <router-link to="/" class="text-sm">Главная</router-link>
           <router-link to="/about" class="text-sm">О нас</router-link>
           <router-link to="/services" class="text-sm">Услуги</router-link>

@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-10 my-10 space-x-8 text-2xl font-bold text-gray-700">
+  <div class="">
 
     <h2>Как купить входную дверь?</h2>
   </div>
@@ -7,13 +7,12 @@
     <div class="advantages-container flex justify-between">
       <!-- Преимущество 1 -->
       <div class="advantage">
-        <div class="icon flex text-gray-700">
-          <CreditCard class='text-gray-700' style="width: 2em; height: 2em; margin-right: 10px"/>
+        <div class="icon ">
           <span class='flex'>Не берем предоплат!</span>
           <!-- Вставьте иконку для первого преимущества -->
           <!-- <img src="icon1.png" alt="Icon 1" /> -->
         </div>
-        <div class="text text-gray-700">
+        <div class="text ">
           <!-- Текст для первого преимущества -->
           <p>Расчет происходит только после установки</p>
         </div>
@@ -21,13 +20,12 @@
   
       <!-- Преимущество 2 -->
       <div class="advantage">
-        <div class="icon flex text-gray-700">
-          <Box style="width: 2em; height: 2em; margin-right: 10px"/>
+        <div class="icon ">
           <span class='flex'>Не берем предоплат!</span>
           <!-- Вставьте иконку для второго преимущества -->
           <!-- <img src="icon2.png" alt="Icon 2" /> -->
         </div>
-        <div class="text text-gray-700">
+        <div class="text">
           <!-- Текст для второго преимущества -->
           <p>Расчет происходит только после установки</p>
         </div>
@@ -35,12 +33,11 @@
   
       <!-- Преимущество 3 -->
       <div class="advantage">
-        <div class="icon flex text-gray-700">
-          <!-- Вставьте иконку для третьего преимущества -->
-          <Box style="width: 2em; height: 2em; margin-right: 10px"/>
+        <div class="icon">
+          
           <span class='flex'>Не берем предоплат!</span>
         </div>
-        <div class="text text-gray-700">
+        <div class="text">
           <!-- Текст для третьего преимущества -->
           <p>Расчет происходит только после установки</p>
         </div>
@@ -48,12 +45,11 @@
   
       <!-- Преимущество 4 -->
       <div class="advantage">
-        <div class="icon flex text-gray-700">
-          <!-- Вставьте иконку для четвертого преимущества -->
-          <Box style="width: 2em; height: 2em; margin-right: 10px"/>
+        <div class="icon">
+          
           <span class='flex'>Не берем предоплат!</span>
         </div>
-        <div class="text text-gray-700">
+        <div class="text">
           <!-- Текст для четвертого преимущества -->
           <p>Расчет происходит только после установки</p>
         </div>

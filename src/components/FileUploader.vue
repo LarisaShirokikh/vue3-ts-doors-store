@@ -1,8 +1,8 @@
 <template>
     <div class="mt-4">
-      <label for="fileInput" class="cursor-pointer flex items-center space-x-2 text-blue-500">
+      <label for="fileInput" class="">
         <svg
-          class="w-6 h-6"
+          class=""
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -27,14 +27,14 @@
   
       <!-- Зона для перетаскивания -->
       <div
-        class="mt-4 border-dashed border-2 border-gray-300 p-4 rounded"
+        class=""
         @dragenter.prevent="isDragStarted = true"
         @dragleave.prevent="isDragStarted = false"
         @dragover.prevent
         @drop.prevent="handleDrop"
-        :class="{ 'bg-blue-100': isDragStarted }"
+        :class="{ '': isDragStarted }"
       >
-        <p class="text-gray-500 text-sm">Перетащите файл сюда</p>
+        <p class="">Перетащите файл сюда</p>
       </div>
   
       <!-- Отображение результатов разбора -->
