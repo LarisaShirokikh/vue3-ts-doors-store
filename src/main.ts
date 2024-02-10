@@ -7,7 +7,6 @@ import 'element-plus/dist/index.css'
 import Vue3Toastify, { updateGlobalOptions, type ToastContainerOptions } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import '@/assets/css/main.css';
 
 
 const app = createApp(App);

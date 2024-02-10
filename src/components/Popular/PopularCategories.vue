@@ -1,13 +1,19 @@
 <template>
-    <div class="title">
-          <h2>Популярные категории</h2>
-           <el-link to="/more" class="more-link">
-              <p>Смотреть больше <i class="fa-solid fa-chevron-right"></i></p>
-            </el-link>
-        </div>
+  <div class="title">
+    <h2>Популярные категории</h2>
+    <el-link to="/more" class="more-link" :underline="false">
+      <p>Смотреть больше <i class="fa-solid fa-chevron-right"></i></p>
+    </el-link>
+  </div>
+
+  <el-scrollbar>
     <div class="scrollbar">
       <div v-for="catalog in catalogs" :key="catalog.id">
-        <el-link :href="'/catalog/' + catalog.id" :underline="false" :justify="space - evenly">
+        <el-link
+          :href="'/catalog/' + catalog.id"
+          :underline="false"
+          :justify="space - evenly"
+        >
           <el-image
             :src="photoUrl(catalog.photo[0])"
             :alt="catalog.name"
@@ -35,8 +41,8 @@
         </el-link>
       </div>
     </div>
+  </el-scrollbar>
 </template>
-
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
@@ -62,8 +68,6 @@ onMounted(async () => {
 <style scoped>
 .scrollbar {
   display: flex;
-  overflow: hidden;
-  scroll-snap-type: x mandatory;
 }
 
 .title {

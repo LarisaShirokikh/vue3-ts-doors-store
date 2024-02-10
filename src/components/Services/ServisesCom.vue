@@ -1,93 +1,103 @@
 <template>
-    <div class="title">
-          <h2>Услуги и сервисы</h2>
-           <el-link href="/more" class="more-link">
-        <p>Смотреть больше <i class="fa-solid fa-chevron-right"></i></p>
-      </el-link>
+  <div class="title">
+    <h2>Услуги и сервисы</h2>
+    <el-link href="/more" class="more-link" :underline="false">
+      <p>Смотреть больше <i class="fa-solid fa-chevron-right"></i></p>
+    </el-link>
+  </div>
+
+  <el-scrollbar>
+    <div class="services">
+      <div v-for="service in servises" :key="service.id">
+        <el-link :href="'/service/' + service.id" :underline="false">
+          <div class="image-container" style="">
+          <img
+            :src="photoUrl(service.photo[0])"
+            :alt="service.name"
+            class="service-image"
+            style="max-width: 200px; max-height: 200px; border-radius: 10px"
+          />
+          <div class="service-name" style="margin: 5px; max-width: 200px;">
+            {{ service.serviceName }}
+          </div>
+          <div class="service-name" style="margin: 5px">
+            от {{ service.price }}
+          </div>
+          <button style="border: none; color: #333; margin: 5px">Подробнее...</button>
         </div>
-    <el-scrollbar>
-        <div class="popular-categories">
-          <router-link v-for="service in servises" :to="'/catalog/' + service.id" 
-          :key="service.id" class="category-link">
-            <div class="category-card" :style="{ backgroundImage: 'url(' + service.photoLink + ')' }">
-              <div class="category-overlay">
-                <h3 class="category-name">{{ service.serviceName }}</h3>
-              </div>
-            </div>
-          </router-link>
-        </div>
-      </el-scrollbar>
+          <!-- <el-image
+            :src="photoUrl(service.photo[0])"
+            :alt="service.name"
+            style="
+              width: 120px;
+              height: 150px;
+              margin: 5px;
+              border-radius: 15px;
+            "
+          >
+          </el-image>
+          <div
+            class="service-name"
+            style="
+              position: absolute;
+              top: 10px;
+              left: 15px;
+              color: white;
+              font-size: 12px;
+              font-weight: bold;
+            "
+          >
+            {{ service.name }}
+          </div> -->
+        </el-link>
+      </div>
+    </div>
+  </el-scrollbar>
 </template>
 
-<script lang="ts">
- //import { sendServiceToServer } from '@/server/service';
-import { getServices } from '@/server/service';
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+//import { sendServiceToServer } from '@/server/service';
+import { getServices } from "@/server/service";
+import { onMounted, ref } from "vue";
 //import { toast } from 'vue3-toastify/index';
 
-export default defineComponent({
-    data() {
-        return {
-            servises: [],
-            cardHeight: '200px',
-        };
-    },
-    methods: {
-    
-    },
-     async mounted() {
-        try {
-            const response = await getServices();
-            this.servises = response;
-        } catch (error) {
-            console.error('Error fetching data from the server:', error);
-        }
-    },
+const servises = ref<Array<any>>([]);
+
+const photoUrl = (path: string) => {
+  if (path.startsWith("/uploads/")) {
+    return `http://localhost:3000${path}`;
+  }
+  return path;
+};
+
+onMounted(async () => {
+  try {
+    servises.value = await getServices();
+  } catch (error) {
+    console.error("Error fetching data from the server:", error);
+  }
 });
 </script>
 
 <style scoped>
-.popular-categories {
-    margin-bottom: 20px;
-    display: flex;
+.services {
+  display: flex;
+  
+}
+.image-container {
+  margin: 15px;
 }
 
-.category-card {
-position: relative;
-  width: 400px;
-  height: 300px;
-  margin: 10px;
-  border: 1px solid #ccc; /* Добавляем бордер */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Добавляем тень */
-  overflow: hidden;
-  border-radius: 4px;
-}
-
-.category-name {
-    position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.1);
-  color: #333;
-}
-
-.category-image {
-  width: auto;
-  height: 50%;
-  /* object-fit: cover; */
-  border-radius: 4px;
-}
 .title {
   color: #333;
-  padding: 20px 30px 20px; 
+  padding: 20px 30px 20px;
   display: flex;
   align-items: center;
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .category-link {
-    text-decoration: none;
+  text-decoration: none;
   color: #333;
 }
 .more-link {
@@ -102,5 +112,4 @@ position: relative;
 .more-link i {
   margin-left: 5px;
 }
-
 </style>

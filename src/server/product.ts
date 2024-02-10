@@ -57,4 +57,14 @@ export const getProducts = async () => {
             console.error('Продукты не найден:', error);
     }
 }
+
 }
+export const getProductsWithPagination = async (
+  startIndex: number,
+  endIndex: number
+) => {
+    const response = await axios.get(
+      `http://localhost:3000/api/product/pagination?startIndex=${startIndex}&endIndex=${endIndex}`
+    );
+    return response.data;
+};

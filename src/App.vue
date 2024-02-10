@@ -7,11 +7,13 @@
       padding: 10px;
       box-sizing: border-box;
       height: 100vh;
+      position: relative;
     "
   >
     <el-container>
       <el-space direction="vertical">
         <el-aside
+          v-if="showSidebars"
           width="250px"
           :span="4"
           style="
@@ -32,6 +34,7 @@
         </el-aside>
 
         <el-aside
+          v-if="showSidebars"
           width="250px"
           :span="4"
           style="
@@ -53,12 +56,61 @@
           overflow-y: auto;
         "
       >
+      <div
+       style="
+              border-radius: 15px;
+              margin: 5px;
+              background-color: white;
+              width: 100%;
+              height: 50px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+      >
+        <div style="display: flex; align-items: center; width: 50%">
+          <el-icon style="font-size: 34px; margin: 10px; color: #606266"
+            ><ArrowDownBold 
+          /></el-icon>
+          <el-link href="/"> BREND </el-link>
+        </div>
+        
+
+          <div
+            v-if="!showSidebars"
+            @click="handleButtonClick"
+            link
+            class="login-button-main"
+            style="
+              border-radius: 15px;
+              margin: 5px;
+              background-color: white;
+              width: 100%;
+              height: 50px;
+              display: flex;
+              justify-content: flex-end;
+              align-items: center;
+            "
+          >
+            <el-icon style="font-size: 24px"><User /></el-icon>
+            <span v-if="!loggedIn" style="margin: 10px">Войти</span>
+            <span v-if="loggedIn" style="margin: 10px">{{ user.email }}</span>
+            <img
+              v-if="user.avatar"
+              :src="user.avatar"
+              alt="Аватарка"
+              style="margin-left: 10px"
+            />
+          </div>
+        </div>
+      
         <search-input />
         <router-view />
       </el-main>
 
       <el-space direction="vertical">
         <el-button
+          v-if="showSidebars"
           @click="handleButtonClick"
           link
           :span="4"
@@ -107,6 +159,7 @@
         </el-dialog>
 
         <el-aside
+          v-if="showSidebars"
           width="300px"
           :span="4"
           style="
@@ -124,15 +177,17 @@
         </el-aside>
       </el-space>
     </el-container>
+    <footer style="position: absolute">Здесь что то будет написано</footer>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import { authenticateUser } from "@/server/auth";
 import MenuLeft from "@/components/Menu-left.vue";
 import CaruselRight from "@/components/Carusel-Right.vue";
 import SearchInput from "@/components/Search-input.vue";
+import { ArrowDownBold, User } from "@element-plus/icons-vue";
 import { authenticateWithEmailPassword } from "@/server/auth";
 import router from "@/router/router";
 import { toast } from "vue3-toastify";
@@ -140,6 +195,24 @@ import { toast } from "vue3-toastify";
 const loggedIn = ref(false);
 const dialogFormVisible = ref(false);
 // const formLabelWidth = '140px'
+
+const screenWidth = ref(window.innerWidth);
+
+onMounted(() => {
+  window.addEventListener("resize", handleResize);
+});
+
+const handleResize = () => {
+  screenWidth.value = window.innerWidth;
+};
+
+const showSidebars = computed(() => {
+  return screenWidth.value >= 1300;
+});
+
+// const showLoginButton = computed(() => {
+//   return screenWidth.value >= 1300;
+// });
 
 const form = reactive({
   email: "",
@@ -215,6 +288,32 @@ const submitForm = async () => {
 body {
   margin: 0;
   padding: 0;
+}
+
+@media screen and (max-width: 1300px) {
+  .common-layout .el-aside,
+  .common-layout .login-button {
+    display: none;
+  }
+
+  .common-layout .login-button-main {
+    display: flex;
+  }
+
+  .common-layout .el-main {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  .common-layout .login-button-main {
+    display: none;
+  }
+
+  .common-layout .el-aside,
+  .common-layout .login-button {
+    display: flex;
+  }
 }
 
 .el-button--text {

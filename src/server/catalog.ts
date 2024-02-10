@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { createRequestConfig } from './lib/catalog-lib';
 
 const getToken = () => {
@@ -31,10 +31,41 @@ export const sendCatalogToServer = async (data: CatalogData): Promise<CatalogRes
     return handleRequest('http://localhost:3000/api/categories', 'post', data, { headers: config.headers });
 };
 
+export const getCategoryById = async (catalogId: number)
+: Promise<CatalogResponse> => {
+    const config = createRequestConfig();
+    return handleRequest(
+      `http://localhost:3000/api/categories/${catalogId}`,
+      "get",
+      undefined,
+      { headers: config.headers }
+    );
+};
+
 export const getCatalogs = async (): Promise<CatalogResponse> => {
     const config = createRequestConfig();
     return handleRequest('http://localhost:3000/api/categories',
      'get', undefined, { headers: config.headers });
+};
+
+export const getCatalogsForLeftMenu = async (): Promise<CatalogResponse> => {
+    try {
+        const response: AxiosResponse<CatalogResponse> = await axios
+        .get('http://localhost:3000/api/categories/le');
+        console.log("Response from server:", response);
+        return response.data;
+    } catch (error) {
+        if (
+          axios.isAxiosError(error) &&
+          error.response &&
+          error.response.status === 404
+        ) {
+          console.error("Каталоги не найдены:", error);
+        } else {
+          console.error("Ошибка при отправке запроса:", error);
+        }
+        throw error;
+    }
 };
 
 export const updateCatalog = async (data: CatalogData, catalogId: number): Promise<CatalogResponse> => {

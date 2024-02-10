@@ -1,5 +1,5 @@
 <template>
-  
+  <el-scrollbar >
     <div class="scrollbar">
       <div v-for="catalog in catalogs" :key="catalog.id">
         <el-link :href="'/catalog/' + catalog.id" :underline="false">
@@ -7,9 +7,9 @@
             :src="photoUrl(catalog.photo[0])"
             :alt="catalog.name"
             style="
-              width: 220px;
+              width: 250px;
               height: 300px;
-              margin: 5px;
+              margin: 10px;
               border-radius: 15px;
             "
           >
@@ -20,8 +20,9 @@
               position: absolute;
               top: 10px;
               left: 15px;
-              color: white;
-              font-size: 16px;
+              color: #333;
+              font-size: 24px;
+              margin: 10px;
               font-weight: bold;
             "
           >
@@ -30,7 +31,7 @@
         </el-link>
       </div>
     </div>
-  
+  </el-scrollbar >
 </template>
 
 <script lang="ts" setup>
@@ -57,7 +58,5 @@ onMounted(async () => {
 <style scoped>
 .scrollbar {
   display: flex;
-  overflow: hidden;
-  scroll-snap-type: x mandatory;
 }
 </style>

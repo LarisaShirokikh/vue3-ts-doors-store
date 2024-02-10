@@ -1,147 +1,200 @@
 <template>
   <div class="container">
-    <el-container>
-      <el-aside width="600px">
-        <h2 class="heading">Добавить сервисы и услуги</h2>
-        <el-form :model="form" ref="serviceForm" :rules="rules" label-width="100px">
-          <el-form-item label="Название" prop="serviceName">
-            <el-input v-model="form.serviceName" type="textarea"
-            placeholder="Введите название" required></el-input>
-          </el-form-item>
-          <el-form-item label="Короткое описание" prop="shotDesc">
-            <el-input v-model="form.shotDesc" 
-            placeholder="Введите короткое описание"
-            type="textarea"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="Условия" prop="сonditions">
-            <el-input v-model="form.serviceCon" 
-            type="textarea"
-            placeholder="Введите условия" required></el-input>
-          </el-form-item>
-          <el-form-item label="Стоимость" prop="price">
-            <el-input v-model="form.price" 
-            type="textarea"
-            placeholder="Введите стоимость" required></el-input>
-          </el-form-item>
-          <el-form-item label="Оформление услуги" prop="decor">
-            <el-input v-model="form.decor" 
-            type="textarea"
-            placeholder="Введите оформление услуги" required></el-input>
-          </el-form-item>
-          <el-form-item label="Описание оформления" prop="decorDesc">
-            <el-input v-model="form.decorDesc" 
-            type="textarea"
-            placeholder="Введите описание оформления" 
-            style="active-border-color: #f59e0b;"
-            required></el-input>
-          </el-form-item>
-          <el-form-item label="Ссылка на фото" prop="photoLink">
-            <el-input v-model="form.photoLink" placeholder="Введите ссылку на фото"></el-input>
-          </el-form-item>
-          
-          <el-form-item>
-            <el-button type="primary"
-            style="background-color: #f59e0b; border-color: #f59e0b;"
-            @click="sendServiceData">Добавить сервис</el-button>
-          </el-form-item>
-        </el-form>
-      </el-aside>
+    <div>
+      <h2 class="heading">Добавить сервисы и услуги</h2>
+      <form @submit.prevent="sendServiceData" class="form">
+        <label for="serviceName" class="label">Название сервиса:</label>
+        <input
+          v-model="serviceName"
+          type="text"
+          id="serviceName"
+          class="input"
+          required
+        />
 
-      <el-main>
-    <h2 class="heading">Список сервисов</h2>
-    <div v-for="service in services" :key="service.id" class="service-item">
-      <el-card>
-        <el-image :src="service.photo" fit="cover"></el-image>
-        <el-row>
-          <el-col :span="12">
-            <span class="service-name">{{ service.serviceName }}</span>
-          </el-col>
-          <el-col :span="12" class="text-right">
-            <el-button type="text" @click="editService(service)">Редактировать</el-button>
-            <el-button type="text" @click="deleteService(service.id)">Удалить</el-button>
-          </el-col>
-        </el-row>
-      </el-card>
+        <label for="shotDesc" class="label">Короткое описание</label>
+        <input v-model="shotDesc" type="text" id="shotDesc" class="input" />
+
+        <label for="сonditions" class="label">Условия</label>
+        <input
+          v-model="serviceCon"
+          type="textarea"
+          class="input"
+          id="сonditions"
+        />
+
+        <label for="price" class="label">Стоимость от</label>
+        <input v-model="price" type="text" class="input" required />
+
+        <label for="decor" class="label">Оформление услуги</label>
+        <input v-model="decor" type="textarea" class="input" required />
+
+        <label for="decorDesc" class="label">Описание оформления</label>
+        <input v-model="decorDesc" type="textarea" class="input" required />
+
+        <label for="servicePhoto" class="label">Загрузить фото:</label>
+        <input
+          type="file"
+          id="servicePhoto"
+          @change="handleServicePhotoChange"
+          accept="image/*, .png, .jpg, gif, .web,"
+          class="input"
+        />
+        <img
+          v-if="servicePhotoPreview"
+          :src="servicePhotoPreview"
+          alt="Предворительный просмотр фото"
+          class="service-preview"
+          style="max-width: 80px; max-height: 80px;"
+        />
+
+        <button type="submit" class="button">Добавить сервис</button>
+      </form>
     </div>
-  </el-main>
-    </el-container>
+
+    <div>
+      <h2 class="heading">Список сервисов</h2>
+
+      <el-table :data="services" :key="index" style="width: 100%" >
+      <el-table-column prop="id" label="id" width="50"/>
+      <el-table-column label="Фото" width="100">
+        <template v-slot="scope">
+          <img
+            :src="photoUrl(scope.row.photo[0])"
+            :alt="scope.row.name"
+            style="max-width: 80px; max-height: 80px;"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column prop="serviceName" label="Название" />
+      <el-table-column label="Действия" width="100">
+        <template v-slot="scope">
+          <el-button
+            v-if="!isEditing(scope.row.id)"
+            @click="startEditing(scope.row.id)"
+            icon="el-icon-edit"
+            circle
+            size="small"
+            type="primary"
+          ></el-button>
+          <el-button
+            v-if="isEditing(scope.row.id)"
+            @click="saveChanges(scope.row.id)"
+            icon="el-icon-check"
+            circle
+            size="small"
+            type="success"
+          ></el-button>
+          <el-button
+            v-if="isEditing(scope.row.id)"
+            @click="cancelEditing(scope.row.id)"
+            icon="el-icon-close"
+            circle
+            size="small"
+            type="danger"
+          ></el-button>
+          <el-button
+            @click="deleteCatalog(scope.row.id)"
+            icon="el-icon-delete"
+            circle
+            size="small"
+            type="danger"
+          ></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+      </div>
+    
   </div>
 </template>
 
-  <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue';
-  import { toast } from 'vue3-toastify';
-  import { getServices, sendServiceToServer } from '@/server/service'
+<script lang="ts" setup>
+import { onMounted, ref } from "vue";
+import { toast } from "vue3-toastify";
+import { getServices, sendServiceToServer } from "@/server/service";
 
-  export default defineComponent({
-    setup() {
-      const form = ref({
-        serviceName: '',
-        shotDesc: '',
-        serviceCon: '',
-        price: '',
-        decor: '',
-        decorDesc: '',
-        photoLink: '',
-      });
+const serviceName = ref("");
+const shotDesc = ref("");
+const serviceCon = ref("");
+const price = ref("");
+const decor = ref("");
+const decorDesc = ref("");
+const servicePhoto = ref<File | null>(null);
+const servicePhotoPreview = ref<string | null>(null);
+//const services = ref<Array<any>>([]);
+const editedServiceId = ref<number | null>(null);
+const editedServiceName = ref<string>("");
+//const editedServicePhoto = ref<File | null>(null);
 
-      const rules = {
-        serviceName: [{ required: true, message: 'Введите название', trigger: 'blur' }],
-        serviceCon: [{ required: true, message: 'Введите условия', trigger: 'blur' }],
-        price: [{ required: true, message: 'Введите стоимость', trigger: 'blur' }],
-        decor: [{ required: true, message: 'Введите оформление услуги', trigger: 'blur' }],
-        decorDesc: [{ required: true, message: 'Введите описание оформления', trigger: 'blur' }],
-      };
+const isEditing = (serviceId: number) => serviceId === editedServiceId.value;
 
+const startEditing = (serviceId: number) => {
+  editedServiceId.value = serviceId;
+  editedServiceName.value =
+    services.value.find((service) => service.id === serviceId)?.name || "";
+};
 
+    const photoUrl = (path: string) => {
+  if (path.startsWith("/uploads/")) {
+    return `http://localhost:3000${path}`;
+  }
+  return path;
+};
+const handleServicePhotoChange = (event: Event) => {
+  const fileInput = event.target as HTMLInputElement;
+  const file = fileInput.files?.[0];
 
-      const sendServiceData = async () => {
-        try {
-          const requestData = {
-            serviceName: form.value.serviceName,
-            shotDesc: form.value.shotDesc,
-            serviceCon: form.value.serviceCon,
-            price: form.value.price,
-            decor: form.value.decor,
-            decorDesc: form.value.decorDesc,
-            photoLink: form.value.photoLink,
-          };
-          const response = await sendServiceToServer(requestData)
-          console.log('Server Response:', response);
+  if (file) {
+    servicePhoto.value = file;
+    servicePhotoPreview.value = URL.createObjectURL(file);
+  }
+};
 
-          if (response) {
-            toast.success('Успешное добавление продукта', { theme: 'colored' });
-            
-          } else {
-            toast.error('Ошибка при добавлении продукта', { theme: 'colored' });
-          }
-        } catch (error) {
-          console.error('Ошибка при отправке продукта:', error);
-        }
-      
-       };
-       const services = ref([]);
+console.log("serviceName.value:", serviceName.value);
+console.log("servicePhoto.value:", servicePhoto.value);
 
-      onMounted(async () => {
-        try {
-          services.value = await getServices();
-        } catch (error) {
-          console.error('Ошибка при получении списка сервисов:', error);
-        }
-      });
+const sendServiceData = async () => {
+  console.log("Функция sendServiceData вызвана");
+  try {
+    if (!serviceName.value || !servicePhoto.value) {
+      console.log("Не все данные заполнены");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("serviceName", serviceName.value);
+    formData.append("shotDesc", shotDesc.value);
+    formData.append("serviceCon", serviceCon.value);
+    formData.append("price", price.value);
+    formData.append("decor", decor.value);
+    formData.append("decorDesc", decorDesc.value);
+    const photo = servicePhoto.value;
+    if (photo) {
+      formData.append("photo", photo, photo.name);
+    }
 
-      return {
-        form,
-        rules,
-        sendServiceData,
+    console.log("Отправляю данные на сервер:", formData);
+    const response = await sendServiceToServer(formData);
+    console.log("Server Response:", response);
 
-      };
-    },
-  });
-  </script>
+    if (response) {
+      toast.success("Успешное добавление продукта", { theme: "colored" });
+    } else {
+      toast.error("Ошибка при добавлении продукта", { theme: "colored" });
+    }
+  } catch (error) {
+    console.error("Ошибка при отправке продукта:", error);
+  }
+};
+const services = ref([]);
 
-  
+onMounted(async () => {
+  try {
+    services.value = await getServices();
+  } catch (error) {
+    console.error("Ошибка при получении списка сервисов:", error);
+  }
+});
+</script>
 
 <style>
 .container {
@@ -255,5 +308,4 @@
 .delete-button {
   color: #e53e3e;
 }
-
 </style>

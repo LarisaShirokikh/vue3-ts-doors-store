@@ -16,13 +16,13 @@
         <input v-model="price" type="number" id="price" class="input" />
 
         <label for="description" class="label">Описание:</label>
-        <input
+        <textarea
           v-model="description"
-          type="text"
+          rows="4"
           id="description"
           class="input"
           required
-        />
+        ></textarea>
 
         <div class="checkbox-container">
           <input
@@ -54,6 +54,22 @@
           <label for="popular" class="checkbox-label">Популярный:</label>
         </div>
 
+        <label for="selectedChapter" class="label">Выберите категорию:</label>
+        <select
+          v-model="selectedChapter"
+          id="selectedChapter"
+          class="select-box"
+          required
+        >
+          <option
+            v-for="chapter in chapters"
+            :key="chapter.id"
+            :value="chapter.id"
+          >
+            {{ chapter.name }}
+          </option>
+        </select>
+
         <label for="photoLink" class="label">Ссылка на фото:</label>
         <input v-model="photoLink" type="text" id="photoLink" class="input" />
 
@@ -77,60 +93,59 @@
     </div>
 
     <div>
-    <h2 class="heading">Список каталогов</h2>
+      <h2 class="heading">Список каталогов</h2>
 
-    <el-table :data="catalogs" :key="index" style="width: 100%" >
-      <el-table-column prop="id" label="id" width="50"/>
-      <el-table-column label="Фото" width="100">
-        <template v-slot="scope">
-          <img
-            :src="photoUrl(scope.row.photo[0])"
-            :alt="scope.row.name"
-            style="max-width: 80px; max-height: 80px;"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column prop="name" label="Название" />
-      <el-table-column label="Действия" width="50">
-        <template v-slot="scope">
-          <el-button
-            v-if="!isEditing(scope.row.id)"
-            @click="startEditing(scope.row.id)"
-            icon="el-icon-edit"
-            circle
-            size="small"
-            type="primary"
-          ></el-button>
-          <el-button
-            v-if="isEditing(scope.row.id)"
-            @click="saveChanges(scope.row.id)"
-            icon="el-icon-check"
-            circle
-            size="small"
-            type="success"
-          ></el-button>
-          <el-button
-            v-if="isEditing(scope.row.id)"
-            @click="cancelEditing(scope.row.id)"
-            icon="el-icon-close"
-            circle
-            size="small"
-            type="danger"
-          ></el-button>
-          <el-button
-            @click="deleteCatalog(scope.row.id)"
-            icon="el-icon-delete"
-            circle
-            size="small"
-            type="danger"
-          ></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <el-table :data="catalogs" :key="index" style="width: 100%">
+        <el-table-column prop="id" label="id" width="50" />
+        <el-table-column label="Фото" width="100">
+          <template v-slot="scope">
+            <img
+              :src="photoUrl(scope.row.photo[0])"
+              :alt="scope.row.name"
+              style="max-width: 80px; max-height: 80px"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="Название" />
+        <el-table-column label="Действия" width="100">
+          <template v-slot="scope">
+            <el-button
+              v-if="!isEditing(scope.row.id)"
+              @click="startEditing(scope.row.id)"
+              icon="el-icon-edit"
+              circle
+              size="small"
+              type="primary"
+            ></el-button>
+            <el-button
+              v-if="isEditing(scope.row.id)"
+              @click="saveChanges(scope.row.id)"
+              icon="el-icon-check"
+              circle
+              size="small"
+              type="success"
+            ></el-button>
+            <el-button
+              v-if="isEditing(scope.row.id)"
+              @click="cancelEditing(scope.row.id)"
+              icon="el-icon-close"
+              circle
+              size="small"
+              type="danger"
+            ></el-button>
+            <el-button
+              @click="deleteCatalog(scope.row.id)"
+              icon="el-icon-delete"
+              circle
+              size="small"
+              type="danger"
+            ></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
@@ -141,6 +156,7 @@ import {
   updateCatalog,
 } from "../server/catalog";
 import { toast } from "vue3-toastify";
+import { getChapters } from "@/server/chapter";
 
 const popular = ref(false);
 const atHome = ref(false);
@@ -155,6 +171,8 @@ const editedCatalogId = ref<number | null>(null);
 const editedCatalogName = ref<string>("");
 const editedCatalogPhoto = ref<File | null>(null);
 const photoLink = ref("");
+const selectedChapter = ref("");
+const chapters = ref([]);
 
 const isEditing = (catalogId: number) => catalogId === editedCatalogId.value;
 
@@ -190,6 +208,7 @@ const saveChanges = async (catalogId: number) => {
     formData.append("forOne", forOne.value ? "true" : "false");
     formData.append("popular", popular.value ? "true" : "false");
     formData.append("atHome", atHome.value ? "true" : "false");
+    formData.append("chapters", selectedChapter.value);
     if (editedCatalogPhoto.value) {
       formData.append(
         "photo",
@@ -267,8 +286,9 @@ const sendCatalogData = async () => {
     ) {
       formData.append("price", price.value);
     }
-    formData.append("atHome", atHome.value ? "true" : "false");
-    formData.append("popular", popular.value ? "true" : "false");
+    formData.append("atHome", atHome.value);
+    formData.append("popular", popular.value);
+    formData.append("forOne", forOne.value);
 
     const response = await sendCatalogToServer(formData);
 
@@ -297,8 +317,17 @@ const sendCatalogData = async () => {
 //     editedCatalogPhoto.value = file;
 //   }
 // };
+const fetchChapters = async () => {
+  try {
+    // Fetch the list of catalogs from the server
+    chapters.value = await getChapters();
+  } catch (error) {
+    console.error("Ошибка при получении списка каталогов:", error);
+  }
+};
 
 onMounted(async () => {
+  fetchChapters();
   try {
     catalogs.value = await getCatalogs();
   } catch (error) {
@@ -314,111 +343,59 @@ onMounted(async () => {
   gap: 20px;
   width: auto;
 }
-.catalog-preview {
-  width: auto;
-  height: auto;
-}
-/* .container {
-  padding: 0px 30px 0px;
-} */
-
-
-
-.catalog-info {
-  display: flex;
-  padding: 10px;
-  color: #4a5568;
-}
-
-.edit-input {
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-.price {
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-.catalog-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.edit-button,
-.save-button,
-.cancel-button,
-.delete-button {
-  cursor: pointer;
-  padding: 5px;
-  margin: 5px;
-  border: none;
-  border-radius: 4px;
-  font-size: 20px;
-}
-
-.edit-button i,
-.delete-button i {
-  font-size: 20px;
-}
-
-.heading {
-  font-size: 14px;
-  color: #4a5568;
-  margin-bottom: 1rem;
-}
 
 .form {
-  max-width: 500px;
-  /* изменено значение */
+  max-width: 100%;
   margin: auto;
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 0.375rem;
+  background-color: #f8f9fa; /* Цвет фона */
+  padding: 2rem;
+  border-radius: 8px; /* Радиус скругления углов */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+  padding-left: 20px;
 }
 
 .label {
   display: block;
-  color: #4a5568;
-  font-size: 0.875rem;
+  color: #495057; /* Цвет текста */
+  font-size: 1rem; /* Размер шрифта */
   margin-bottom: 0.5rem;
 }
 
-.input {
+.input,
+.select-box {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
+  padding: 0.75rem;
+  border: 1px solid #ced4da; /* Цвет границы */
+  border-radius: 4px; /* Радиус скругления */
   outline: none;
   margin-bottom: 1rem;
-  /* добавлено значение */
+}
+
+.select-box {
+  position: relative;
+}
+
+.select-box::after {
+  content: "\25BC";
+  font-size: 12px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .button {
-  background-color: #f59e0b;
+  background-color: #ffad42; /* Цвет фона кнопки */
   color: #fff;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s; /* Анимация при наведении */
 }
 
 .button:hover {
-  background-color: #e67e22;
-}
-
-.image {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 0.375rem;
-  margin-bottom: 1rem;
-  outline: none;
+  background-color: #0056b3; /* Цвет фона при наведении */
 }
 
 .checkbox-container {
@@ -431,17 +408,29 @@ onMounted(async () => {
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #ffcc00;
+  border: 2px solid #6c757d; /* Цвет рамки */
   border-radius: 4px;
   margin-right: 10px;
   cursor: pointer;
+  position: relative;
 }
 
 .checkbox:checked {
-  background-color: #ffcc00;
+  background-color: #007bff; /* Цвет фона при активации */
+}
+
+.checkbox:checked::after {
+  content: "\2714"; /* Галочка */
+  font-size: 14px;
+  color: #fff; /* Цвет галочки */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .checkbox-label {
   font-size: 1rem;
+  color: #495057; /* Цвет текста */
 }
 </style>

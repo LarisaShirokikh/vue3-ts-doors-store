@@ -1,11 +1,11 @@
 <template>
     <el-scrollbar height="800px">
    
-      <div v-for="catalog in catalogs" :key="catalog.id" class="scrollbar">
-        <el-link :href="'/catalog/' + catalog.id" :underline="false">
+      <div v-for="chapter in chapters" :key="chapter.id" class="scrollbar">
+        <el-link :href="'/chapter/' + chapter.id" :underline="false">
           <el-image
-            :src="photoUrl(catalog.photo[0])"
-            :alt="catalog.name"
+            :src="photoUrl(chapter.photo[0])"
+            :alt="chapter.name"
             style="
               width: 60px;
               height: 60px;
@@ -15,7 +15,7 @@
           >
           </el-image>
           <div
-            class="catalog-name"
+            class="chapter-name"
             style="
               /* position: absolute; */
               top: 10px;
@@ -26,7 +26,7 @@
               overflow-y: auto;
             "
           >
-            {{ catalog.name }}
+            {{ chapter.name }}
           </div>
         </el-link>
       </div>
@@ -89,9 +89,9 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import { getCatalogs } from "@/server/catalog";
+import {  getChapters } from "@/server/chapter";
 
-const catalogs = ref<Array<any>>([]);
+const chapters = ref<Array<any>>([]);
 
 const photoUrl = (path: string) => {
   if (path.startsWith("/uploads/")) {
@@ -102,10 +102,13 @@ const photoUrl = (path: string) => {
 
 onMounted(async () => {
   try {
-    catalogs.value = await getCatalogs();
+    console.log("Sending request...");
+    chapters.value = await getChapters();
+    console.log("chapters after setting:", chapters.value);
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }
+
 });
 </script>
 <style scoped>

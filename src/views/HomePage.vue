@@ -1,28 +1,31 @@
 <template>
-  <div id="home-view">
-    <el-scrollbar :style="{ height: 'calc(100vh - 20px)' }" >
+  <div id="home-view" >
+    <el-scrollbar :style="{ height: 'calc(100vh - 20px)' }">
       <catalog-category />
       <building-list :videos="videos"></building-list>
       <popular-categories></popular-categories>
 
-      <catalog-list
+      <!-- <catalog-list
         v-if="!isDesktop"
         :catalogs="catalogs"
         :selectedTabIndex="selectedTabIndex"
-      ></catalog-list>
+      ></catalog-list> -->
 
-      <product-grid></product-grid>
-      <delivery-blog />
+      <product-grid ></product-grid>
+
+      <catalog-main-menu ></catalog-main-menu>
+
+      
       <service-com></service-com>
     </el-scrollbar>
+    
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
 //  import ReviewBlog from '@/components/ReviewBlog.vue'
-import DeliveryBlog from "@/components/DeliveryBlog.vue";
-import CatalogList from "@/components/CatalogList.vue";
+// import DeliveryBlog from "@/components/DeliveryBlog.vue";
 import { fetchDataFromServer } from "@/server/catalog";
 import BuildingList from "@/components/Buildings/BuildingList.vue";
 import { getVideo } from "@/server/video";
@@ -30,6 +33,7 @@ import PopularCategories from "@/components/Popular/PopularCategories.vue";
 import ServiceCom from "@/components/Services/ServisesCom.vue";
 import ProductGrid from "@/components/Products/ProductGrid.vue";
 import CatalogCategory from "@/components/Catalog-Category.vue";
+import CatalogMainMenu from "@/components/Catalog-Main-Menu";
 
 const isDesktop = ref(true);
 const catalogs = ref([]);
@@ -73,8 +77,6 @@ const fetchData = async () => {
 </script>
 
 <style scoped>
-.build {
-  margin-top: 50px;
-  margin-bottom: 20px;
+.container {
 }
 </style>
