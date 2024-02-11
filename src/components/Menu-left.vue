@@ -32,59 +32,6 @@
       </div>
     
     </el-scrollbar>
-    <!-- <el-menu  class="el-menu-vertical-demo" 
-        active-text-color="#ffd04b" style="width:250px; padding-top: 20px; padding-bottom: 20px;">
-
-        <el-menu-item index="1">
-            <el-image style="width: 50px; height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-            <span>Все двери</span>
-        </el-menu-item>
-
-        <el-menu-item index="2">
-            <el-image style="width: 50px; height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-            <span>Хиты продаж</span>
-        </el-menu-item>
-
-        <el-menu-item index="3">
-            <el-image style="width: 50px; height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-            <span>Цены ниже</span>
-        </el-menu-item>
-
-        <el-menu-item index="4">
-            <el-image style="width: 50px; height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-            <span>Белые двери</span>
-        </el-menu-item>
-
-        <el-menu-item index="5">
-            <el-image style="width: 50px; height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-            <span>Отделка металл</span>
-        </el-menu-item>
-
-        <el-menu-item index="6">
-                <el-image style="width: 50px; height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-                <span>С терморазрывом</span>
-            </el-menu-item>
-
-    <el-menu-item index="7">
-                <el-image style="width: 50px; height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-                <span>С зеркалом</span>
-            </el-menu-item>
-
-            <el-menu-item index="8">
-                <el-image style="width: 50px; 
-                border-radius: 15px;
-                height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-                <span>Под покраску</span>
-            </el-menu-item>
-
-
-        <el-menu-item index="9">
-            <el-image style="width: 50px; 
-            border-radius: 15px;
-            height: 50px; padding-right: 10px;" :src="w" :fit="fit"></el-image>
-            <span>Двухконтурные</span>
-        </el-menu-item>
-    </el-menu> -->
 </template>
 
 <script lang="ts" setup>

@@ -32,8 +32,8 @@ import { getVideo } from "@/server/video";
 import PopularCategories from "@/components/Popular/PopularCategories.vue";
 import ServiceCom from "@/components/Services/ServisesCom.vue";
 import ProductGrid from "@/components/Products/ProductGrid.vue";
-import CatalogCategory from "@/components/Catalog-Category.vue";
-import CatalogMainMenu from "@/components/Catalog-Main-Menu";
+import CatalogCategory from "@/components/Catalog/Catalog-Category.vue";
+import CatalogMainMenu from "@/components/Catalog/Catalog-Main-Menu";
 
 const isDesktop = ref(true);
 const catalogs = ref([]);

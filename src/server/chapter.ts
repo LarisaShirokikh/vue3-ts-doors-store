@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { TokenData } from "./video";
+import { Category } from "@/types/catalogType";
 export const updateChapter = () => {};
 
 export const sendChapterToServer = async (data: FormData): Promise<any> => {
@@ -57,4 +58,39 @@ export const getChapters = async (): Promise<any> => {
     console.error("Ошибка при отправке запроса:", error);
     throw error;
   }
+};
+
+export const getChapterById = async (chapterId: number): Promise<Chapter> => {
+  try {
+    const response: AxiosResponse<Chapter> = await axios.get(
+      `http://localhost:3000/api/chapter/${chapterId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    throw error;
+  }
+};
+
+export const getCatalogsByChapterId = async (
+  chapterId: number
+): Promise<Category> => {
+  try {
+    const response: AxiosResponse<Chapter> = await axios.get(
+      `http://localhost:3000/api/categories/${chapterId}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    throw error;
+  }
+};
+
+export type Chapter = {
+  id: string;
+  name: string;
+  photo: string;
+  description: string;
+  category: Category[];
 };

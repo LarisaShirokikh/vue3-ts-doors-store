@@ -1,81 +1,89 @@
 <template>
-    <div class="category-details">
-      <div v-for="category in categories" :key="category.id">
-        <h2 class="">{{category.name}}</h2>
-        <button class="">Посмотреть все</button>
-      </div>
-      
-      <div class="scrollbar-flex-content">
-      <div v-for="product in products" :key="product.id">
-        <el-link
-          :href="'/product/' + product.id"
-          :underline="false"
-          class="name"
-          style="align-items: center;"
-        >
+  <el-breadcrumb separator="/" style="margin-bottom: 30px; margin-left: 10px">
+    <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
+    <el-breadcrumb-item>Категории</el-breadcrumb-item>
+  </el-breadcrumb>
+  <!--  -->
+  <div class="category-details" v-if="category">
+    <h1>{{ category.name }}</h1>
+  </div>
+
+  <div v-if="products.length > 0">
+    <div v-for="product in products" :key="product.id">
+      <el-link
+        :href="'/product/' + product.id"
+        :underline="false"
+        class="name"
+        style="align-items: center"
+      >
+        <div>
+          <img
+            :src="photoUrl(product.photo[0])"
+            :alt="product.name"
+            style="
+              width: 150px;
+              height: 170px;
+              margin: 5px;
+              border-radius: 10px;
+            "
+          />
+          <div class="product-name" style="margin: 5px; max-width: 200px">
+            <span>{{ product.name }}</span>
+          </div>
           <div>
-            <img
-              :src="photoUrl(product.photo[0])"
-              :alt="product.name"
+            <el-button
+              type="danger"
               style="
-                width: 150px;
-                height: 170px;
+                border-radius: 15px;
+                width: 120px;
                 margin: 5px;
-                border-radius: 10px;
+                align-items: center;
               "
-            />
-            <div class="product-name" style="margin: 5px; max-width: 200px">
-              <span>{{ product.name }}</span>
-            </div>
-            <div>
-              <el-button
-                type="danger"
-                style="border-radius: 15px; width: 120px; margin: 5px; align-items: center;"
-                class="flex-wrap gap-6"
-                plain
-                >{{ product.newPrice }} руб.</el-button
-              >
-            </div>
-            <el-button text class="flex justify-space-between flex-wrap gap-4"
-              >Подробнее <el-icon><ArrowRight /></el-icon></el-button
+              class="flex-wrap gap-6"
+              plain
+              >{{ product.newPrice }} руб.</el-button
             >
           </div>
-        </el-link>
-      </div>
+          <el-button text class="flex justify-space-between flex-wrap gap-4"
+            >Подробнее <el-icon><ArrowRight /></el-icon
+          ></el-button>
+        </div>
+      </el-link>
     </div>
-    </div>
-  </template>
-  
-  <script lang="ts" setup>
+  </div>
+</template>
+
+<script setup>
 import { ref, onMounted } from "vue";
-  
-import { getProducts } from "@/server/product";
+import { getProductsByCatalogId } from "@/server/product";
 import { getCategoryById } from "@/server/catalog";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
-const products = ref<Array<any>>([]);
-const categories = ref<Array<any>>([]);
-const catalogId = ref<number | null>(null);
+const category = ref(null);
+const products = ref([]);
 
-onMounted(async () => {
-  try {
-    // Проверяем, существует ли this.$route.params
-    if (this.$route.params && this.$route.params.catalogId) {
-      catalogId.value = parseInt(this.$route.params.catalogId as string, 10);
-      categories.value = await getCategoryById(catalogId.value);
-      products.value = await getProducts();
-    } else {
-      console.error("Missing 'catalogId' parameter");
-    }
-  } catch (error) {
-    console.error("Error fetching data from the server:", error);
-  }
-});
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/doorsPhoto/")) {
+const photoUrl = (path) => {
+  if (path.startsWith("/uploads/")) {
     return `http://localhost:3000${path}`;
   }
   return path;
 };
-  
-  </script>
+
+const fetchCategories = async () => {
+  try {
+    const routeParams = router.currentRoute.value.params;
+    const catalogId = routeParams ? routeParams.id : null;
+
+    if (!catalogId) {
+      throw new Error("Product ID not found in the route parameters.");
+    }
+    category.value = await getCategoryById(catalogId);
+    products.value = await getProductsByCatalogId(catalogId);
+  } catch (error) {
+    console.error("Ошибка при получении продуктов:", error);
+  }
+};
+
+onMounted(fetchCategories);
+</script>

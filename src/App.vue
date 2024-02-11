@@ -177,7 +177,7 @@
         </el-aside>
       </el-space>
     </el-container>
-    <footer style="position: absolute">Здесь что то будет написано</footer>
+    <footer-component></footer-component>
   </div>
 </template>
 
@@ -187,6 +187,7 @@ import { authenticateUser } from "@/server/auth";
 import MenuLeft from "@/components/Menu-left.vue";
 import CaruselRight from "@/components/Carusel-Right.vue";
 import SearchInput from "@/components/Search-input.vue";
+import FooterComponent from "./components/Footer-component.vue";
 import { ArrowDownBold, User } from "@element-plus/icons-vue";
 import { authenticateWithEmailPassword } from "@/server/auth";
 import router from "@/router/router";

@@ -12,6 +12,7 @@ import AddServices from "../components/Services/AddServices.vue";
 import AddReview from "@/components/AddReview.vue";
 import MyProfile from "@/components/MyProfile.vue";
 import CategoryCard from "@/components/CategoryCard.vue";
+import ChapterPage from "@/components/Chapters/ChapterPage.vue";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", component: Home },
@@ -23,8 +24,13 @@ const routes: RouteRecordRaw[] = [
   { path: "/addFile", component: FileUploader },
   { path: "/addServices", component: AddServices },
   { path: "/addProduct", component: AddProduct },
+  {
+    path: "/chapter/:id",
+    name: "Chapter",
+    component: ChapterPage,
+  },
   { path: "/product/:id", name: "product-details", component: ProductDetails },
-  { path: "/catalog/:id", name: "catalog-details", component: CategoryCard },
+  { path: "/catalog/:id", name: "Catalog", component: CategoryCard },
   { path: "/addVideo", component: UploadVideo },
   { path: "/addReview", component: AddReview },
 ];

@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { createRequestConfig } from './lib/catalog-lib';
+import { Category } from "@/types/catalogType";
 
 const getToken = () => {
     const storedToken = sessionStorage.getItem('userToken');
@@ -31,15 +32,17 @@ export const sendCatalogToServer = async (data: CatalogData): Promise<CatalogRes
     return handleRequest('http://localhost:3000/api/categories', 'post', data, { headers: config.headers });
 };
 
-export const getCategoryById = async (catalogId: number)
-: Promise<CatalogResponse> => {
-    const config = createRequestConfig();
-    return handleRequest(
-      `http://localhost:3000/api/categories/${catalogId}`,
-      "get",
-      undefined,
-      { headers: config.headers }
+export const getCategoryById = async (catalogId: number): Promise<Category> => {
+  try {
+    const response: AxiosResponse<Category> = await axios.get(
+      `http://localhost:3000/api/categories/catalog/${catalogId}`
     );
+
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    throw error;
+  }
 };
 
 export const getCatalogs = async (): Promise<CatalogResponse> => {
@@ -48,25 +51,25 @@ export const getCatalogs = async (): Promise<CatalogResponse> => {
      'get', undefined, { headers: config.headers });
 };
 
-export const getCatalogsForLeftMenu = async (): Promise<CatalogResponse> => {
-    try {
-        const response: AxiosResponse<CatalogResponse> = await axios
-        .get('http://localhost:3000/api/categories/le');
-        console.log("Response from server:", response);
-        return response.data;
-    } catch (error) {
-        if (
-          axios.isAxiosError(error) &&
-          error.response &&
-          error.response.status === 404
-        ) {
-          console.error("Каталоги не найдены:", error);
-        } else {
-          console.error("Ошибка при отправке запроса:", error);
-        }
-        throw error;
-    }
-};
+// export const getCatalogsForLeftMenu = async (): Promise<CatalogResponse> => {
+//     try {
+//         const response: AxiosResponse<CatalogResponse> = await axios
+//         .get('http://localhost:3000/api/categories/le');
+//         console.log("Response from server:", response);
+//         return response.data;
+//     } catch (error) {
+//         if (
+//           axios.isAxiosError(error) &&
+//           error.response &&
+//           error.response.status === 404
+//         ) {
+//           console.error("Каталоги не найдены:", error);
+//         } else {
+//           console.error("Ошибка при отправке запроса:", error);
+//         }
+//         throw error;
+//     }
+// };
 
 export const updateCatalog = async (data: CatalogData, catalogId: number): Promise<CatalogResponse> => {
     const config = createRequestConfig();
