@@ -24,54 +24,39 @@
           required
         ></textarea>
 
-        <div class="checkbox-container">
-          <input
-            v-model="atHome"
-            type="checkbox"
-            id="atHome"
-            class="checkbox"
-          />
-          <label for="atHome" class="checkbox-label">Для квартиры:</label>
-        </div>
-
-        <div class="checkbox-container">
-          <input
-            v-model="forOne"
-            type="checkbox"
-            id="forOne"
-            class="checkbox"
-          />
-          <label for="forOne" class="checkbox-label">Для компонента 1:</label>
-        </div>
-
-        <div class="checkbox-container">
-          <input
-            v-model="popular"
-            type="checkbox"
-            id="popular"
-            class="checkbox"
-          />
-          <label for="popular" class="checkbox-label">Популярный:</label>
-        </div>
-
-        <label for="selectedChapter" class="label">Выберите категорию:</label>
-        <select
+        <label class="label">Выберите раздел:</label>
+        <el-select
           v-model="selectedChapter"
-          id="selectedChapter"
-          class="select-box"
-          required
+          collapse-tags
+          placeholder="Выбрать..."
+          style="width: 100%; border-color: none"
+          multiple
         >
-          <option
+        <template #header>
+      <el-checkbox
+        v-model="checkAll"
+        :indeterminate="indeterminate"
+        @change="handleCheckAll"
+      >
+        Все
+      </el-checkbox>
+    </template>
+          <el-option
             v-for="chapter in chapters"
             :key="chapter.id"
             :value="chapter.id"
-          >
-            {{ chapter.name }}
-          </option>
-        </select>
+            :label="chapter.name"
+          />
+        </el-select>
 
         <label for="photoLink" class="label">Ссылка на фото:</label>
-        <input v-model="photoLink" type="text" id="photoLink" class="input" />
+        <input
+          v-model="photoLink"
+          type="text"
+          id="photoLink"
+          class="input"
+          @input="loadPhotoFromLink"
+        />
 
         <label for="catalogPhoto" class="label">Загрузить фото:</label>
         <input
@@ -86,160 +71,56 @@
           :src="catalogPhotoPreview"
           alt="Предворительный просмотр фото каталога"
           class="catalog-preview"
+          style="width: 250px; height: 300px; margin: 10px; border-radius: 15px"
         />
 
         <button type="submit" class="button">Добавить каталог</button>
       </form>
     </div>
-
-    <div>
-      <h2 class="heading">Список каталогов</h2>
-
-      <el-table :data="catalogs" :key="index" style="width: 100%">
-        <el-table-column prop="id" label="id" width="50" />
-        <el-table-column label="Фото" width="100">
-          <template v-slot="scope">
-            <img
-              :src="photoUrl(scope.row.photo[0])"
-              :alt="scope.row.name"
-              style="max-width: 80px; max-height: 80px"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="Название" />
-        <el-table-column label="Действия" width="100">
-          <template v-slot="scope">
-            <el-button
-              v-if="!isEditing(scope.row.id)"
-              @click="startEditing(scope.row.id)"
-              icon="el-icon-edit"
-              circle
-              size="small"
-              type="primary"
-            ></el-button>
-            <el-button
-              v-if="isEditing(scope.row.id)"
-              @click="saveChanges(scope.row.id)"
-              icon="el-icon-check"
-              circle
-              size="small"
-              type="success"
-            ></el-button>
-            <el-button
-              v-if="isEditing(scope.row.id)"
-              @click="cancelEditing(scope.row.id)"
-              icon="el-icon-close"
-              circle
-              size="small"
-              type="danger"
-            ></el-button>
-            <el-button
-              @click="deleteCatalog(scope.row.id)"
-              icon="el-icon-delete"
-              circle
-              size="small"
-              type="danger"
-            ></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+    <catalog-list></catalog-list>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import {
-  deleteCatalogRequest,
-  getCatalogs,
-  sendCatalogToServer,
-  updateCatalog,
-} from "../server/catalog";
+import { onMounted, ref, watch } from "vue";
+import { sendCatalogToServer } from "../server/catalog";
 import { toast } from "vue3-toastify";
 import { getChapters } from "@/server/chapter";
+import CatalogList from "@/components/CatalogList.vue";
+import type { CheckboxValueType } from 'element-plus'
 
-const popular = ref(false);
-const atHome = ref(false);
-const forOne = ref(false);
 const price = ref("" || null);
 const description = ref("");
 const catalogName = ref("");
 const catalogPhoto = ref<File | null>(null);
 const catalogPhotoPreview = ref<string | null>(null);
-const catalogs = ref<Array<any>>([]);
-const editedCatalogId = ref<number | null>(null);
-const editedCatalogName = ref<string>("");
-const editedCatalogPhoto = ref<File | null>(null);
 const photoLink = ref("");
-const selectedChapter = ref("");
+const selectedChapter = ref([]);
 const chapters = ref([]);
+const value = ref<CheckboxValueType[]>([])
 
-const isEditing = (catalogId: number) => catalogId === editedCatalogId.value;
 
-const startEditing = (catalogId: number) => {
-  editedCatalogId.value = catalogId;
-  editedCatalogName.value =
-    catalogs.value.find((catalog) => catalog.id === catalogId)?.name || "";
-};
+const checkAll = ref(false)
+const indeterminate = ref(false)
 
-// const isString = (value: any): value is string => typeof value === "string";
-
-// // Функция для формирования URL фото из файла
-// const getPhotoUrl = (photo: any): string => {
-//   if (photo instanceof File) {
-//     return URL.createObjectURL(photo);
-//   } else {
-//     console.error("Ошибка: Невозможно определить тип фото");
-//     return ""; // или другой URL по умолчанию
-//   }
-// };
-
-const cancelEditing = () => {
-  editedCatalogId.value = null;
-  editedCatalogName.value = "";
-  editedCatalogPhoto.value = null;
-};
-
-const saveChanges = async (catalogId: number) => {
-  console.log("catalogId", catalogId);
-  try {
-    const formData = new FormData();
-    formData.append("name", editedCatalogName.value);
-    formData.append("forOne", forOne.value ? "true" : "false");
-    formData.append("popular", popular.value ? "true" : "false");
-    formData.append("atHome", atHome.value ? "true" : "false");
-    formData.append("chapters", selectedChapter.value);
-    if (editedCatalogPhoto.value) {
-      formData.append(
-        "photo",
-        editedCatalogPhoto.value,
-        editedCatalogPhoto.value.name
-      );
-    }
-
-    const response = await updateCatalog(formData, catalogId);
-    if (response) {
-      toast.success("Успешное обновление каталога", { theme: "colored" });
-      editedCatalogId.value = null;
-      editedCatalogName.value = "";
-    } else {
-      toast.error("Ошибка при обновлении каталога", { theme: "colored" });
-    }
-  } catch (error) {
-    console.error("Ошибка при обновлении каталога:", error);
+watch(value, (val) => {
+  if (val.length === 0) {
+    checkAll.value = false
+    indeterminate.value = false
+  } else if (val.length === chapters.value.length) {
+    checkAll.value = true
+    indeterminate.value = false
+  } else {
+    indeterminate.value = true
   }
-};
+})
 
-const deleteCatalog = async (catalogId: number) => {
-  try {
-    const response = await deleteCatalogRequest(catalogId);
-    if (response === 200) {
-      toast.success("Успешное удаление каталога", { theme: "colored" });
-    } else {
-      toast.error("Ошибка при удалении каталога", { theme: "colored" });
-    }
-  } catch (error) {
-    console.error("Ошибка при удалении каталога:", error);
+
+const loadPhotoFromLink = () => {
+  if (photoLink.value.trim() !== "") {
+    catalogPhotoPreview.value = photoLink.value.trim();
+  } else {
+    catalogPhotoPreview.value = null;
   }
 };
 
@@ -250,24 +131,15 @@ const handleCatalogPhotoChange = (event: Event) => {
   if (file) {
     catalogPhoto.value = file;
     catalogPhotoPreview.value = URL.createObjectURL(file);
-    // const reader = new FileReader();
-    // reader.onload = (e) => {
-    //   catalogPhotoPreview.value = e.target?.result as string;
-    // };
-    // reader.readAsDataURL(file);
   }
-};
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
 };
 
 const sendCatalogData = async () => {
   try {
-    if (!catalogName.value || (!catalogPhoto.value && !photoLink.value)) {
+    if (
+      !catalogName.value ||
+      (!catalogPhoto.value && !photoLink.value.trim())
+    ) {
       return;
     }
 
@@ -276,7 +148,7 @@ const sendCatalogData = async () => {
     if (catalogPhoto.value) {
       formData.append("photo", catalogPhoto.value, catalogPhoto.value.name);
     } else if (photoLink.value) {
-      formData.append("photo", photoLink.value);
+      formData.append("photo", photoLink.value.trim());
     }
     formData.append("description", description.value);
     if (
@@ -286,9 +158,7 @@ const sendCatalogData = async () => {
     ) {
       formData.append("price", price.value);
     }
-    formData.append("atHome", atHome.value);
-    formData.append("popular", popular.value);
-    formData.append("forOne", forOne.value);
+    formData.append("chapterId", selectedChapter.value.join(","));
 
     const response = await sendCatalogToServer(formData);
 
@@ -300,6 +170,8 @@ const sendCatalogData = async () => {
       catalogPhoto.value = null;
       catalogPhotoPreview.value = null;
       photoLink.value = "";
+      description.value = "";
+      photoLink.value = "";
     } else {
       toast.error("Ошибка при добавлении каталога", { theme: "colored" });
       console.error("Дополнительная информация об ошибке:", response);
@@ -309,17 +181,8 @@ const sendCatalogData = async () => {
   }
 };
 
-// const handleEditedCatalogPhotoChange = (event: Event) => {
-//   const fileInput = event.target as HTMLInputElement;
-//   const file = fileInput.files?.[0];
-
-//   if (file) {
-//     editedCatalogPhoto.value = file;
-//   }
-// };
 const fetchChapters = async () => {
   try {
-    // Fetch the list of catalogs from the server
     chapters.value = await getChapters();
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
@@ -328,11 +191,6 @@ const fetchChapters = async () => {
 
 onMounted(async () => {
   fetchChapters();
-  try {
-    catalogs.value = await getCatalogs();
-  } catch (error) {
-    console.error("Ошибка при получении списка каталогов:", error);
-  }
 });
 </script>
 
@@ -395,30 +253,33 @@ onMounted(async () => {
 }
 
 .button:hover {
-  background-color: #0056b3; /* Цвет фона при наведении */
+  background-color: #b65e58; /* Цвет фона при наведении */
 }
 
 .checkbox-container {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .checkbox {
   appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #6c757d; /* Цвет рамки */
-  border-radius: 4px;
-  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #6c757d;
+  border-radius: 3px;
+  margin-right: 6px;
   cursor: pointer;
-  position: relative;
 }
 
 .checkbox:checked {
-  background-color: #007bff; /* Цвет фона при активации */
+  background-color: #323e4a;
 }
 
+.checkbox-label {
+  font-size: 0.9rem;
+  color: #495057;
+}
 .checkbox:checked::after {
   content: "\2714"; /* Галочка */
   font-size: 14px;
@@ -427,10 +288,5 @@ onMounted(async () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-.checkbox-label {
-  font-size: 1rem;
-  color: #495057; /* Цвет текста */
 }
 </style>

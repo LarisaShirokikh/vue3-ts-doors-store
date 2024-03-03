@@ -1,52 +1,45 @@
 <template>
-    <el-breadcrumb separator="/" style="margin-bottom: 30px; margin-left: 10px">
+  <el-breadcrumb separator="/" style="margin-bottom: 30px; margin: 20px">
     <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
-    <el-breadcrumb-item>Белые двери</el-breadcrumb-item>
-</el-breadcrumb>
-<!--  -->
-  <div class="chapter-page" v-if="chapter">
+    <el-breadcrumb-item :to="{ path: '/category' }">Категории</el-breadcrumb-item>
+    <el-breadcrumb-item v-if="chapter" >{{ chapter.name }}</el-breadcrumb-item>
+  </el-breadcrumb>
+  <!--  -->
+  <div class="chapter-page" 
+  v-if="chapter" 
+  style="margin-bottom: 30px; margin: 20px">
     <h1>{{ chapter.name }}</h1>
-    <h3>{{ chapter.description }}</h3>
     <!-- Другие детали вашей главы, которые вы хотите отобразить -->
   </div>
-  <div v-if="catalogs.length > 0">
-    <div v-for="catalog in catalogs" :key="catalog.id">
-      <el-link :href="'/catalog/' + catalog.id" :underline="false">
-            <el-image
-              :src="photoUrl(catalog.photo[0])"
-              :alt="catalog.name"
-              style="
-                width: 250px;
-                height: 300px;
-                margin: 10px;
-                border-radius: 15px;
-              "
-            >
-            </el-image>
-            <div
-              class="catalog-name"
-              style="
-                position: absolute;
-                top: 10px;
-                left: 15px;
-                color: #fff;
-                font-size: 24px;
-                margin: 10px;
-                font-weight: bold;
-              "
-            >
-              {{ catalog.name }}
-            </div>
-          </el-link>
-  
-        </div>
-        
-</div>
+
+  <div v-if="catalogs.length > 0" class="category">
+    <div v-for="catalog in catalogs" :key="catalog.id" class="catalog-item">
+      <el-link :href="'/chapter/' + catalog.id" :underline="false">
+        <el-image
+          :src="photoUrl(catalog.photo[0])"
+          :alt="catalog.name"
+          class="catalog-image"
+          style="
+            width: 120px;
+            max-height: 350px;
+            margin: 10px;
+            border-radius: 10px;
+          "
+        >
+        </el-image>
+      </el-link>
+      <div
+        class="catalog-name"
+      >
+        {{ catalog.name }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getChapterById, getCatalogsByChapterId} from "@/server/chapter";
+import { getChapterById, getCatalogsByChapterId } from "@/server/chapter";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -79,5 +72,31 @@ onMounted(fetchChapter);
 </script>
 
 <style scoped>
-/* Стили вашей страницы главы */
+.category {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.catalog-item {
+  text-align: center;
+  margin: 20px;
+  flex: 0 0 calc(33.3333% - 40px);
+}
+
+.catalog-image {
+  width: 250px;
+  max-height: 300px;
+  border-radius: 10px;
+}
+
+.catalog-name {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px; /* Adjust as needed */
+  max-width: 100%;
+  text-align: center;
+}
 </style>

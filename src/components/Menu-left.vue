@@ -1,5 +1,5 @@
 <template>
-    <el-scrollbar height="800px">
+    <el-scrollbar >
    
       <div v-for="chapter in chapters" :key="chapter.id" class="scrollbar">
         <el-link :href="'/chapter/' + chapter.id" :underline="false">
@@ -21,7 +21,7 @@
               top: 10px;
               left: 20px;
               color: #333;
-              font-size: 13px;
+              font-size: 16px;
               font-weight: bold;
               overflow-y: auto;
             "

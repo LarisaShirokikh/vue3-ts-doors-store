@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar >
+  <el-scrollbar>
     <div class="scrollbar">
       <div v-for="catalog in catalogs" :key="catalog.id">
         <el-link :href="'/catalog/' + catalog.id" :underline="false">
@@ -7,31 +7,29 @@
             :src="photoUrl(catalog.photo[0])"
             :alt="catalog.name"
             style="
-              width: 250px;
+              width: 180px;
               height: 300px;
               margin: 10px;
-              border-radius: 15px;
+              border-radius: 10px;
             "
-          >
-          </el-image>
-          <div
-            class="catalog-name"
-            style="
-              position: absolute;
-              top: 10px;
-              left: 15px;
-              color: #333;
-              font-size: 24px;
-              margin: 10px;
-              font-weight: bold;
-            "
-          >
-            {{ catalog.name }}
-          </div>
+          ></el-image>
         </el-link>
+        <div
+          class="catalog-name"
+          style="
+            color: #333;
+            top: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 2px;
+            text-align: center;
+          "
+        >
+          {{ catalog.name }}
+        </div>
       </div>
     </div>
-  </el-scrollbar >
+  </el-scrollbar>
 </template>
 
 <script lang="ts" setup>
@@ -49,7 +47,8 @@ const photoUrl = (path: string) => {
 
 onMounted(async () => {
   try {
-    catalogs.value = await getCatalogs();
+    const fetchedCatalogs = await getCatalogs();
+    catalogs.value = fetchedCatalogs.reverse();
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/HomePage.vue";
-import Doors from "../views/Doors.vue";
 import Login from "../components/LoginPage.vue";
 import Register from "../components/RegisterPage.vue";
 import AddCatalog from "../components/AddCatalog.vue";
@@ -13,10 +12,10 @@ import AddReview from "@/components/AddReview.vue";
 import MyProfile from "@/components/MyProfile.vue";
 import CategoryCard from "@/components/CategoryCard.vue";
 import ChapterPage from "@/components/Chapters/ChapterPage.vue";
+import CategoryAll from "@/components/Chapters/ChapterAll.vue";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", component: Home },
-  { path: "/doors", component: Doors },
   { path: "/login", component: Login },
   { path: "/register", component: Register },
   { path: "/addCatalog", component: AddCatalog },
@@ -24,15 +23,12 @@ const routes: RouteRecordRaw[] = [
   { path: "/addFile", component: FileUploader },
   { path: "/addServices", component: AddServices },
   { path: "/addProduct", component: AddProduct },
-  {
-    path: "/chapter/:id",
-    name: "Chapter",
-    component: ChapterPage,
-  },
+  { path: "/chapter/:id", name: "Chapter", component: ChapterPage },
   { path: "/product/:id", name: "product-details", component: ProductDetails },
   { path: "/catalog/:id", name: "Catalog", component: CategoryCard },
   { path: "/addVideo", component: UploadVideo },
   { path: "/addReview", component: AddReview },
+  { path: "/category", component: CategoryAll },
 ];
 
 const router = createRouter({

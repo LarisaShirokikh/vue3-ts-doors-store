@@ -139,6 +139,15 @@
           class="input"
         ></textarea>
 
+        <label for="photoLink" class="label">Ссылка на фото:</label>
+        <input
+          v-model="photoLink"
+          type="text"
+          id="photoLink"
+          class="input"
+          @input="loadPhotoFromLink"
+        />
+
         <label for="productPhoto" class="label">Загрузить фото:</label>
         <input
           type="file"
@@ -262,6 +271,7 @@ import { onMounted, Ref, ref } from "vue";
 import { toast } from "vue3-toastify";
 import { Check, Delete, Edit } from "@element-plus/icons-vue";
 
+const photoLink = ref("");
 const direction = ref("rtl");
 const drawer = ref(false);
 const productName = ref("");
@@ -303,6 +313,15 @@ const isEditing = (productId: number) => productId === editedProductId.value;
 //     products.value.find((product) => product.id === productId)?.name || "";
 // };
 
+const loadPhotoFromLink = () => {
+  // Если ссылка на фото не пуста, установите превью
+  if (photoLink.value.trim() !== "") {
+    productPhotoPreview.value = photoLink.value.trim();
+  } else {
+    productPhotoPreview.value = null;
+  }
+};
+
 const handleProductPhotoChange = (event: Event) => {
   const fileInput = event.target as HTMLInputElement;
   const file = fileInput.files?.[0];
@@ -326,8 +345,9 @@ const photoUrl = (path: string) => {
 };
 
 const sendProductData = async () => {
+  console.log("Отправка данных продукта на сервер...");
   try {
-    if (!productName.value || !productPhoto.value || !productPrice.value) {
+    if (!productName.value || !productPhoto.value && !photoLink.value.trim() || !productPrice.value) {
       return;
     }
 
@@ -352,13 +372,12 @@ const sendProductData = async () => {
     formData.append("description", description.value || "");
     formData.append("category", selectedCatalog.value);
 
-    const photo = productPhoto.value;
-    if (photo) {
-      formData.append("photo", photo, photo.name);
+    if (productPhoto.value) {
+      formData.append("photo", productPhoto.value, productPhoto.value.name);
+    } else if (photoLink.value) {
+      formData.append("photo", photoLink.value.trim());
     }
-
     const response = await sendProductToServer(formData);
-
     console.log("Server Response:", response);
 
     if (response) {

@@ -1,30 +1,25 @@
 <template>
-  <div id="home-view" >
-    <el-scrollbar :style="{ height: 'calc(100vh - 20px)' }">
-      <catalog-category />
-      <building-list :videos="videos"></building-list>
-      <popular-categories></popular-categories>
-
-      <!-- <catalog-list
-        v-if="!isDesktop"
-        :catalogs="catalogs"
-        :selectedTabIndex="selectedTabIndex"
-      ></catalog-list> -->
-
-      <product-grid ></product-grid>
-
-      <catalog-main-menu ></catalog-main-menu>
-
-      
-      <service-com></service-com>
-    </el-scrollbar>
+  <!-- <div id="home-view"> -->
+  <!-- <el-scrollbar 
     
-  </div>
+    > -->
+  <SearchInput></SearchInput>
+  <carusel-item></carusel-item>
+  <catalog-category />
+  <building-list :videos="videos"></building-list>
+  <popular-categories></popular-categories>
+  <ReviewBlog></ReviewBlog>
+  <product-grid></product-grid>
+  <catalog-wite></catalog-wite>
+
+  <service-com></service-com>
+  <!-- </el-scrollbar> -->
+  <!-- </div> -->
 </template>
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
-//  import ReviewBlog from '@/components/ReviewBlog.vue'
+import ReviewBlog from "@/components/ReviewBlog.vue";
 // import DeliveryBlog from "@/components/DeliveryBlog.vue";
 import { fetchDataFromServer } from "@/server/catalog";
 import BuildingList from "@/components/Buildings/BuildingList.vue";
@@ -33,7 +28,9 @@ import PopularCategories from "@/components/Popular/PopularCategories.vue";
 import ServiceCom from "@/components/Services/ServisesCom.vue";
 import ProductGrid from "@/components/Products/ProductGrid.vue";
 import CatalogCategory from "@/components/Catalog/Catalog-Category.vue";
-import CatalogMainMenu from "@/components/Catalog/Catalog-Main-Menu";
+import CatalogWite from "@/components/Catalog/CatalogWite.vue";
+import SearchInput from "@/components/Search-input.vue";
+import CaruselItem from "@/components/CaruselItem.vue";
 
 const isDesktop = ref(true);
 const catalogs = ref([]);
@@ -44,15 +41,6 @@ const checkScreenWidth = () => {
   isDesktop.value = window.innerWidth > 1000;
 };
 
-// const updateSelectedTabIndex = async (index: number) => {
-//   selectedTabIndex.value = index;
-
-//   try {
-//     catalogs.value = await fetchDataFromServer(selectedTabIndex.value);
-//   } catch (error) {
-//     console.error('Ошибка при загрузке каталогов из базы данных:', error);
-//   }
-// };
 onMounted(() => {
   console.log("Component mounted");
   checkScreenWidth();

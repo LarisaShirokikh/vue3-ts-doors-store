@@ -2,20 +2,17 @@ import { Review } from "@/types/reviewType";
 import axios, { AxiosResponse } from "axios";
 
 export type requestData = {
-    serviceName: string;
-    shotDesc: string;
-    serviceCon: string;
-    price: string;
-    decor: string;
-    decorDesc: string;
-    photoLink: string;
-}
+  rating: number;
+  reviewName: string;
+  description: string;
+  photo: string;
+};
 
 interface TokenData {
     token: string;
 }
 
-export const sendReview = async (data: requestData): Promise<any> => {
+export const sendReview = async (data: FormData): Promise<any> => {
     console.log('Data before sending axios:', data);
     try {
         const storedToken = sessionStorage.getItem('userToken');
@@ -26,13 +23,16 @@ export const sendReview = async (data: requestData): Promise<any> => {
 
         const { token }: TokenData = JSON.parse(storedToken);
 
-        const response: AxiosResponse<any> = await axios
-            .post('http://localhost:3000/api/review', data, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
+        const response: AxiosResponse<any> = await axios.post(
+          "http://localhost:3000/api/review",
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
         return response.data;
     } catch (error) {

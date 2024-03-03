@@ -1,44 +1,46 @@
+
 <template>
-  <div class="search">
-    <el-affix :offset="10">
-      <el-input
-        v-model="input"
-        :underline="false"
-        class="w-50 m-2 "
-        size="large"
-        placeholder="Найти дверь..."
-        clearable
-        :suffix-icon="Search"
-        required
-        style="border: none;"
-      />
-    </el-affix>
+  <div class="search-container">
+    <input class="search-input"
+      type="text"
+      v-model="searchQuery"
+      placeholder="Найти дверь..."
+      @input="handleSearch"
+    />
+    <!-- Здесь можете отобразить результаты поиска -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { Search } from "@element-plus/icons-vue";
-const input = ref("");
+// const input = ref("");
+
+import { ref } from 'vue';
+
+const searchQuery = ref('');
+
+const handleSearch = () => {
+  // Здесь можете реализовать логику поиска
+  console.log('Выполняется поиск: ', searchQuery.value);
+  // Например, вызов функции для выполнения поиска на основе searchQuery.value
+};
 </script>
 
+
 <style scoped>
-.custom-input {
-  border-radius: 10px;
+.search-container {
+  margin-bottom: 20px;
+  width: 96%;
 }
 
-.custom-input input {
-  border-radius: 10px;
-}
-
-.custom-input input:focus {
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.affix-container {
-  text-align: center;
-  height: 400px;
-  background: var(--el-color-primary-light-9);
+.search-input {
+  padding: 10px;
+  margin: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  margin-right: 10px;
+  width: 100%;
+  text-decoration: none;
 }
 </style>
+

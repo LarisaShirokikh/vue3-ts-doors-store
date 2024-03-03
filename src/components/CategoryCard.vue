@@ -1,10 +1,11 @@
 <template>
-  <el-breadcrumb separator="/" style="margin-bottom: 30px; margin-left: 10px">
+  <el-breadcrumb separator="/" style="margin-bottom: 30px; margin: 20px">
     <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
-    <el-breadcrumb-item>Категории</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/category' }">Категории</el-breadcrumb-item>
+    <el-breadcrumb-item v-if="category" :to="{ path: '/catalog/id' }">{{ category.name }}</el-breadcrumb-item>
   </el-breadcrumb>
   <!--  -->
-  <div class="category-details" v-if="category">
+  <div class="category-details" v-if="category" style="margin-bottom: 30px; margin: 20px">
     <h1>{{ category.name }}</h1>
   </div>
 

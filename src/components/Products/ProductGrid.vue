@@ -1,12 +1,7 @@
 <template>
   <div class="title">
     <h2>Хиты для Вас</h2>
-    <el-link
-      to="/more"
-      class="more-link"
-      :underline="false"
-      :prefix-icon="ArrowRight"
-    >
+    <el-link to="/more" class="more-link" :underline="false">
       <p>Смотреть больше</p>
       <el-icon><ArrowRight /></el-icon>
     </el-link>
@@ -19,7 +14,7 @@
           :href="'/product/' + product.id"
           :underline="false"
           class="name"
-          style="align-items: center;"
+          style="align-items: center; padding: 10px;"
         >
           <div>
             <img
@@ -29,22 +24,29 @@
                 width: 150px;
                 height: 170px;
                 margin: 5px;
-                border-radius: 10px;
+                border-radius: 5px;
               "
             />
-            <div class="product-name" style="margin: 5px; max-width: 200px">
+            <div class="product-name" 
+            style="margin: 1px; max-width: 200px; text-align: center;"
+            
+            >
               <span>{{ product.name }}</span>
             </div>
             <div>
               <el-button
                 type="danger"
-                style="border-radius: 15px; width: 120px; margin: 5px; align-items: center;"
+                style="border-radius: 15px;
+                 width: 120px; 
+                 margin: 5px;
+                 align-items: center;"
                 class="flex-wrap gap-6"
                 plain
                 >{{ product.newPrice }} руб.</el-button
               >
             </div>
-            <el-button text class="flex justify-space-between flex-wrap gap-4"
+            <el-button text 
+            class="flex justify-space-between flex-wrap gap-4"
               >Подробнее <el-icon><ArrowRight /></el-icon></el-button
             >
           </div>
