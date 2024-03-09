@@ -1,56 +1,32 @@
 <template>
   <div class="title">
     <h2>Хиты для Вас</h2>
-    <el-link to="/more" class="more-link" :underline="false">
+    <el-link to="/products" class="more-link" :underline="false">
       <p>Смотреть больше</p>
       <el-icon><ArrowRight /></el-icon>
     </el-link>
   </div>
 
   <el-scrollbar>
-    <div class="scrollbar-flex-content">
-      <div v-for="product in products" :key="product.id">
-        <el-link
-          :href="'/product/' + product.id"
-          :underline="false"
-          class="name"
-          style="align-items: center; padding: 10px;"
-        >
-          <div>
-            <img
-              :src="photoUrl(product.photo[0])"
-              :alt="product.name"
-              style="
-                width: 150px;
-                height: 170px;
-                margin: 5px;
-                border-radius: 5px;
-              "
-            />
-            <div class="product-name" 
-            style="margin: 1px; max-width: 200px; text-align: center;"
-            
-            >
-              <span>{{ product.name }}</span>
-            </div>
-            <div>
-              <el-button
-                type="danger"
-                style="border-radius: 15px;
-                 width: 120px; 
-                 margin: 5px;
-                 align-items: center;"
-                class="flex-wrap gap-6"
-                plain
-                >{{ product.newPrice }} руб.</el-button
-              >
-            </div>
-            <el-button text 
-            class="flex justify-space-between flex-wrap gap-4"
-              >Подробнее <el-icon><ArrowRight /></el-icon></el-button
-            >
-          </div>
+    <div class="product">
+      <div v-for="product in products" :key="product.id" class="product-item">
+        <el-link :href="'/product/' + product.id" :underline="false">
+          <el-image
+            :src="photoUrl(product.photo[0])"
+            :alt="product.name"
+            class="product-image"
+          ></el-image>
         </el-link>
+
+        <div class="product-name">
+          {{ truncateProductName(product.name) }}
+        </div>
+        <div class="product-price">{{ product.newPrice }} руб.</div>
+        <div>
+          <el-button class="product-button" type="danger" plain size="default"
+            >Подробнее <el-icon><ArrowRight /></el-icon
+          ></el-button>
+        </div>
       </div>
     </div>
   </el-scrollbar>
@@ -63,9 +39,19 @@ import { ArrowRight } from "@element-plus/icons-vue";
 
 const products = ref<Array<any>>([]);
 
+const truncateProductName = (name: string) => {
+  const words = name.split(" ");
+  if (words.length > 7) {
+    return words.slice(0, 6).join(" ") + " ...";
+  } else {
+    return name;
+  }
+};
+
 onMounted(async () => {
   try {
-    products.value = await getProducts();
+    const fetchedProducts = await getProducts();
+    products.value = fetchedProducts.reverse();
   } catch (error) {
     console.error("Error fetching data from the server:", error);
   }
@@ -80,66 +66,43 @@ const photoUrl = (path: string) => {
 </script>
 
 <style scoped>
-:root {
-  --el-color-primary: red;
-}
-.scrollbar-flex-content {
+.product {
   display: flex;
 }
-.scrollbar-flex-content:hover {
-  display: flex;
-  color: red;
+.product-item {
+  text-align: center;
+  margin: 10px;
+  flex: 0 0 calc(33.3333% - 20px);
 }
 
-.name:hover {
-  color: red;
+.product-price {
+  margin-top: 10px;
 }
 
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.product-image {
+  width: 220px;
+  max-height: 200px;
 }
 
-.button {
-  padding: 0;
-  min-height: auto;
-}
-
-.image {
-  object-fit: cover;
-}
-
-.more-link-card {
-  text-decoration: none;
+.product-name {
   color: #333;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 300px;
-  height: 500px;
-  margin: 5px;
-}
-.more-link {
-  text-decoration: none;
-  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px; /* Adjust as needed */
+  max-width: 100%;
+  /* max-height: 20px; */
 }
 
-.more-link:hover {
-  color: #d91111;
+.product-button {
+  margin-top: 10px;
+  border-radius: 10px;
+  max-width: 70%;
 }
 
-.more-link i {
-  margin-left: 5px;
-}
 .title {
-  color: #333;
-  padding: 20px 20px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  padding: 20px;
 }
 </style>

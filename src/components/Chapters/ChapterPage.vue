@@ -1,13 +1,17 @@
 <template>
   <el-breadcrumb separator="/" style="margin-bottom: 30px; margin: 20px">
     <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
-    <el-breadcrumb-item :to="{ path: '/category' }">Категории</el-breadcrumb-item>
-    <el-breadcrumb-item v-if="chapter" >{{ chapter.name }}</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/category' }"
+      >Категории</el-breadcrumb-item
+    >
+    <el-breadcrumb-item v-if="chapter">{{ chapter.name }}</el-breadcrumb-item>
   </el-breadcrumb>
   <!--  -->
-  <div class="chapter-page" 
-  v-if="chapter" 
-  style="margin-bottom: 30px; margin: 20px">
+  <div
+    class="chapter-page"
+    v-if="chapter"
+    style="margin-bottom: 30px; margin: 20px"
+  >
     <h1>{{ chapter.name }}</h1>
     <!-- Другие детали вашей главы, которые вы хотите отобразить -->
   </div>
@@ -28,9 +32,7 @@
         >
         </el-image>
       </el-link>
-      <div
-        class="catalog-name"
-      >
+      <div class="catalog-name">
         {{ catalog.name }}
       </div>
     </div>

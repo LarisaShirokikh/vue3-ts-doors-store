@@ -49,9 +49,7 @@ const photoUrl = (path: string) => {
 
 onMounted(async () => {
   try {
-    console.log("Sending request...");
     chapters.value = await getChapters();
-    console.log("chapters after setting:", chapters.value);
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }

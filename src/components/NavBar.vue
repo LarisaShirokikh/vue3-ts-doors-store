@@ -13,27 +13,40 @@
       position: relative;
     "
   >
-    <div style="display: flex; align-items: center; ">
-      <el-icon
-        @click="toggleMenu"
-        style="font-size: 44px; 
-        margin: 10px; 
-        margin-right: 30px;
-        color: #606266"
-        ><Expand
-      /></el-icon>
-      <el-link 
-      type="danger"
-      :underline="false"
-      href="/" 
-      style="font-size: 34px;
+    <div style="display: flex; align-items: center">
       
-      
-      "> <h1>Двери Эталон</h1> </el-link>
-    </div>
+        <el-icon
+        v-popover="popoverRef"
+        v-click-outside="onClickOutside"
+        
+          style="
+            font-size: 44px;
+            margin: 10px;
+            margin-right: 30px;
+            color: #606266; border: none; cursor: pointer;
+          "
+          @click="toggleIcon"
+          ><template v-if="!expanded">
+          <Expand />
+        </template>
+        <template v-else>
+          <CloseBold />
+        </template></el-icon>
 
-    <div v-if="menuOpened" class="dropdown-menu" @click.stop=""> 
-      <menu-left></menu-left>
+      <el-popover ref="popoverRef" trigger="click" width="600px">
+        <div>
+          <menu-left class="dropdown-menu"></menu-left>
+        </div>
+      </el-popover>
+
+      <el-link
+        type="danger"
+        :underline="false"
+        href="/"
+        style="font-size: 34px"
+      >
+        <h1>Двери Эталон</h1>
+      </el-link>
     </div>
 
     <el-button
@@ -108,26 +121,38 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, ref } from "vue";
+import { reactive, onMounted, ref, unref } from "vue";
 import { toast } from "vue3-toastify";
-import { User, Expand } from "@element-plus/icons-vue";
+import { User, Expand, CloseBold } from "@element-plus/icons-vue";
+import { ClickOutside as vClickOutside } from "element-plus";
 import { authenticateWithEmailPassword, authenticateUser } from "@/server/auth";
 import router from "@/router/router";
+import MenuLeft from "./Menu-left.vue";
 
+const popoverRef = ref();
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.();
+};
 const loggedIn = ref(false);
 const dialogFormVisible = ref(false);
 const menuOpened = ref(false);
+const expanded = ref(false);
+
+const toggleIcon = () => {
+  expanded.value = !expanded.value;
+};
 
 // Закрываем меню при клике вне его области
-window.addEventListener('click', (event) => {
-  if (!event.target.closest('.navbar')) {
+window.addEventListener("click", (event) => {
+  if (!event.target.closest(".navbar")) {
     menuOpened.value = false;
   }
 });
 
-const toggleMenu = () => {
-  menuOpened.value = !menuOpened.value;
-};
+// const toggleMenu = () => {
+//   console.log("click!");
+//   menuOpened.value = !menuOpened.value;
+// };
 
 const form = reactive({
   email: "",
@@ -201,12 +226,6 @@ const submitForm = async () => {
 
 <style>
 .dropdown-menu {
-  position: absolute; /* Используем абсолютное позиционирование для правильного отображения меню */
-  top: calc(100% + 10px); /* Располагаем меню под иконкой */
-  left: 0;
-  background: white;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000; /* Устанавливаем z-index для меню поверх других элементов */
+  font-size: 36px;
 }
 </style>

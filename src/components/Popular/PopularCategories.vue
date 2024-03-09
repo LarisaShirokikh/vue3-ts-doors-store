@@ -2,10 +2,10 @@
   <div class="title">
     <h2>Популярные категории</h2>
     <el-link 
-    to="/category" 
+    :href="'/catalogs'" 
     class="more-link" 
-    :underline="false" 
-    >
+    :underline="false" >
+    
       <p>Смотреть больше</p>
       <el-icon><ArrowRight /></el-icon>
     </el-link>

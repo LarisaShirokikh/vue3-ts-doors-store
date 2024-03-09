@@ -13,6 +13,7 @@ import MyProfile from "@/components/MyProfile.vue";
 import CategoryCard from "@/components/CategoryCard.vue";
 import ChapterPage from "@/components/Chapters/ChapterPage.vue";
 import CategoryAll from "@/components/Chapters/ChapterAll.vue";
+import CatalogsAll from "@/components/Catalog/CatalogsAll.vue";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", component: Home },
@@ -29,6 +30,7 @@ const routes: RouteRecordRaw[] = [
   { path: "/addVideo", component: UploadVideo },
   { path: "/addReview", component: AddReview },
   { path: "/category", component: CategoryAll },
+  { path: "/catalogs", component: CatalogsAll },
 ];
 
 const router = createRouter({
