@@ -14,24 +14,28 @@
     "
   >
     <div style="display: flex; align-items: center">
-      
+      <template v-if="shouldShowExpandIcon">
         <el-icon
-        v-popover="popoverRef"
-        v-click-outside="onClickOutside"
-        
+          v-popover="popoverRef"
+          v-click-outside="onClickOutside"
           style="
             font-size: 44px;
             margin: 10px;
             margin-right: 30px;
-            color: #606266; border: none; cursor: pointer;
+            color: #606266;
+            border: none;
+            cursor: pointer;
           "
           @click="toggleIcon"
-          ><template v-if="!expanded">
-          <Expand />
-        </template>
-        <template v-else>
-          <CloseBold />
-        </template></el-icon>
+        >
+          <template v-if="!expanded">
+            <Expand />
+          </template>
+          <template v-else>
+            <CloseBold />
+          </template>
+        </el-icon>
+      </template>
 
       <el-popover ref="popoverRef" trigger="click" width="600px">
         <div>
@@ -90,6 +94,7 @@
         alt="Аватарка"
         style="margin-left: 10px"
       />
+      <el-button v-if="loggedIn" @click="logout">Выйти</el-button>
     </div>
   </div>
   <el-space direction="vertical">
@@ -138,9 +143,27 @@ const dialogFormVisible = ref(false);
 const menuOpened = ref(false);
 const expanded = ref(false);
 
+const logout = () => {
+  sessionStorage.removeItem("userToken");
+  loggedIn.value = false;
+  user.email = "";
+};
+
 const toggleIcon = () => {
   expanded.value = !expanded.value;
 };
+
+// Функция для проверки ширины экрана
+const checkWindowWidth = () => {
+  return window.innerWidth < 1300;
+};
+
+const shouldShowExpandIcon = ref(checkWindowWidth()); // Определяем показ иконки в зависимости от ширины экрана
+
+// Обновление показа иконки при изменении ширины окна
+window.addEventListener("resize", () => {
+  shouldShowExpandIcon.value = checkWindowWidth();
+});
 
 // Закрываем меню при клике вне его области
 window.addEventListener("click", (event) => {
@@ -148,11 +171,6 @@ window.addEventListener("click", (event) => {
     menuOpened.value = false;
   }
 });
-
-// const toggleMenu = () => {
-//   console.log("click!");
-//   menuOpened.value = !menuOpened.value;
-// };
 
 const form = reactive({
   email: "",
@@ -204,6 +222,7 @@ const submitForm = async () => {
     console.log("userData", form.email, form.password);
     if (userData) {
       sessionStorage.setItem("userToken", JSON.stringify(userData));
+      loggedIn.value = true;
       const storedToken = sessionStorage.getItem("userToken");
       console.log("stored token", storedToken);
       user.email = userData.email;

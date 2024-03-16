@@ -1,7 +1,7 @@
 <template>
   <div class="title">
     <h2>Хиты для Вас</h2>
-    <el-link to="/products" class="more-link" :underline="false">
+    <el-link :href="'/products'" class="more-link" :underline="false">
       <p>Смотреть больше</p>
       <el-icon><ArrowRight /></el-icon>
     </el-link>

@@ -49,7 +49,9 @@
           border-radius: 15px"
         />
 
-        <button type="submit" class="button">Добавить раздел</button>
+        <button type="submit" 
+        style="background-color: #F56C6C; border-color: #F56C6C"
+        class="button">Добавить раздел</button>
       </form>
     </div>
 

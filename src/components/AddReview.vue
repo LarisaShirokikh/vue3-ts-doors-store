@@ -39,37 +39,22 @@
       <el-button
         type="primary"
         @click="submitForm"
-        style="background-color: #f90; border-color: #f90"
+        style="background-color: #F56C6C; border-color: #F56C6C"
         >Добавить отзыв</el-button
       >
     </el-form-item>
   </el-form>
-  <div>
-    <div v-for="review in reviews" :key="review.id" class="review-item">
-      <el-image
-        :src="photoUrl(review.photo[0])"
-        :alt="review.name"
-        class="review-image"
-        style="max-width: 80px; max-height: 80px"
-      >
-      </el-image>
-      <div class="review-name">
-        {{ review.rating }}
-      </div>
-      <div class="review-name">
-        {{ review.reviewName }}
-      </div>
-       <div class="review-name">
-        {{ review.description }}
-      </div>
-    </div>
-  </div>
+  <review-list></review-list>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { getReviews, sendReview } from "@/server/review";
 import { toast } from "vue3-toastify";
+import ReviewList from "@/components/Review/Review-List.vue"
+const reviews = ref<Array<any>>([]);
+const reviewPhoto = ref<File | null>(null);
+const reviewPhotoPreview = ref<string | null>(null);
 
 const ruleForm = ref({
   rating: 0,
@@ -77,9 +62,21 @@ const ruleForm = ref({
   description: "",
 });
 
-const reviews = ref<Array<any>>([]);
-const reviewPhoto = ref<File | null>(null);
-const reviewPhotoPreview = ref<string | null>(null);
+const user = ref({
+  email: "",
+});
+
+const extractUserInfoFromToken = () => {
+  const token = sessionStorage.getItem("userToken");
+  if (token) {
+    try {
+      const tokenData = JSON.parse(token);
+      user.value.email = tokenData.email;
+    } catch (error) {
+      console.error("Ошибка при разборе токена:", error);
+    }
+  }
+};
 
 const fetchReviews = async () => {
   try {
@@ -90,13 +87,6 @@ const fetchReviews = async () => {
 };
 
 onMounted(fetchReviews);
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const handleReviewPhotoChange = (event: Event) => {
   const fileInput = event.target as HTMLInputElement;
@@ -140,6 +130,8 @@ const resetForm = () => {
   reviewPhoto.value = null;
   reviewPhotoPreview.value = null;
 };
+
+onMounted(extractUserInfoFromToken);
 </script>
 
 <style scoped>
@@ -162,5 +154,9 @@ const resetForm = () => {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
+}
+
+.heading {
+  color: #F56C6C
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <el-breadcrumb separator="/" style="margin-bottom: 30px; margin-left: 10px">
+  <el-breadcrumb separator="/" style="margin-bottom: 30px; margin-left: 10px; margin: 20px">
     <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
     <el-breadcrumb-item>Мой профиль</el-breadcrumb-item>
     <!--  -->
@@ -108,7 +108,7 @@ onMounted(async () => {
 <style>
 .demo-tabs > .el-tabs__content {
   padding: 32px;
-  color: var(--el-text-color-warning);
+  color: var(--el-text-color-danger);
   font-size: 18px;
   font-weight: auto;
 }

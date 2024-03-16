@@ -62,18 +62,13 @@ export const sendChapterToServer = async (data: FormData): Promise<any> => {
 
 export const getChapters = async (): Promise<any> => {
   try {
-    const storedToken = sessionStorage.getItem("userToken");
-
-    if (!storedToken) {
-      throw new Error("User token not found.");
-    }
-    const { token }: TokenData = JSON.parse(storedToken);
+  
 
     const response: AxiosResponse<any> = await axios.get(
       "http://localhost:3000/api/chapter",
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          
           "Content-Type": "multipart/form-data",
         },
       }
