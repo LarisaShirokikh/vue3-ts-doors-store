@@ -53,6 +53,17 @@
       </el-link>
     </div>
 
+    <div v-if="shouldShowExpandIcon" link @click="phoneClick">
+      <el-icon style="font-size: 34px; color: #333;">
+        <PhoneFilled />
+      </el-icon>
+    </div>
+    <div v-if="!shouldShowExpandIcon" link @click="phoneClick">
+      <div style="font-size: 34px; color: #333;">
+        +7 (999) 999 99 99
+      </div>
+    </div>
+
     <el-button
       v-if="showSidebars"
       @click="handleButtonClick"
@@ -128,7 +139,7 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref, unref } from "vue";
 import { toast } from "vue3-toastify";
-import { User, Expand, CloseBold } from "@element-plus/icons-vue";
+import { User, Expand, CloseBold, PhoneFilled } from "@element-plus/icons-vue";
 import { ClickOutside as vClickOutside } from "element-plus";
 import { authenticateWithEmailPassword, authenticateUser } from "@/server/auth";
 import router from "@/router/router";

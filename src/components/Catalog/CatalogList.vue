@@ -1,45 +1,45 @@
 <template>
-    <div>
-      <h2 class="heading">Список каталогов</h2>
+  <div>
+    <h2 class="heading">Список каталогов</h2>
 
-      <el-table
-        :data="catalogs"
-        :key="index"
-        style="width: 100%; max-height: 500px; overflow-y: auto"
-        :page-size="5"
-      >
-        <el-table-column prop="id" label="id" width="50" />
-        <el-table-column label="Фото" width="100">
-          <template v-slot="scope">
-            <img
-              :src="photoUrl(scope.row.photo[0])"
-              :alt="scope.row.name"
-              style="max-width: 80px; max-height: 80px"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="Название" />
-        <el-table-column label="Действия" width="100">
-          <template v-slot="scope">
-            <el-button
-              @click="(drawer = true), startEditing(scope.row)"
+    <el-table
+      :data="catalogs"
+      :key="index"
+      style="width: 100%; max-height: 500px; overflow-y: auto"
+      :page-size="5"
+    >
+      <el-table-column prop="id" label="id" width="50" />
+      <el-table-column label="Фото" width="100">
+        <template v-slot="scope">
+          <img
+            :src="photoUrl(scope.row.photo[0])"
+            :alt="scope.row.name"
+            style="max-width: 80px; max-height: 80px"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column prop="name" label="Название" />
+      <el-table-column label="Действия" width="100">
+        <template v-slot="scope">
+          <el-button
+            @click="(drawer = true), startEditing(scope.row)"
             :icon="Edit"
-              circle
-              size="small"
-              type="primary"
-            ></el-button>
-            <el-button
-              @click="deleteCatalog(scope.row.id)"
-              :icon="Delete"
-              circle
-              size="small"
-              type="danger"
-            ></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+            circle
+            size="small"
+            type="primary"
+          ></el-button>
+          <el-button
+            @click="deleteCatalog(scope.row.id)"
+            :icon="Delete"
+            circle
+            size="small"
+            type="danger"
+          ></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-      <el-drawer
+    <el-drawer
       v-model="drawer"
       size="50%"
       :visible="editDrawerVisible"
@@ -113,17 +113,12 @@
         </form>
 
         <div class="dialog-footer">
-          <el-button @click="drawer = false"
-            >Отменить</el-button
-          >
-          <el-button type="warning" @click="saveChanges"
-            >Сохранить</el-button
-          >
+          <el-button @click="drawer = false">Отменить</el-button>
+          <el-button type="warning" @click="saveChanges">Сохранить</el-button>
         </div>
       </div>
     </el-drawer>
-
-    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -132,7 +127,7 @@ import {
   deleteCatalogRequest,
   getCatalogs,
   updateCatalog,
-} from "../server/catalog";
+} from "@/server/catalog";
 import { toast } from "vue3-toastify";
 import { Delete, Edit } from "@element-plus/icons-vue";
 import { Category } from "@/types/catalogType";
@@ -147,7 +142,6 @@ const editDrawerVisible = ref(false);
 const removePhoto = () => {
   editedCatalog.value.photo = null;
 };
-
 
 const editedCatalog = ref({
   id: null,
@@ -191,8 +185,8 @@ const saveChanges = async () => {
     if (response && response.id) {
       toast.success("Успешное обновление каталога", { theme: "colored" });
       editDrawerVisible.value = false;
-      resetEditedCatalog()
-      await  fetchCatalogs()
+      resetEditedCatalog();
+      await fetchCatalogs();
     } else {
       toast.error("Ошибка при обновлении каталога", { theme: "colored" });
     }
@@ -201,7 +195,7 @@ const saveChanges = async () => {
   }
 };
 
-const deleteCatalog = async (catalogId) => {
+const deleteCatalog = async (catalogId: number) => {
   try {
     const response = await deleteCatalogRequest(catalogId);
     if (response === 200) {
@@ -214,7 +208,7 @@ const deleteCatalog = async (catalogId) => {
   }
 };
 
-const handleCatalogPhotoChange = (event: { target: any; }) => {
+const handleCatalogPhotoChange = (event: { target: any }) => {
   const fileInput = event.target;
   const file = fileInput.files?.[0];
 
@@ -232,12 +226,17 @@ const photoUrl = (path: string) => {
 };
 
 const fetchCatalogs = async () => {
-    try {
+  try {
     catalogs.value = await getCatalogs();
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }
-}
+};
 
 onMounted(fetchCatalogs);
 </script>
+<style>
+.heading {
+  color: #f56c6c;
+}
+</style>

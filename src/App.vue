@@ -1,46 +1,44 @@
 <template>
   <div class="common-layout" id="app">
-    <el-container style="height: 100%;">
-
-      <el-container style="height: 100%;">
-      <el-aside
-        v-if="showSidebars"
-        width="300px"
-        :span="4"
-        style="
-          border-radius: 15px;
-          margin-left: 5px;
-          background-color: white;
-          margin-right: 15px;
-          height: calc(100vh - 40px);
-          overflow-y: auto;
-        "
-      >
-        <menu-left></menu-left>
-      </el-aside>
-
-      <el-main style="padding: 5px">
-        <div style="width: auto">
-          <nav-bar class="nav"></nav-bar>
-        </div>
-
-        <el-main
+    <el-container style="height: 100%">
+      <el-container style="height: 100%">
+        <el-aside
+          v-if="showSidebars"
+          width="300px"
+          :span="4"
           style="
-            padding: 5px;
             border-radius: 15px;
+            margin-left: 5px;
             background-color: white;
-            overflow-y: auto;
-            height: calc(100vh - 140px);
+            margin-right: 15px;
+            height: calc(100vh - 40px);
           "
         >
-          <el-scrollbar>
-            <router-view />
-          </el-scrollbar>
+          <menu-left></menu-left>
+        </el-aside>
+
+        <el-main style="padding: 5px">
+          <div style="width: auto">
+            <nav-bar class="nav"></nav-bar>
+          </div>
+
+          <el-main
+            style="
+              padding: 5px;
+              border-radius: 15px;
+              background-color: white;
+              /* overflow-y: auto; */
+              height: calc(100vh - 140px);
+            "
+          >
+            <el-scrollbar>
+              <router-view />
+            </el-scrollbar>
+          </el-main>
         </el-main>
-      </el-main>
+      </el-container>
     </el-container>
-  </el-container>
-  <el-footer><FooterCom></FooterCom></el-footer>
+    <el-footer><FooterCom></FooterCom></el-footer>
   </div>
 </template>
 
@@ -70,10 +68,6 @@ const showSidebars = computed(() => {
 body {
   margin: 0;
   padding: 0;
-}
-
-:root {
-  --el-color-primary: red;
 }
 
 .el-collapse-item__header {
@@ -122,6 +116,5 @@ body {
   font-family: Avenir, Helvetica, sans-serif;
   background-color: #f0f0f0;
   padding: 10px 10px 120px;
-  
 }
 </style>

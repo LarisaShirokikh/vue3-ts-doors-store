@@ -83,10 +83,10 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, watch } from "vue";
-import { sendCatalogToServer } from "../server/catalog";
+import { sendCatalogToServer } from '@/server/catalog';
 import { toast } from "vue3-toastify";
 import { getChapters } from "@/server/chapter";
-import CatalogList from "@/components/CatalogList.vue";
+import CatalogList from '@/components/Catalog/CatalogList.vue';
 import type { CheckboxValueType } from 'element-plus'
 
 const price = ref("" || null);

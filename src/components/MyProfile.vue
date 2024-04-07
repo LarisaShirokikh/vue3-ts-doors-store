@@ -72,10 +72,10 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import AddCatalog from "@/components/AddCatalog.vue";
-import AddProduct from "@/components/AddProduct.vue";
+import AddCatalog from "@/components/Catalog/AddCatalog.vue";
+import AddProduct from "@/components/Products/AddProduct.vue";
 import AddServices from "@/components/Services/AddServices.vue";
-import AddReview from "@/components/AddReview.vue";
+import AddReview from "@/components/Review/AddReview.vue";
 import AddChapter from "@/components/AddChapter.vue";
 import AddVideo from "@/components/Video/UploadVideo.vue";
 import FileUploader from "@/components/FileUploader.vue";
@@ -115,10 +115,16 @@ onMounted(async () => {
 
 
 .el-tabs .el-tabs__item.is-active {
-  color: #f28144; /* Желтый цвет для активного таба */
+  color: #ff124a; 
 }
 
+
 .el-tabs .el-tabs__item.is-active::after {
-  background-color: #f28144; /* Желтый цвет для подчеркивания активного таба */
+  background-color: #ff124a; /* Желтый цвет для подчеркивания активного таба */
+}
+
+.el-tabs .el-tabs__item.is-active:hover,
+.el-tabs .el-tabs__item.is-active:hover::after {
+  color: #ff124a !important; 
 }
 </style>

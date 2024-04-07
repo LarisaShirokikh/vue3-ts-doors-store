@@ -72,6 +72,7 @@ const extractUserInfoFromToken = () => {
     try {
       const tokenData = JSON.parse(token);
       user.value.email = tokenData.email;
+      console.log('userToken: ', user.value.email)
     } catch (error) {
       console.error("Ошибка при разборе токена:", error);
     }

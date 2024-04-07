@@ -9,30 +9,50 @@
 
   <el-scrollbar>
     <div class="reviews">
-      <div v-for="review in reviews" :key="review.id" class="review-item">
+      <div v-for="review in reviews.reverse()" :key="review.id" class="review-item">
         <el-link :href="'/review/' + review.id" :underline="false">
+
           <el-image
             :src="photoUrl(review.photo[0])"
             :alt="review.reviewName"
-            class="image"
-            :fit="fit"
+            style="
+              width: 150px;
+              max-height: 200px;
+              margin: 10px;
+              border-radius: 10px;
+            "
           >
           </el-image>
         </el-link>
         <div style="padding: 10px">
-          <span>{{ review.reviewName }}</span>
           <div class="rating">
             <el-rate
-              v-if="typeof review.rating === 'number'"
-              v-model="review.rating"
-              :disabled="true"
-              show-score
-              :score-template="scoreTemplate"
+            v-if="typeof review.rating === 'number'"
+            v-model="review.rating"
+            :disabled="true"
+            show-score
+            :score-template="scoreTemplate"
             ></el-rate>
           </div>
-          <div class="bottom">
-            <el-button text class="button">Подробнее</el-button>
-          </div>
+          <div class="review-text">
+              <h3 style="
+            color: #333;
+            top: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 2px;
+            text-align: left;
+          ">{{ review.reviewName }}</h3>
+              <p>{{ getFirstSentence(review.description) }}</p>
+            </div>
+          
+            <el-button text class="button" 
+            v-if="!isReadMoreVisible(review.description)" 
+            @click="showFullDescription(review)"
+            >
+            Читать далее
+          </el-button>
+          
         </div>
       </div>
     </div>
@@ -61,19 +81,37 @@ onMounted(async () => {
   try {
     const response = await getReviews();
     console.log("response rating", response);
-    reviews.value = response;
+    reviews.value = response.map(review => ({ ...review, showFullDescription: false }));
   } catch (error) {
     console.error("Error fetching data from the server:", error);
   }
 });
+
+const getFirstSentence = (description) => {
+  if (!description) return "";
+  const sentences = description.split(/[.!?]/);
+  return sentences[0];
+};
+
+const isReadMoreVisible = (description) => {
+  if (!description) return false;
+  const sentences = description.split(/[.!?]/);
+  return sentences.length > 1;
+};
+
+const showFullDescription = (review) => {
+  review.showFullDescription = true;
+};
 </script>
 
 <style scoped>
 .reviews {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+}
+.review-item {
+  text-align: left;
+  margin: 10px;
+  flex: 0 0 calc(33.3333% - 20px);
 }
 
 .bottom {
@@ -89,14 +127,7 @@ onMounted(async () => {
   min-height: auto;
 }
 
-.review-image {
-  width: 250px;
-  max-height: 300px;
-  border-radius: 10px;
-}
-.image {
-  object-fit: cover;
-}
+
 
 .more-link-card {
   text-decoration: none;

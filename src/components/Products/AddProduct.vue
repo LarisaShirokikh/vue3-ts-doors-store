@@ -12,23 +12,29 @@
           required
         />
 
-        <label for="productPrice" class="label">Старая цена:</label>
-        <input
-          v-model="productOldPrice"
-          type="number"
-          id="productPrice"
-          class="input"
-          required
-        />
+        <div class="price-product">
 
-        <label for="productPrice" class="label">Новая цена:</label>
-        <input
-          v-model="productPrice"
-          type="number"
-          id="productPrice"
-          class="input"
-          required
-        />
+          <el-form-item label ="Старая цена:">
+        
+          <input
+            v-model="productOldPrice"
+            type="number"
+            id="productPrice"
+            class="input"
+            required
+          />
+        </el-form-item>
+  
+          <el-form-item label ="Новая цена:">
+          <input
+            v-model="productPrice"
+            type="number"
+            id="productPrice"
+            class="input"
+            required
+          />
+          </el-form-item>
+        </div>
 
         <div class="checkbox-container">
           <input
@@ -139,14 +145,30 @@
           class="input"
         ></textarea>
 
-        <label for="photoLink" class="label">Ссылка на фото:</label>
-        <input
-          v-model="photoLink"
-          type="text"
-          id="photoLink"
-          class="input"
-          @input="loadPhotoFromLink"
-        />
+        <div>
+          <label for="photoLink" class="label">Ссылка на фото:</label>
+          <div class="input-group">
+            <input
+              v-model="photoLink"
+              id="photoLink"
+              class="input"
+              @input="loadPhotoFromLink"
+            />
+            <el-button
+              style="
+                width: 2em;
+                height: 2em;
+                margin-bottom: 15px;
+                margin-left: 10px;
+              "
+              @click="addPhotoLink"
+              :icon="Plus"
+              circle
+              size="default"
+              type="info"
+            ></el-button>
+          </div>
+        </div>
 
         <label for="productPhoto" class="label">Загрузить фото:</label>
         <input
@@ -155,31 +177,54 @@
           id="productPhoto"
           @change="handleProductPhotoChange"
           accept="image/*, .png, .jpg, gif, .web,"
-          class="input"
         />
-        <img
-          v-if="productPhotoPreview"
-          :src="productPhotoPreview"
-          alt="Product Preview"
-          class="catalog-preview"
-          style="max-width: 80px; max-height: 80px"
-        />
-
-        <label for="selectedCatalog" class="label">Выберите каталог:</label>
-        <select
-          v-model="selectedCatalog"
-          id="selectedCatalog"
-          class="select-box"
-          required
+        <div
+          v-if="productPhotoPreview.length > 0"
+          class="photo-preview-container"
         >
-          <option
+          <div v-for="(preview, index) in productPhotoPreview" :key="index">
+            <img
+              :src="preview"
+              alt="`Product Preview ${index}`"
+              class="catalog-preview"
+              style="max-width: 80px; max-height: 80px"
+            />
+            <el-button
+            style="
+                width: 2em;
+                height: 2em;
+                margin-bottom: 15px;
+                margin-left: 10px;
+              "
+              :icon="Delete"
+              circle
+              size="small"
+              type="danger"
+              @click="removePhoto(index)"
+            ></el-button>
+          </div>
+        </div>
+
+        <el-label
+          for="selectedCatalog"
+          style="margin-top: 20px; width: 100%"
+          class="label"
+          >Выберите каталог:
+        </el-label>
+        <el-select
+          v-model="selectedCatalog"
+          collapse-tags
+          placeholder="Выбрать..."
+          style="width: 100%; border-color: transparent !important; text-decoration: none;"
+        >
+        
+          <el-option
             v-for="catalog in catalogs"
             :key="catalog.id"
             :value="catalog.id"
-          >
-            {{ catalog.name }}
-          </option>
-        </select>
+            :label="catalog.name "
+          />
+        </el-select>
 
         <button type="submit" class="button">Добавить продукт</button>
       </form>
@@ -254,13 +299,12 @@
           @current-change="handlePageChange"
         />
       </div>
-      
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import ProductDetails from "../components/Products/ProductDetails.vue";
+import ProductDetails from "./ProductDetails.vue";
 import { getCatalogs } from "@/server/catalog";
 import {
   sendProductToServer,
@@ -269,9 +313,9 @@ import {
 } from "@/server/product";
 import { onMounted, Ref, ref } from "vue";
 import { toast } from "vue3-toastify";
-import { Check, Delete, Edit } from "@element-plus/icons-vue";
+import { Check, Plus, Delete, Edit } from "@element-plus/icons-vue";
 
-const photoLink = ref("");
+let photoLink = ref("");
 const direction = ref("rtl");
 const drawer = ref(false);
 const productName = ref("");
@@ -292,11 +336,11 @@ const interiorFinish = ref("");
 const hinges = ref("");
 const doorProtection = ref("");
 const description = ref("");
-const productPhotoPreview = ref<string | null>(null);
+const productPhotoPreview = ref<string[]>([]);
 const productPhoto = ref<File | null>(null);
 const selectedCatalog = ref("");
 const catalogs = ref([]);
-
+const photoLinks = ref<string[]>([]);
 const products = ref<Array<any>>([]);
 const editedProductId = ref<number | null>(null);
 const currentPage = ref(1);
@@ -312,28 +356,39 @@ const isEditing = (productId: number) => productId === editedProductId.value;
 //   editedProductName.value =
 //     products.value.find((product) => product.id === productId)?.name || "";
 // };
+const addPhotoLink = () => {
+  if (photoLink.value.trim() !== "") {
+    photoLinks.value.push(photoLink.value.trim());
+    loadPhotoPreviews();
+    photoLink.value = ""; // Очищаем поле ввода
+  }
+};
+
+const loadPhotoPreviews = () => {
+  productPhotoPreview.value = photoLinks.value.map((link) => link.trim());
+};
 
 const loadPhotoFromLink = () => {
-  // Если ссылка на фото не пуста, установите превью
-  if (photoLink.value.trim() !== "") {
-    productPhotoPreview.value = photoLink.value.trim();
-  } else {
-    productPhotoPreview.value = null;
-  }
+  loadPhotoPreviews();
+};
+
+const removePhoto = (index: number) => {
+  productPhotoPreview.value.splice(index, 1); // Удаляем превью по индексу из массива
 };
 
 const handleProductPhotoChange = (event: Event) => {
   const fileInput = event.target as HTMLInputElement;
-  const file = fileInput.files?.[0];
+  const files = fileInput.files;
 
-  if (file) {
-    productPhoto.value = file;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      productPhotoPreview.value = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
+  if (files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        productPhotoPreview.value.push(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 };
 
@@ -347,7 +402,11 @@ const photoUrl = (path: string) => {
 const sendProductData = async () => {
   console.log("Отправка данных продукта на сервер...");
   try {
-    if (!productName.value || !productPhoto.value && !photoLink.value.trim() || !productPrice.value) {
+    if (
+      !productName.value ||
+      (!productPhoto.value && photoLinks.value.length === 0) ||
+      !productPrice.value
+    ) {
       return;
     }
 
@@ -370,19 +429,20 @@ const sendProductData = async () => {
     formData.append("hinges", hinges.value || "");
     formData.append("doorProtection", doorProtection.value || "");
     formData.append("description", description.value || "");
-    formData.append("category", selectedCatalog.value);
+    formData.append("categoryId", selectedCatalog.value);
 
+    // Добавляем фото в formData
     if (productPhoto.value) {
       formData.append("photo", productPhoto.value, productPhoto.value.name);
-    } else if (photoLink.value) {
-      formData.append("photo", photoLink.value.trim());
+    } else if (photoLinks.value.length > 0) {
+      photoLinks.value.forEach((link) => formData.append("photo[]", link));
     }
+
     const response = await sendProductToServer(formData);
     console.log("Server Response:", response);
 
     if (response) {
       toast.success("Успешное добавление продукта", { theme: "colored" });
-      // Reset form fields if needed
     } else {
       toast.error("Ошибка при добавлении продукта", { theme: "colored" });
     }
@@ -391,21 +451,17 @@ const sendProductData = async () => {
   }
 };
 
-
-
 const fetchData = async () => {
   try {
     const startIndex = (currentPage.value - 1) * pageSize.value;
     const endIndex = currentPage.value * pageSize.value;
-    const response = await getProductsWithPagination(startIndex, endIndex); 
+    const response = await getProductsWithPagination(startIndex, endIndex);
     products.value = response.data;
-    totalProducts.value = response.total 
-    
+    totalProducts.value = response.total;
   } catch (error) {
     console.error("Ошибка при получении списка продуктов:", error);
   }
 };
-
 
 const fetchCatalogs = async () => {
   try {
@@ -423,22 +479,49 @@ const handlePageChange = (page: number) => {
 
 onMounted(async () => {
   fetchCatalogs();
-   fetchData();
-// try {
-//     // Fetch the list of catalogs from the server
-//     catalogs.value = await getCatalogs();
-//   } catch (error) {
-//     console.error("Ошибка при получении списка каталогов:", error);
-//   }
+  fetchData();
 });
 </script>
 
 <style scoped>
+*:focus {
+    outline: none;
+}
+[contenteditable="true"]:focus {
+    outline: none;
+}
+.price-product {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  gap: 10px
+}
 .container {
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: auto;
+}
+.input {
+  flex: 1;
+}
+
+.foto-botton {
+  margin-left: 10px;
+  height: 100%;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.photo-preview-container {
+  display: flex;
+  flex-wrap: nowrap; /* Чтобы изображения не переносились на новую строку */
+  overflow-x: auto;
+  border: none; /* Добавление горизонтального скролла, если изображения не помещаются в контейнер */
 }
 
 .form {
@@ -482,7 +565,7 @@ onMounted(async () => {
 }
 
 .button {
-  background-color: #ffad42; /* Цвет фона кнопки */
+  background-color: #f56c6c; /* Цвет фона кнопки */
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -492,7 +575,7 @@ onMounted(async () => {
 }
 
 .button:hover {
-  background-color: #0056b3; /* Цвет фона при наведении */
+  background-color: #f56c6c; /* Цвет фона при наведении */
 }
 
 .checkbox-container {
@@ -505,7 +588,7 @@ onMounted(async () => {
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #6c757d; /* Цвет рамки */
+  border: 2px solid #f56c6c; /* Цвет рамки */
   border-radius: 4px;
   margin-right: 10px;
   cursor: pointer;
@@ -513,7 +596,7 @@ onMounted(async () => {
 }
 
 .checkbox:checked {
-  background-color: #007bff; /* Цвет фона при активации */
+  background-color: #f56c6c; /* Цвет фона при активации */
 }
 
 .checkbox:checked::after {
@@ -536,5 +619,9 @@ onMounted(async () => {
   margin-bottom: 20px; /* Отступ снизу */
   display: flex;
   justify-content: flex-end; /* Выравнивание пагинации вправо */
+}
+
+.heading {
+  color: #f56c6c;
 }
 </style>

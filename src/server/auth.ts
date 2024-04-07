@@ -2,11 +2,15 @@ import axios from "axios";
 
 export const authenticateUser = async (token: string): Promise<boolean> => {
     try {
-        const response = await axios.post('http://localhost:3000/api/auth/verify', {}, {
+        const response = await axios.post(
+          `${process.env.API_URL}/auth/verify`,
+          {},
+          {
             headers: {
-                'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
-        });
+          }
+        );
         if (response.status === 201) {
             return true; // Токен верифицирован
         } else {
@@ -21,7 +25,7 @@ export const authenticateUser = async (token: string): Promise<boolean> => {
 export const authenticateWithEmailPassword = async (email: string, password: string): Promise<any | null> => {
     console.log('userDataServer', email, password)
     try {
-        const response = await axios.post('http://localhost:3000/api/auth/login', {
+        const response = await axios.post(`http://localhost:3000/api/auth/login`, {
             email,
             password,
         });

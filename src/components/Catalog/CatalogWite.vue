@@ -2,7 +2,7 @@
   <div class="title">
     <h2>Входные двери для домов ПИК</h2>
     <el-link 
-    to="/more" 
+    to="/catalogs" 
     class="more-link" 
     :underline="false" 
     >
@@ -14,15 +14,29 @@
 
   <el-scrollbar>
     <div class="catalogs">
-      <div v-for="catalog in catalogs" :key="catalog.id" class="catalog-item">
+      <div v-for="catalog in catalogs.slice(0, 6)" :key="catalog.id" class="catalog-item">
         <el-link :href="'/catalog/' + catalog.id" :underline="false">
           <el-image
             :src="photoUrl(catalog.photo[0])"
             :alt="catalog.name"
-            class="catalog-image"
+            style="
+              width: 110px;
+              max-height: 200px;
+              margin: 10px;
+              border-radius: 10px;
+            "
           ></el-image>
         </el-link>
-        <div class="catalog-name">
+        <div class="catalog-name"
+        style="
+            color: #333;
+            top: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 2px;
+            text-align: center;
+          "
+        >
           {{ catalog.name }}
         </div>
       </div>
@@ -65,11 +79,11 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .catalog-item {
   text-align: center;
-  margin: 20px;
   flex: 0 0 calc(33.3333% - 40px);
 }
 
