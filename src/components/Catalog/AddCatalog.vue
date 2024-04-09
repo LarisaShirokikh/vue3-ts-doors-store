@@ -32,15 +32,15 @@
           style="width: 100%; border-color: none"
           multiple
         >
-        <template #header>
-      <el-checkbox
-        v-model="checkAll"
-        :indeterminate="indeterminate"
-        @change="handleCheckAll"
-      >
-        Все
-      </el-checkbox>
-    </template>
+          <template #header>
+            <el-checkbox
+              v-model="checkAll"
+              :indeterminate="indeterminate"
+              @change="handleCheckAll"
+            >
+              Все
+            </el-checkbox>
+          </template>
           <el-option
             v-for="chapter in chapters"
             :key="chapter.id"
@@ -83,11 +83,11 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, watch } from "vue";
-import { sendCatalogToServer } from '@/server/catalog';
+import { sendCatalogToServer } from "@/server/catalog";
 import { toast } from "vue3-toastify";
 import { getChapters } from "@/server/chapter";
-import CatalogList from '@/components/Catalog/CatalogList.vue';
-import type { CheckboxValueType } from 'element-plus'
+import CatalogList from "@/components/Catalog/CatalogList.vue";
+import type { CheckboxValueType } from "element-plus";
 
 const price = ref("" || null);
 const description = ref("");
@@ -97,24 +97,22 @@ const catalogPhotoPreview = ref<string | null>(null);
 const photoLink = ref("");
 const selectedChapter = ref([]);
 const chapters = ref([]);
-const value = ref<CheckboxValueType[]>([])
+const value = ref<CheckboxValueType[]>([]);
 
-
-const checkAll = ref(false)
-const indeterminate = ref(false)
+const checkAll = ref(false);
+const indeterminate = ref(false);
 
 watch(value, (val) => {
   if (val.length === 0) {
-    checkAll.value = false
-    indeterminate.value = false
+    checkAll.value = false;
+    indeterminate.value = false;
   } else if (val.length === chapters.value.length) {
-    checkAll.value = true
-    indeterminate.value = false
+    checkAll.value = true;
+    indeterminate.value = false;
   } else {
-    indeterminate.value = true
+    indeterminate.value = true;
   }
-})
-
+});
 
 const loadPhotoFromLink = () => {
   if (photoLink.value.trim() !== "") {
@@ -243,7 +241,7 @@ onMounted(async () => {
 }
 
 .button {
-  background-color: #ffad42; /* Цвет фона кнопки */
+  background-color: #f56c6c; /* Цвет фона кнопки */
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -288,5 +286,9 @@ onMounted(async () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.heading {
+  color: #f56c6c;
 }
 </style>
