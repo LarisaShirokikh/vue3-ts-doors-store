@@ -1,10 +1,11 @@
 <template>
     
-  <el-breadcrumb separator="/" style="margin-bottom: 30px; margin: 20px">
+  <el-breadcrumb separator="/" style="margin-bottom: 40px; margin: 30px">
     <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
     <el-breadcrumb-item :to="{ path: '/category' }">Категории</el-breadcrumb-item>
-    <el-breadcrumb-item v-if="product" 
-    :to="{ path: '/category' }">{{ product.catalog }}</el-breadcrumb-item>
+    <el-breadcrumb-item v-if="category" 
+    :to="{ path: '/category' }">{{ category.name }}</el-breadcrumb-item>
+    <el-breadcrumb-item v-if="product">{{ product.name }}</el-breadcrumb-item>
   </el-breadcrumb>
 
   <div class="product-details">
@@ -27,7 +28,7 @@
     disabled
     show-score
     text-color="#ff9900"
-    score-template="{value} points"
+    score-template="{value}"
   />
       <div class="actions">
         <button class="action-button" @click="askQuestion">
@@ -75,7 +76,7 @@ if (!router) {
 }
 
 const product = ref(null);
-const value = ref(3.7)
+const value = ref(4.7)
 
 const photoUrl = (path: string) => {
   if (path.startsWith("/doorsPhoto/")) {
@@ -116,7 +117,7 @@ onMounted(() => {
 }
 
 .checked {
-  color: orange;
+  color: #f56c6c;
 }
 
 .actions {
@@ -127,10 +128,10 @@ onMounted(() => {
   font-size: 1.4rem;
   padding: 10px 20px;
   margin-right: 10px;
-  background-color: #3498db;
+  background-color: #f56c6c;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -165,7 +166,7 @@ h1 {
 
 .product-price {
   font-size: 1.8rem;
-  color: #d91111;
+  color: #f56c6c;
   margin-bottom: 10px;
 }
 
