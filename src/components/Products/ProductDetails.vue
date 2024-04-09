@@ -1,10 +1,12 @@
 <template>
-    
   <el-breadcrumb separator="/" style="margin-bottom: 40px; margin: 30px">
     <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
-    <el-breadcrumb-item :to="{ path: '/category' }">Категории</el-breadcrumb-item>
-    <el-breadcrumb-item v-if="category" 
-    :to="{ path: '/category' }">{{ category.name }}</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/category' }"
+      >Категории</el-breadcrumb-item
+    >
+    <el-breadcrumb-item v-if="category" :to="{ path: '/category' }">{{
+      category.name
+    }}</el-breadcrumb-item>
     <el-breadcrumb-item v-if="product">{{ product.name }}</el-breadcrumb-item>
   </el-breadcrumb>
 
@@ -24,17 +26,17 @@
       </p>
       <p class="product-price">{{ product.newPrice }} руб.</p>
       <el-rate
-    v-model="value"
-    disabled
-    show-score
-    text-color="#ff9900"
-    score-template="{value}"
-  />
+        v-model="value"
+        disabled
+        show-score
+        text-color="#ff9900"
+        score-template="{value}"
+      />
       <div class="actions">
         <button class="action-button" @click="askQuestion">
           Задать вопрос
         </button>
-        <button class="action-button" @click="callSpecialist">
+        <button class="action-button" @click="dialogFormVisible = true">
           Вызвать замерщика
         </button>
       </div>
@@ -63,12 +65,46 @@
     </div>
     <div v-else>Загрузка данных...</div>
   </div>
+
+  <el-dialog v-model="dialogFormVisible" title="Заявка на замер" width="800">
+    <form :model="form" class="form">
+      <el-form-item label="Ваше имя" :label-width="formLabelWidth">
+        <input v-model="form.name" class="input" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="Ваш адрес" :label-width="formLabelWidth">
+        <input v-model="form.adress" class="input" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="Ваш телефон" :label-width="formLabelWidth">
+        <input v-model="form.phone" class="input" autocomplete="off" />
+      </el-form-item>
+    </form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">Отменить</el-button>
+        <el-button type="danger" @click="dialogFormVisible = false">
+          Отправить заявку
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive } from "vue";
 import { getProductById } from "@/server/product";
 import { useRouter } from "vue-router";
+const dialogFormVisible = ref(false);
+const formLabelWidth = "140px";
+
+const form = reactive({
+  name: "",
+  adress: "",
+  phone: "",
+  delivery: false,
+  type: [],
+  resource: "",
+  desc: "",
+});
 
 const router = useRouter();
 if (!router) {
@@ -76,7 +112,7 @@ if (!router) {
 }
 
 const product = ref(null);
-const value = ref(4.7)
+const value = ref(4.7);
 
 const photoUrl = (path: string) => {
   if (path.startsWith("/doorsPhoto/")) {
@@ -109,6 +145,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+.form {
+  max-width: 100%;
+  margin: auto;
+  background-color: #f8f9fa; /* Цвет фона */
+  padding: 2rem;
+  border-radius: 8px; /* Радиус скругления углов */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+  padding-left: 20px;
+}
 .old-price {
   font-size: 1.6rem;
   color: #777;
@@ -136,7 +182,7 @@ onMounted(() => {
 }
 
 .action-button:hover {
-  background-color: #217dbb;
+  background-color: #89bbf8;
 }
 .product-details {
   display: flex;
