@@ -146,12 +146,16 @@ onMounted(() => {
 
 <style scoped>
 
+.input{
+  border-radius: 9px;
+}
+
 .form {
   max-width: 100%;
   margin: auto;
   background-color: #f8f9fa; /* Цвет фона */
   padding: 2rem;
-  border-radius: 8px; /* Радиус скругления углов */
+  border-radius: 15px; /* Радиус скругления углов */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
   padding-left: 20px;
 }

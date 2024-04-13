@@ -22,20 +22,22 @@ export const authenticateUser = async (token: string): Promise<boolean> => {
     }
 };
 
-export const authenticateWithEmailPassword = async (email: string, password: string): Promise<any | null> => {
-    console.log('userDataServer', email, password)
-    try {
-        const response = await axios.post(`http://localhost:3000/api/auth/login`, {
-            email,
-            password,
-        });
-        console.log('response.data', response.data)
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.error('Ошибка при аутентификации:', error);
-        return null;
-    }
+export const authenticateWithPhone = async (
+  phone: string
+): Promise<any | null> => {
+  console.log("userDataServer", phone);
+  try {
+    const response = await axios.post(`http://localhost:3000/api/auth/login`, {
+      
+      phone,
+    });
+    console.log("response.data", response.data);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error("Ошибка при аутентификации:", error);
+    return null;
+  }
 };
 
 export const getUserInfo = async (email: string) => {
@@ -52,3 +54,11 @@ export const getUserInfo = async (email: string) => {
         throw error;
     }
 };
+
+// export const  loginPhone = async(phone: string) => {
+//     try {
+//         const response = await axios.post(``)
+//     } catch (error) {
+        
+//     }
+// }

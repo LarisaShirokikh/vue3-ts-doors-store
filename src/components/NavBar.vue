@@ -54,14 +54,12 @@
     </div>
 
     <div v-if="shouldShowExpandIcon" link @click="phoneClick">
-      <el-icon style="font-size: 34px; color: #333;">
+      <el-icon style="font-size: 34px; color: #333">
         <PhoneFilled />
       </el-icon>
     </div>
     <div v-if="!shouldShowExpandIcon" link @click="phoneClick">
-      <div style="font-size: 34px; color: #333;">
-        +7 (999) 999 99 99
-      </div>
+      <div style="font-size: 34px; color: #333">+7 (999) 999 99 99</div>
     </div>
 
     <el-button
@@ -108,42 +106,27 @@
       <el-button v-if="loggedIn" @click="logout">Выйти</el-button>
     </div>
   </div>
-  <el-space direction="vertical">
-    <el-dialog v-model="dialogFormVisible">
-      <div>
-        <el-input
-          v-model="form.email"
-          placeholder="Логин"
-          autocomplete="off"
-          style="border: none"
-        />
-        <el-input
-          v-model="form.password"
-          placeholder="Пароль"
-          type="password"
-          autocomplete="off"
-          style="border: none"
-        />
-      </div>
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">Отмена</el-button>
-          <el-button type="primary" @click="submitForm">Войти</el-button>
-        </span>
-      </template>
-    </el-dialog>
+  <el-space direction="vertical" >
+    <el-drawer
+      v-model="dialogFormVisible"
+      size="40%"
+      style="border-radius: 30px; height: 600px;"
+    >
+      <LoginForm />
+    </el-drawer>
   </el-space>
 </template>
 
 <script lang="ts" setup>
 import { reactive, onMounted, ref, unref } from "vue";
-import { toast } from "vue3-toastify";
+//import { toast } from "vue3-toastify";
+import { ElDrawer  } from "element-plus";
 import { User, Expand, CloseBold, PhoneFilled } from "@element-plus/icons-vue";
 import { ClickOutside as vClickOutside } from "element-plus";
-import { authenticateWithEmailPassword, authenticateUser } from "@/server/auth";
+import { authenticateUser } from "@/server/auth";
 import router from "@/router/router";
 import MenuLeft from "./Menu-left.vue";
+import LoginForm from "@/components/Auth/LoginForm.vue";
 
 const popoverRef = ref();
 const onClickOutside = () => {
@@ -153,6 +136,8 @@ const loggedIn = ref(false);
 const dialogFormVisible = ref(false);
 const menuOpened = ref(false);
 const expanded = ref(false);
+
+
 
 const logout = () => {
   sessionStorage.removeItem("userToken");
@@ -181,11 +166,6 @@ window.addEventListener("click", (event) => {
   if (!event.target.closest(".navbar")) {
     menuOpened.value = false;
   }
-});
-
-const form = reactive({
-  email: "",
-  password: "",
 });
 
 const user = reactive({
@@ -221,37 +201,6 @@ onMounted(() => {
   console.log("Component is mounted loggin");
   checkLoggedIn();
 });
-
-const submitForm = async () => {
-  if (!form) return;
-
-  try {
-    const userData = await authenticateWithEmailPassword(
-      form.email,
-      form.password
-    );
-    console.log("userData", form.email, form.password);
-    if (userData) {
-      sessionStorage.setItem("userToken", JSON.stringify(userData));
-      loggedIn.value = true;
-      const storedToken = sessionStorage.getItem("userToken");
-      console.log("stored token", storedToken);
-      user.email = userData.email;
-      dialogFormVisible.value = false;
-      toast.success("Успешный вход", { theme: "colored" });
-      console.log("Успешный вход:", form.email);
-    } else {
-      console.error("Токен не верифицирован");
-      toast.error("Такой пользователь не найден", { theme: "colored" });
-    }
-  } catch (error) {
-    console.error("Ошибка входа:", error);
-    if (error.response) {
-      console.log("Данные ответа сервера:", error.response.data);
-      console.log("Статус код:", error.response.status);
-    }
-  }
-};
 </script>
 
 <style>

@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/HomePage.vue";
-import Login from "../components/LoginPage.vue";
-import Register from "../components/RegisterPage.vue";
 import AddCatalog from "../components/Catalog/AddCatalog.vue";
 import FileUploader from "../components/FileUploader.vue";
 import AddProduct from "../components/Products/AddProduct.vue";
@@ -17,8 +15,6 @@ import CatalogsAll from "@/components/Catalog/CatalogsAll.vue";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", component: Home },
-  { path: "/login", component: Login },
-  { path: "/register", component: Register },
   { path: "/addCatalog", component: AddCatalog },
   { path: "/myProfile", component: MyProfile },
   { path: "/addFile", component: FileUploader },
