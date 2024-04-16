@@ -104,6 +104,10 @@ body {
   margin-right: 15px;
 }
 
+.el-input {
+  border-color: #ff124a
+}
+
 .el-select {
   width: 300px;
 }
@@ -116,5 +120,6 @@ body {
   font-family: Avenir, Helvetica, sans-serif;
   background-color: #f0f0f0;
   padding: 10px 10px 120px;
+  
 }
 </style>

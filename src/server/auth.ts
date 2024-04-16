@@ -40,6 +40,20 @@ export const authenticateWithPhone = async (
   }
 };
 
+export const sendConfirmCode = async (code: string): Promise<any | null> => {
+try {
+  const response = await axios.post(`http://localhost:3000/api/auth/login`, {
+    code,
+  });
+  console.log("response.data", response.data);
+  const data = response.data;
+  return data;
+} catch (error) {
+  console.error("Ошибка при аутентификации:", error);
+  return null;
+}
+}
+
 export const getUserInfo = async (email: string) => {
     try {
         const response = await axios.get('http://localhost:3000/api/user/email', {
