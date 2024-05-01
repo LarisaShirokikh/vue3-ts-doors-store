@@ -20,26 +20,41 @@
       />
     </div>
     <div v-if="product" class="product-info">
-      <h1>{{ product.name }}</h1>
-      <p v-if="product.oldPrice" class="old-price">
-        {{ product.oldPrice }} руб.
-      </p>
-      <p class="product-price">{{ product.newPrice }} руб.</p>
-      <el-rate
-        v-model="value"
-        disabled
-        show-score
-        text-color="#ff9900"
-        score-template="{value}"
-      />
-      <div class="actions">
-        <button class="action-button" @click="askQuestion">
+      <a-space direction="vertical">
+        <a-text style="font-size: 28px">{{ product.name }}</a-text>
+      </a-space>
+      <br />
+      <br />
+      <a-space direction="vertical">
+        <p v-if="product.oldPrice" class="old-price">
+          {{ product.oldPrice }} руб.
+        </p>
+        <p class="product-price">{{ product.newPrice }} руб.</p>
+      </a-space>
+      <a-space direction="vertical">
+        <el-rate
+          v-model="value"
+          disabled
+          show-score
+          text-color="#ff9900"
+          score-template="{value}"
+        />
+      </a-space>
+      <br />
+      <br />
+      <a-space warp class="actions" style="align-items: center">
+        <a-button danger size="large" @click="askQuestion">
           Задать вопрос
-        </button>
-        <button class="action-button" @click="dialogFormVisible = true">
+        </a-button>
+        <a-button
+          type="primary"
+          size="large"
+          danger
+          @click="dialogFormVisible = true"
+        >
           Вызвать замерщика
-        </button>
-      </div>
+        </a-button>
+      </a-space>
       <p class="product-description">{{ product.description }}</p>
       <div class="additional-info">
         <p><strong>Коллекция:</strong> {{ product.category }}</p>
@@ -66,45 +81,28 @@
     <div v-else>Загрузка данных...</div>
   </div>
 
-  <el-dialog v-model="dialogFormVisible" title="Заявка на замер" width="800">
-    <form :model="form" class="form">
-      <el-form-item label="Ваше имя" :label-width="formLabelWidth">
-        <input v-model="form.name" class="input" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="Ваш адрес" :label-width="formLabelWidth">
-        <input v-model="form.adress" class="input" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="Ваш телефон" :label-width="formLabelWidth">
-        <input v-model="form.phone" class="input" autocomplete="off" />
-      </el-form-item>
-    </form>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Отменить</el-button>
-        <el-button type="danger" @click="dialogFormVisible = false">
-          Отправить заявку
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
+  <a-drawer
+    v-model:open="dialogFormVisible"
+    title="Заявка на замер"
+    centered
+  >
+    <modal-window />
+  </a-drawer>
+
+  <products-new />
+  <div class="footer">
+    <FooterCom class="footer"></FooterCom>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref } from "vue";
 import { getProductById } from "@/server/product";
 import { useRouter } from "vue-router";
+import ProductsNew from "@/components/ProductsNew.vue";
+import FooterCom from "@/components/FuterCom.vue";
+import ModalWindow from "../ModalWindow.vue";
 const dialogFormVisible = ref(false);
-const formLabelWidth = "140px";
-
-const form = reactive({
-  name: "",
-  adress: "",
-  phone: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: "",
-});
 
 const router = useRouter();
 if (!router) {
@@ -145,20 +143,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
-.input{
-  border-radius: 9px;
-}
-
-.form {
-  max-width: 100%;
-  margin: auto;
-  background-color: #f8f9fa; /* Цвет фона */
-  padding: 2rem;
-  border-radius: 15px; /* Радиус скругления углов */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
-  padding-left: 20px;
-}
 .old-price {
   font-size: 1.6rem;
   color: #777;
@@ -217,13 +201,13 @@ h1 {
 .product-price {
   font-size: 1.8rem;
   color: #f56c6c;
-  margin-bottom: 10px;
+  margin: 20px;
 }
 
 .product-description {
   font-size: 1.4rem;
   color: #555;
-  margin-bottom: 20px;
+  margin: 30px;
 }
 
 .additional-info {

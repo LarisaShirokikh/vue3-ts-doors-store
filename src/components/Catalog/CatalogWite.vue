@@ -1,20 +1,20 @@
 <template>
-  <div class="title">
-    <h2>Входные двери для домов ПИК</h2>
+  <a-space class="title">
+    <a-text>Входные двери для домов ПИК</a-text>
     <el-link 
     to="/catalogs" 
     class="more-link" 
     :underline="false" 
     >
-      <p>Смотреть больше</p>
-      <el-icon><ArrowRight /></el-icon>
+      <a-text>Смотреть больше  ></a-text>
     </el-link>
-  </div>
+  </a-space>
   
 
   <el-scrollbar>
     <div class="catalogs">
-      <div v-for="catalog in catalogs.slice(0, 6)" :key="catalog.id" class="catalog-item">
+      <div v-for="catalog in catalogs.slice(0, 8)" 
+      :key="catalog.id" class="catalog-item">
         <el-link :href="'/catalog/' + catalog.id" :underline="false">
           <el-image
             :src="photoUrl(catalog.photo[0])"
@@ -46,9 +46,8 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import { getCatalogByChapterId } from "@/server/catalog";
-import { ArrowRight } from "@element-plus/icons-vue";
-const chapterId = 1;
+import { getCatalogByChapterName } from "@/server/catalog";
+const chapterName = "Белые";
 const catalogs = ref<Array<any>>([]);
 
 const photoUrl = (path: string) => {
@@ -60,7 +59,7 @@ const photoUrl = (path: string) => {
 
 onMounted(async () => {
   try {
-    catalogs.value = await getCatalogByChapterId(chapterId);
+    catalogs.value = await getCatalogByChapterName(chapterName);
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }
@@ -74,6 +73,7 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  color: #333;
 }
 .catalogs {
   display: flex;

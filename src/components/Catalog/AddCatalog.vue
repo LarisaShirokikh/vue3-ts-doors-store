@@ -1,175 +1,185 @@
 <template>
   <div class="container">
     <div>
-      <h2 class="heading">Добавить каталог</h2>
-      <form @submit.prevent="sendCatalogData" class="form">
-        <label for="catalogName" class="label">Название каталога:</label>
-        <input
-          v-model="catalogName"
-          type="text"
-          id="catalogName"
-          class="input"
-          required
-        />
+      <el-text class="heading">Добавить каталог</el-text>
+      <a-form
+        :model="formState"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+      >
+      <a-form-item>
+          <label for="catalogName" class="label">Название каталога:</label>
+          <a-input v-model:value="formState.catalogName" required allow-clear />
+        </a-form-item>
 
-        <label for="price" class="label">Стоимость от:</label>
-        <input v-model="price" type="number" id="price" class="input" />
+        <a-form-item>
+          <label for="price" class="label">Стоимость от:</label>
+          <a-input v-model:value="formState.price" 
+          :rules="[{ validator: checkPrice }]"
+          allow-clear 
+          />
+        </a-form-item>
 
         <label for="description" class="label">Описание:</label>
-        <textarea
-          v-model="description"
-          rows="4"
-          id="description"
-          class="input"
+        <a-textarea
+          v-model:value="formState.description"
           required
-        ></textarea>
+          :autosize="{ minRows: 2 }"
+          allow-clear
+        />
 
-        <label class="label">Выберите раздел:</label>
-        <el-select
-          v-model="selectedChapter"
-          collapse-tags
-          placeholder="Выбрать..."
-          style="width: 100%; border-color: none"
-          multiple
+        <a-label class="label">Выберите раздел:</a-label>
+        <a-select
+          v-model:value="formState.selectedChapter"
+          show-search
+          placeholder="Выбрать раздел..."
+          mode="tags"
+          style="width: 100%"
+          allow-clear
+          :rules="[
+            { required: true, message: 'Выберите хотя бы один раздел!' },
+          ]"
         >
-          <template #header>
-            <el-checkbox
-              v-model="checkAll"
-              :indeterminate="indeterminate"
-              @change="handleCheckAll"
-            >
-              Все
-            </el-checkbox>
-          </template>
-          <el-option
+          <a-select-option
             v-for="chapter in chapters"
             :key="chapter.id"
-            :value="chapter.id"
-            :label="chapter.name"
+            :value="chapter.name"
+            :label="chapter.id"
           />
-        </el-select>
+        </a-select>
 
         <label for="photoLink" class="label">Ссылка на фото:</label>
-        <input
-          v-model="photoLink"
-          type="text"
-          id="photoLink"
-          class="input"
+        <a-input
+          v-model:value="formState.photoLink"
           @input="loadPhotoFromLink"
+          allow-clear
         />
 
         <label for="catalogPhoto" class="label">Загрузить фото:</label>
-        <input
-          type="file"
-          id="catalogPhoto"
-          @change="handleCatalogPhotoChange"
-          accept="image/*, .png, .jpg, gif, .web,"
+        <a-upload
+          v-model:file-list="fileList"
+          list-type="picture"
+          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          :headers="headers"
+          @change="handleChange"
           class="input"
-        />
+        >
+          <a-button>
+            <upload-outlined></upload-outlined>
+            Загрузить...
+          </a-button>
+        </a-upload>
         <img
           v-if="catalogPhotoPreview"
           :src="catalogPhotoPreview"
           alt="Предворительный просмотр фото каталога"
           class="catalog-preview"
-          style="width: 250px; height: 300px; margin: 10px; border-radius: 15px"
+          style="width: auto; height: 300px; margin: 10px; border-radius: 15px"
         />
 
-        <button type="submit" class="button">Добавить каталог</button>
-      </form>
+        <a-button danger @click="sendCatalogData" class="button"
+          >Добавить каталог</a-button
+        >
+      </a-form>
     </div>
-    <catalog-list></catalog-list>
+    <catalog-list :catalog-added-count="catalogAddedCount"></catalog-list>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { sendCatalogToServer } from "@/server/catalog";
 import { toast } from "vue3-toastify";
 import { getChapters } from "@/server/chapter";
 import CatalogList from "@/components/Catalog/CatalogList.vue";
-import type { CheckboxValueType } from "element-plus";
-
-const price = ref("" || null);
-const description = ref("");
-const catalogName = ref("");
+import { message } from "ant-design-vue";
+import { UploadOutlined } from "@ant-design/icons-vue";
+import type { UploadChangeParam } from "ant-design-vue";
+const catalogAddedCount = ref(0);
 const catalogPhoto = ref<File | null>(null);
 const catalogPhotoPreview = ref<string | null>(null);
-const photoLink = ref("");
-const selectedChapter = ref([]);
 const chapters = ref([]);
-const value = ref<CheckboxValueType[]>([]);
+const fileList = ref([]);
+const headers = {
+  authorization: "authorization-text",
+};
 
-const checkAll = ref(false);
-const indeterminate = ref(false);
+interface FormState {
+  catalogName: string;
+  price:   number;
+  description: string;
+  photoLink: string;
+  selectedChapter: string[];
+}
 
-watch(value, (val) => {
-  if (val.length === 0) {
-    checkAll.value = false;
-    indeterminate.value = false;
-  } else if (val.length === chapters.value.length) {
-    checkAll.value = true;
-    indeterminate.value = false;
-  } else {
-    indeterminate.value = true;
-  }
+const formState: FormState = reactive({
+  catalogName: "",
+  price: 0,
+  description: "",
+  photoLink: "",
+  selectedChapter: [],
 });
 
+const checkPrice = (_: any, value: { number: number }) => {
+  if (value.number > 0) {
+    return Promise.resolve();
+  }
+  return Promise.reject(new Error('Цена должна быть больше 0!'));
+};
+
 const loadPhotoFromLink = () => {
-  if (photoLink.value.trim() !== "") {
-    catalogPhotoPreview.value = photoLink.value.trim();
+  if (formState.photoLink.trim() !== "") {
+    catalogPhotoPreview.value = formState.photoLink.trim();
   } else {
     catalogPhotoPreview.value = null;
   }
 };
 
-const handleCatalogPhotoChange = (event: Event) => {
-  const fileInput = event.target as HTMLInputElement;
-  const file = fileInput.files?.[0];
-
-  if (file) {
-    catalogPhoto.value = file;
-    catalogPhotoPreview.value = URL.createObjectURL(file);
+const handleChange = (info: UploadChangeParam) => {
+  if (info.file.status !== "uploading") {
+    console.log(info.file, info.fileList);
+  }
+  if (info.file.status === "done") {
+    message.success(`${info.file.name} file uploaded successfully`);
+  } else if (info.file.status === "error") {
+    message.error(`${info.file.name} file upload failed.`);
   }
 };
 
 const sendCatalogData = async () => {
   try {
     if (
-      !catalogName.value ||
-      (!catalogPhoto.value && !photoLink.value.trim())
+      !formState.catalogName ||
+      (!catalogPhoto.value && !formState.photoLink.trim())
     ) {
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", catalogName.value);
+    formData.append("name", formState.catalogName);
     if (catalogPhoto.value) {
       formData.append("photo", catalogPhoto.value, catalogPhoto.value.name);
-    } else if (photoLink.value) {
-      formData.append("photo", photoLink.value.trim());
+    } else if (formState.photoLink) {
+      formData.append("photo", formState.photoLink.trim());
     }
-    formData.append("description", description.value);
-    if (
-      price.value !== "" &&
-      price.value !== null &&
-      price.value !== undefined
-    ) {
-      formData.append("price", price.value);
+    formData.append("description", formState.description);
+    if (formState.price ) {
+      formData.append("price", formState.price.toString());
     }
-    formData.append("chapterId", selectedChapter.value.join(","));
+    formData.append("chapterName", formState.selectedChapter.join(", "));
 
     const response = await sendCatalogToServer(formData);
 
-    console.log("Server Response:", response);
-
     if (response && response.name) {
+      catalogAddedCount.value++;
       toast.success("Успешное добавление каталога", { theme: "colored" });
-      catalogName.value = "";
+      formState.catalogName = "";
       catalogPhoto.value = null;
       catalogPhotoPreview.value = null;
-      photoLink.value = "";
-      description.value = "";
-      photoLink.value = "";
+      formState.photoLink = "";
+      formState.description = "";
+      formState.price =  0;
+      formState.selectedChapter = [];
     } else {
       toast.error("Ошибка при добавлении каталога", { theme: "colored" });
       console.error("Дополнительная информация об ошибке:", response);
@@ -188,7 +198,7 @@ const fetchChapters = async () => {
 };
 
 onMounted(async () => {
-  fetchChapters();
+  await fetchChapters();
 });
 </script>
 
@@ -213,79 +223,15 @@ onMounted(async () => {
 .label {
   display: block;
   color: #495057; /* Цвет текста */
-  font-size: 1rem; /* Размер шрифта */
-  margin-bottom: 0.5rem;
-}
-
-.input,
-.select-box {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ced4da; /* Цвет границы */
-  border-radius: 4px; /* Радиус скругления */
-  outline: none;
-  margin-bottom: 1rem;
-}
-
-.select-box {
-  position: relative;
-}
-
-.select-box::after {
-  content: "\25BC";
-  font-size: 12px;
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  font-size: 0, 5rem; /* Размер шрифта */
+  margin: 0.5rem;
 }
 
 .button {
-  background-color: #f56c6c; /* Цвет фона кнопки */
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s; /* Анимация при наведении */
-}
-
-.button:hover {
-  background-color: #b65e58; /* Цвет фона при наведении */
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.checkbox {
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #6c757d;
-  border-radius: 3px;
-  margin-right: 6px;
-  cursor: pointer;
-}
-
-.checkbox:checked {
-  background-color: #323e4a;
-}
-
-.checkbox-label {
-  font-size: 0.9rem;
-  color: #495057;
-}
-.checkbox:checked::after {
-  content: "\2714"; /* Галочка */
-  font-size: 14px;
-  color: #fff; /* Цвет галочки */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  transition: background-color 0.3s;
+  margin: 1rem; /* Анимация при наведении */
 }
 
 .heading {

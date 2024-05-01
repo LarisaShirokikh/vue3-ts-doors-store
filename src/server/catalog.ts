@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { createRequestConfig } from "./lib/catalog-lib";
 import { Category } from "@/types/catalogType";
+import { TokenData } from "./video";
 
 const getToken = () => {
   const storedToken = sessionStorage.getItem("userToken");
@@ -53,11 +54,11 @@ export const getCategoryById = async (catalogId: number): Promise<Category> => {
   }
 };
 
-export const getCatalogByChapterId = async (chapterId: number): Promise<Category[]> => {
-  console.log("chapterId", chapterId);
+export const getCatalogByChapterName = async (chapterName: string): Promise<Category[]> => {
+  console.log("chapterName", chapterName);
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `http://localhost:3000/api/chapter/category/${chapterId}`
+      `http://localhost:3000/api/chapter/category/${chapterName}`
     );
 
     return response.data;
@@ -67,18 +68,6 @@ export const getCatalogByChapterId = async (chapterId: number): Promise<Category
   }
 };
 
-// export const getPopulyarCategory = async (): Promise<Category[]> => {
-//   try {
-//     const response: AxiosResponse<Category[]> = await axios.get(
-//       `http://localhost:3000/api/categories/populyar/populyar`
-//     );
-
-//     return response.data;
-//   } catch (error) {
-//     console.error("Ошибка при отправке запроса:", error);
-//     throw error;
-//   }
-// };
 
 export const getWiteCategory = async (): Promise<Category[]> => {
   try {
@@ -107,26 +96,53 @@ export const getCatalogs = async (): Promise<CatalogResponse> => {
 export const updateCatalog = async (
   data: CatalogData,
   catalogId: number
-): Promise<CatalogResponse> => {
-  const config = createRequestConfig();
-  return handleRequest(
-    `http://localhost:3000/api/categories/${catalogId}`,
-    "put",
-    data,
-    { headers: config.headers }
-  );
+) => {
+  try {
+    const storedToken = sessionStorage.getItem("userToken");
+
+    if (!storedToken) {
+      throw new Error("User token not found.");
+    }
+
+    const { token }: TokenData = JSON.parse(storedToken);
+    const response: AxiosResponse<any> = await axios.put(
+      `http://localhost:3000/api/categories/${catalogId}`, data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    throw error;
+  }
 };
 
-export const deleteCatalogRequest = async (
-  catalogId: number
-): Promise<number> => {
-  const config = createRequestConfig();
-  return handleRequest(
-    `http://localhost:3000/api/categories/${catalogId}`,
-    "delete",
-    undefined,
-    { headers: config.headers }
-  );
+export const deleteCatalogId = async (catalogId: number) => {
+  try {
+    const storedToken = sessionStorage.getItem("userToken");
+
+    if (!storedToken) {
+      throw new Error("User token not found.");
+    }
+
+    const { token }: TokenData = JSON.parse(storedToken);
+    const response: AxiosResponse<any> = await axios.delete(
+      `http://localhost:3000/api/categories/${catalogId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    throw error;
+  }
 };
 
 export const fetchDataFromServer = async (index: any): Promise<any> => {

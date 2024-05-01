@@ -1,11 +1,10 @@
 <template>
-  <div class="title">
-    <h2>Отзывы</h2>
+  <a-space class="title">
+    <a-text>Отзывы</a-text>
     <el-link href="/review" class="more-link">
-      <p>Смотреть больше</p>
-      <el-icon><ArrowRight /></el-icon>
+      <p>Смотреть больше  ></p>
     </el-link>
-  </div>
+  </a-space>
 
   <el-scrollbar>
     <div class="reviews">
@@ -62,13 +61,9 @@
 <script setup>
 import { getReviews } from "@/server/review";
 import { onMounted, ref } from "vue";
-import { ArrowRight } from "@element-plus/icons-vue";
 
 const reviews = ref([]);
 
-// const scoreTemplate = (score) => {
-//   return `${score}/5`;
-// };
 
 const photoUrl = (path) => {
   if (path.startsWith("/uploads/")) {
@@ -155,10 +150,10 @@ const showFullDescription = (review) => {
 }
 
 .title {
-  color: #333;
-  padding: 20px 20px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  color: #333;
 }
 </style>

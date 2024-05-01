@@ -1,16 +1,16 @@
 <template>
-  <div class="title">
-    <h2>Новинки</h2>
-    <el-link href="/review" class="more-link">
-      <p>Смотреть больше</p>
-      <el-icon><ArrowRight /></el-icon>
+  <a-space class="title">
+    <a-text>Новинки</a-text>
+    <el-link href="/review" class="more-link" :underline="false">
+      <p>Смотреть больше  ></p>
+      
     </el-link>
-  </div>
+  </a-space>
 
   <el-scrollbar>
     <div class="products">
       <div
-        v-for="product in products.slice(0, 5)"
+        v-for="product in products.slice(0, 7)"
         :key="product.id"
         class="product-item"
       >
@@ -50,7 +50,6 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { getProducts } from "@/server/product";
-import { ArrowRight } from "@element-plus/icons-vue";
 const products = ref<Array<any>>([]);
 
 const photoUrl = (path: string) => {
@@ -63,7 +62,9 @@ const photoUrl = (path: string) => {
 onMounted(async () => {
   try {
     const fetchedProducts = await getProducts();
-    products.value = fetchedProducts.reverse();
+    if (fetchedProducts && Array.isArray(fetchedProducts)) {
+      products.value = fetchedProducts.slice().reverse();
+    }
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }
@@ -77,6 +78,7 @@ onMounted(async () => {
   flex-wrap: wrap;
 }
 </style>
+
 <style>
 .title {
   display: flex;

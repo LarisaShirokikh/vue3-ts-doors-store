@@ -10,6 +10,7 @@
           id="productName"
           class="input"
           required
+          clearable
         />
 
         <div class="price-product">
@@ -22,6 +23,7 @@
             id="productPrice"
             class="input"
             required
+            clearable
           />
         </el-form-item>
   
@@ -32,6 +34,7 @@
             id="productPrice"
             class="input"
             required
+            clearable
           />
           </el-form-item>
         </div>
@@ -72,6 +75,7 @@
           type="text"
           id="construction"
           class="input"
+          clearable
         />
 
         <label for="sealingContours" class="label">Контуры уплотнения:</label>
@@ -80,6 +84,7 @@
           type="text"
           id="sealingContours"
           class="input"
+          clearable
         />
 
         <label for="thicknessWeight" class="label">Толщина:</label>
@@ -88,16 +93,17 @@
           type="text"
           id="thicknessWeight"
           class="input"
+          clearable
         />
 
         <label for="weight" class="label">Вес:</label>
-        <input v-model="weight" type="text" id="weight" class="input" />
+        <input v-model="weight" type="text" id="weight" class="input" clearable/>
 
         <label for="insulation" class="label">Утепление:</label>
-        <input v-model="insulation" type="text" id="insulation" class="input" />
+        <input v-model="insulation" type="text" id="insulation" class="input" clearable/>
 
         <label for="mainLock" class="label">Основной замок:</label>
-        <input v-model="mainLock" type="text" id="mainLock" class="input" />
+        <input v-model="mainLock" type="text" id="mainLock" class="input" clearable/>
 
         <label for="additionalLock" class="label">Дополнительный замок:</label>
         <input
@@ -105,6 +111,7 @@
           type="text"
           id="additionalLock"
           class="input"
+          clearable
         />
 
         <label for="exteriorFinish" class="label">Отделка снаружи:</label>
@@ -113,6 +120,7 @@
           type="text"
           id="exteriorFinish"
           class="input"
+          clearable
         />
 
         <label for="interiorFinish" class="label">Отделка внутри:</label>
@@ -121,10 +129,11 @@
           type="text"
           id="interiorFinish"
           class="input"
+          clearable
         />
 
         <label for="hinges" class="label">Петли:</label>
-        <input v-model="hinges" type="text" id="hinges" class="input" />
+        <input v-model="hinges" type="text" id="hinges" class="input" clearable/>
 
         <label for="doorProtection" class="label"
           >Защита от снятия полотна:</label
@@ -134,6 +143,7 @@
           type="text"
           id="doorProtection"
           class="input"
+          clearable
         />
 
         <label for="description" class="label">Описание:</label>
@@ -143,6 +153,7 @@
           type="text"
           id="description"
           class="input"
+          clearable
         ></textarea>
 
         <div>
@@ -153,6 +164,7 @@
               id="photoLink"
               class="input"
               @input="loadPhotoFromLink"
+              clearable
             />
             <el-button
               style="
@@ -230,94 +242,23 @@
       </form>
     </div>
 
-    <div>
-      <h2 class="heading">Список продуктов</h2>
-
-      <el-table :data="products" :key="index" style="width: 100%">
-        <el-table-column prop="id" label="id" width="50" />
-        <el-table-column label="Фото" width="100">
-          <template v-slot="scope">
-            <img
-              :src="photoUrl(scope.row.photo[0])"
-              :alt="scope.row.name"
-              style="max-width: 80px; max-height: 80px"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="Название" />
-        <el-table-column label="Действия" width="100">
-          <template v-slot="scope">
-            <el-button
-              v-if="!isEditing(scope.row.id)"
-              @click="drawer = true"
-              :icon="Edit"
-              circle
-              size="small"
-              type="primary"
-            ></el-button>
-            <el-button
-              v-if="isEditing(scope.row.id)"
-              @click="saveChanges(scope.row.id)"
-              :icon="Check"
-              circle
-              size="small"
-              type="success"
-            ></el-button>
-            <el-button
-              v-if="isEditing(scope.row.id)"
-              @click="cancelEditing(scope.row.id)"
-              icon="el-icon-close"
-              circle
-              size="small"
-              type="warning"
-            ></el-button>
-            <el-button
-              @click="deleteProduct(scope.row.id)"
-              :icon="Delete"
-              circle
-              size="small"
-              type="danger"
-            ></el-button>
-
-            <el-drawer
-              v-model="drawer"
-              title=""
-              :direction="direction"
-              :before-close="handleClose"
-            >
-              <product-details></product-details>
-            </el-drawer>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="pagination">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="totalProducts"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          @current-change="handlePageChange"
-        />
-      </div>
-    </div>
+    <product-list :product-added-count="productAddedCount"></product-list>
   </div>
 </template>
 
 <script lang="ts" setup>
-import ProductDetails from "./ProductDetails.vue";
+//import ProductDetails from "./ProductDetails.vue";
+import ProductList from "./ProductList.vue";
 import { getCatalogs } from "@/server/catalog";
 import {
   sendProductToServer,
-  getProductsWithPagination,
-  //getProducts
 } from "@/server/product";
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { toast } from "vue3-toastify";
-import { Check, Plus, Delete, Edit } from "@element-plus/icons-vue";
+import { Plus, Delete } from "@element-plus/icons-vue";
+const productAddedCount = ref(0);
 
 let photoLink = ref("");
-const direction = ref("rtl");
-const drawer = ref(false);
 const productName = ref("");
 const productPrice = ref("");
 const productOldPrice = ref("");
@@ -341,21 +282,14 @@ const productPhoto = ref<File | null>(null);
 const selectedCatalog = ref("");
 const catalogs = ref([]);
 const photoLinks = ref<string[]>([]);
-const products = ref<Array<any>>([]);
-const editedProductId = ref<number | null>(null);
-const currentPage = ref(1);
-const pageSize = ref(10);
-const totalProducts: Ref<number> = ref(0);
+// const products = ref<Array<any>>([]);
+// const editedProductId = ref<number | null>(null);
+// const currentPage = ref(1);
+// const pageSize = ref(10);
+// const totalProducts: Ref<number> = ref(0);
 // const editedProductName = ref<string>("");
 // const editedProductPhoto = ref<File | null>(null);
 
-const isEditing = (productId: number) => productId === editedProductId.value;
-
-// const startEditing = (productId: number) => {
-//   editedProductId.value = productId;
-//   editedProductName.value =
-//     products.value.find((product) => product.id === productId)?.name || "";
-// };
 const addPhotoLink = () => {
   if (photoLink.value.trim() !== "") {
     photoLinks.value.push(photoLink.value.trim());
@@ -392,12 +326,12 @@ const handleProductPhotoChange = (event: Event) => {
   }
 };
 
-const photoUrl = (path: string) => {
-  if (path.startsWith("/doorsPhoto/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
+// const photoUrl = (path: string) => {
+//   if (path.startsWith("/doorsPhoto/")) {
+//     return `http://localhost:3000${path}`;
+//   }
+//   return path;
+// };
 
 const sendProductData = async () => {
   console.log("Отправка данных продукта на сервер...");
@@ -442,6 +376,7 @@ const sendProductData = async () => {
     console.log("Server Response:", response);
 
     if (response) {
+      productAddedCount.value++
       toast.success("Успешное добавление продукта", { theme: "colored" });
     } else {
       toast.error("Ошибка при добавлении продукта", { theme: "colored" });
@@ -451,35 +386,33 @@ const sendProductData = async () => {
   }
 };
 
-const fetchData = async () => {
-  try {
-    const startIndex = (currentPage.value - 1) * pageSize.value;
-    const endIndex = currentPage.value * pageSize.value;
-    const response = await getProductsWithPagination(startIndex, endIndex);
-    products.value = response.data;
-    totalProducts.value = response.total;
-  } catch (error) {
-    console.error("Ошибка при получении списка продуктов:", error);
-  }
-};
+// const fetchData = async () => {
+//   try {
+//     const startIndex = (currentPage.value - 1) * pageSize.value;
+//     const endIndex = currentPage.value * pageSize.value;
+//     const response = await getProductsWithPagination(startIndex, endIndex);
+//     products.value = response.data;
+//     totalProducts.value = response.total;
+//   } catch (error) {
+//     console.error("Ошибка при получении списка продуктов:", error);
+//   }
+// };
 
 const fetchCatalogs = async () => {
   try {
-    // Fetch the list of catalogs from the server
     catalogs.value = await getCatalogs();
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }
 };
 
-const handlePageChange = (page: number) => {
-  currentPage.value = page;
-  fetchData();
-};
+// const handlePageChange = (page: number) => {
+//   currentPage.value = page;
+//   fetchData();
+// };
 
 onMounted(async () => {
   fetchCatalogs();
-  fetchData();
 });
 </script>
 

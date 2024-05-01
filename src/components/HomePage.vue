@@ -1,28 +1,30 @@
 <template>
-  <SearchInput></SearchInput>
+  <searchInput></searchInput>
   <carusel-item></carusel-item>
   <catalog-category />
   <products-new />
-  <!-- <building-list></building-list> -->
   <popular-categories></popular-categories>
   <ReviewBlog></ReviewBlog>
   <product-grid></product-grid>
   <catalog-wite></catalog-wite>
 
   <service-com></service-com>
+  <div class="footer">
+    <FooterCom class="footer"></FooterCom>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import ReviewBlog from "@/components/ReviewBlog.vue";
+import FooterCom from "@/components/FuterCom.vue";
 import { fetchDataFromServer } from "@/server/catalog";
-//import BuildingList from "@/components/Buildings/BuildingList.vue";
 import PopularCategories from "@/components/Popular/PopularCategories.vue";
 import ServiceCom from "@/components/Services/ServisesCom.vue";
 import ProductGrid from "@/components/Products/ProductGrid.vue";
 import CatalogCategory from "@/components/Catalog/Catalog-Category.vue";
 import CatalogWite from "@/components/Catalog/CatalogWite.vue";
-import SearchInput from "@/components/Search-input.vue";
+import searchInput from "@/components/Search-input.vue";
 import CaruselItem from "@/components/CaruselItem.vue";
 import ProductsNew from "@/components/ProductsNew.vue";
 
@@ -56,6 +58,18 @@ const fetchData = async () => {
 </script>
 
 <style scoped>
-.container {
+
+body {
+  padding: 0;
+  margin: 0;
+  border: none;
 }
+.footer {
+  background-color: #f0f0f0;
+  width: 100%;
+  padding: 10px 10px 30px;
+  border: none;
+}
+
+
 </style>

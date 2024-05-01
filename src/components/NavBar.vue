@@ -1,5 +1,5 @@
 <template>
-  <div
+  <a-space
     class="navbar"
     style="
       width: auto;
@@ -13,13 +13,11 @@
       position: relative;
     "
   >
-    <div style="display: flex; align-items: center">
+    <a-space style="display: flex; align-items: center">
       <template v-if="shouldShowExpandIcon">
-        <el-icon
-          v-popover="popoverRef"
-          v-click-outside="onClickOutside"
+        <icon
           style="
-            font-size: 44px;
+            font-size: 34px;
             margin: 10px;
             margin-right: 30px;
             color: #606266;
@@ -29,37 +27,39 @@
           @click="toggleIcon"
         >
           <template v-if="!expanded">
-            <Expand />
+            <MenuOutlined />
           </template>
           <template v-else>
-            <CloseBold />
+            <CloseOutlined />
           </template>
-        </el-icon>
+        </icon>
       </template>
 
-      <el-popover ref="popoverRef" trigger="click" width="600px">
+      <a-drawer
+        :open="open"
+        @close="onClose"
+        :placement="placement"
+        :width="500"
+        border-radius="20px"
+        @update:open="expanded = $event"
+      >
         <div>
           <menu-left class="dropdown-menu"></menu-left>
         </div>
-      </el-popover>
+      </a-drawer>
 
-      <el-link
-        type="danger"
-        :underline="false"
-        href="/"
-        style="font-size: 34px"
-      >
-        <h1>Двери Эталон</h1>
-      </el-link>
-    </div>
+      <a-button type="link" href="/" danger class="title">
+        Двери Эталон
+      </a-button>
+    </a-space>
 
     <div v-if="shouldShowExpandIcon" link @click="phoneClick">
       <el-icon style="font-size: 34px; color: #333">
-        <PhoneFilled />
+        <PhoneOutlined />
       </el-icon>
     </div>
     <div v-if="!shouldShowExpandIcon" link @click="phoneClick">
-      <div style="font-size: 34px; color: #333">+7 (999) 999 99 99</div>
+      <a-space style="font-size: 12px; color: #333">+7 (999) 999 99 99</a-space>
     </div>
 
     <el-button
@@ -73,10 +73,11 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
       "
     >
-      <span v-if="!loggedIn">Войти</span>
-      <span v-else>{{ user.email }}</span>
+      <a-text v-if="!loggedIn">Войти</a-text>
+      <a-text v-else>{{ user.email }}</a-text>
       <img :src="user.avatar" alt="Аватарка" v-if="user.avatar" />
     </el-button>
 
@@ -94,50 +95,67 @@
         align-items: center;
       "
     >
-      <el-icon style="font-size: 24px"><User /></el-icon>
-      <span v-if="!loggedIn" style="margin: 10px">Войти</span>
-      <span v-if="loggedIn" style="margin: 10px">{{ user.email }}</span>
+      <icon size="large" color="#f56c6c" class="no-inherit">
+        <UserOutlined />
+      </icon>
+      <a-text size="large" style="margin: 10px">
+        {{ loggedIn ? user.email : "Войти" }}
+      </a-text>
+
       <img
         v-if="user.avatar"
         :src="user.avatar"
         alt="Аватарка"
         style="margin-left: 10px"
       />
-      <el-button v-if="loggedIn" @click="logout">Выйти</el-button>
+      <el-text v-if="loggedIn" @click="logout">/ Выйти</el-text>
     </div>
-  </div>
-  <el-space direction="vertical" >
+  </a-space>
+  <el-space direction="vertical">
     <el-drawer
       v-model="dialogFormVisible"
       size="40%"
-      style="border-radius: 30px; height: 600px;"
+      style="border-radius: 30px; height: 600px"
     >
-      <LoginForm />
+      <LoginForm :loggedIn="loggedIn" @loggedIn="handleLoginFormSubmit" />
     </el-drawer>
   </el-space>
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, ref, unref } from "vue";
-//import { toast } from "vue3-toastify";
-import { ElDrawer  } from "element-plus";
-import { User, Expand, CloseBold, PhoneFilled } from "@element-plus/icons-vue";
-import { ClickOutside as vClickOutside } from "element-plus";
+import { reactive, onMounted, ref, computed } from "vue";
+import { ElDrawer } from "element-plus";
+import {
+  MenuOutlined,
+  CloseOutlined,
+  UserOutlined,
+  PhoneOutlined,
+} from "@ant-design/icons-vue";
 import { authenticateUser } from "@/server/auth";
 import router from "@/router/router";
 import MenuLeft from "./Menu-left.vue";
 import LoginForm from "@/components/Auth/LoginForm.vue";
-
-const popoverRef = ref();
-const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.();
-};
+import type { DrawerProps } from "ant-design-vue";
+const placement = ref<DrawerProps["placement"]>("left");
+const open = ref<boolean>(false);
 const loggedIn = ref(false);
 const dialogFormVisible = ref(false);
 const menuOpened = ref(false);
 const expanded = ref(false);
+const screenWidth = ref(window.innerWidth);
 
+const showDrawer = () => {
+  open.value = true;
+};
+const onClose = () => {
+  open.value = false;
+};
 
+const handleLoginFormSubmit = (login: any) => {
+  dialogFormVisible.value = false;
+  loggedIn.value = true;
+  user.email = login.email;
+};
 
 const logout = () => {
   sessionStorage.removeItem("userToken");
@@ -146,6 +164,7 @@ const logout = () => {
 };
 
 const toggleIcon = () => {
+  showDrawer();
   expanded.value = !expanded.value;
 };
 
@@ -153,8 +172,11 @@ const toggleIcon = () => {
 const checkWindowWidth = () => {
   return window.innerWidth < 1300;
 };
+const shouldShowExpandIcon = ref(checkWindowWidth());
 
-const shouldShowExpandIcon = ref(checkWindowWidth()); // Определяем показ иконки в зависимости от ширины экрана
+const showSidebars = computed(() => {
+  return screenWidth.value >= 1300;
+});
 
 // Обновление показа иконки при изменении ширины окна
 window.addEventListener("resize", () => {
@@ -174,29 +196,31 @@ const user = reactive({
 });
 const handleButtonClick = () => {
   if (!loggedIn.value) {
-    // Пользователь не вошел в систему, отобразить диалоговое окно входа
     dialogFormVisible.value = true;
   } else {
-    // Пользователь вошел в систему, перейти на страницу профиля
     router.push("/myProfile");
   }
 };
 
-const checkLoggedIn = () => {
+const checkLoggedIn = async () => {
   const storedToken = sessionStorage.getItem("userToken");
 
   if (storedToken) {
     const tokenData = JSON.parse(storedToken);
     const token = tokenData.token;
 
-    authenticateUser(token).then((isAuthenticated) => {
-      if (isAuthenticated === true) {
+    try {
+      const isAuthenticated = await authenticateUser(token);
+      if (isAuthenticated) {
         loggedIn.value = true;
         user.email = tokenData.email;
       }
-    });
+    } catch (error) {
+      console.error("Ошибка аутентификации:", error);
+    }
   }
 };
+
 onMounted(() => {
   console.log("Component is mounted loggin");
   checkLoggedIn();
@@ -206,5 +230,10 @@ onMounted(() => {
 <style>
 .dropdown-menu {
   font-size: 36px;
+}
+
+.title {
+  font-size: 30px;
+  text-decoration: none;
 }
 </style>

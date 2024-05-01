@@ -1,14 +1,20 @@
 
 <template>
-  <div class="search-container">
-    <input class="search-input"
+  <a-space direction="vertical" 
+  style="width: 98%;"
+  class="search-input"
+  >
+    <a-input
       type="text"
       v-model="searchQuery"
       placeholder="Найти дверь..."
-      @input="handleSearch"
+      @search="handleSearch"
+      status="error"
     />
-    <!-- Здесь можете отобразить результаты поиска -->
-  </div>
+    <template #enterButton>
+        <a-button type="error">Custom</a-button>
+      </template>
+  </a-space>
 </template>
 
 <script lang="ts" setup>
@@ -16,7 +22,7 @@
 
 import { ref } from 'vue';
 
-const searchQuery = ref('');
+const searchQuery = ref<string>('');
 
 const handleSearch = () => {
   // Здесь можете реализовать логику поиска
@@ -27,20 +33,16 @@ const handleSearch = () => {
 
 
 <style scoped>
-.search-container {
-  margin-bottom: 20px;
-  width: 96%;
-}
+
 
 .search-input {
   padding: 10px;
   margin: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
   border-radius: 15px;
-  margin-right: 10px;
-  width: 100%;
-  text-decoration: none;
+  border:none;
+  outline: none !important;
+  width: 90%;
 }
 </style>
 

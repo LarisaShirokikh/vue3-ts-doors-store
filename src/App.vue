@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout" id="app">
-    <el-container style="height: 100%">
-      <el-container style="height: 100%">
+    
+      <el-container >
         <el-aside
           v-if="showSidebars"
           width="300px"
@@ -22,23 +22,23 @@
             <nav-bar class="nav"></nav-bar>
           </div>
 
-          <el-main
+          <div
             style="
-              padding: 5px;
+              
               border-radius: 15px;
               background-color: white;
               /* overflow-y: auto; */
-              height: calc(100vh - 140px);
+              height: calc(100vh - 155px);
             "
           >
             <el-scrollbar>
-              <router-view />
+              <router-view class="router"/>
             </el-scrollbar>
-          </el-main>
+          </div>
+          <!-- <el-footer><FooterCom></FooterCom></el-footer> -->
         </el-main>
       </el-container>
-    </el-container>
-    <el-footer><FooterCom></FooterCom></el-footer>
+    
   </div>
 </template>
 
@@ -46,7 +46,7 @@
 import { ref, onMounted, computed } from "vue";
 import MenuLeft from "@/components/Menu-left.vue";
 import NavBar from "@/components/NavBar.vue";
-import FooterCom from "@/components/FuterCom.vue";
+//import FooterCom from "@/components/FuterCom.vue";
 //import SearchInput from '@/components/Search-input.vue'
 
 const screenWidth = ref(window.innerWidth);
@@ -65,9 +65,9 @@ const showSidebars = computed(() => {
 </script>
 
 <style>
-body {
-  margin: 0;
+html, body {
   padding: 0;
+  margin: 0;
 }
 
 .el-collapse-item__header {
@@ -104,22 +104,19 @@ body {
   margin-right: 15px;
 }
 
-.el-input {
-  border-color: #ff124a
-}
 
 .el-select {
   width: 300px;
 }
 
-.dialog-footer button:first-child {
+
+/* .dialog-footer button:first-child {
   margin-right: 10px;
-}
+} */
 
 #app {
   font-family: Avenir, Helvetica, sans-serif;
   background-color: #f0f0f0;
-  padding: 10px 10px 120px;
-  
+  padding: 10px 10px 10px;
 }
 </style>

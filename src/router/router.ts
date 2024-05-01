@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/HomePage.vue";
+import Home from "../components/HomePage.vue";
 import AddCatalog from "../components/Catalog/AddCatalog.vue";
 import FileUploader from "../components/FileUploader.vue";
 import AddProduct from "../components/Products/AddProduct.vue";

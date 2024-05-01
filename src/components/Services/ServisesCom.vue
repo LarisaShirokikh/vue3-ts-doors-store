@@ -1,10 +1,10 @@
 <template>
-  <div class="title">
-    <h2>Услуги и сервисы</h2>
+  <a-space class="title">
+    <a-text>Услуги и сервисы</a-text>
     <el-link href="/more" class="more-link" :underline="false">
-      <p>Смотреть больше <i class="fa-solid fa-chevron-right"></i></p>
+      <a-text>Смотреть больше  ></a-text>
     </el-link>
-  </div>
+  </a-space>
 
   <el-scrollbar>
     <div class="services">

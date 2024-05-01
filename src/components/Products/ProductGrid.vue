@@ -1,11 +1,12 @@
 <template>
-  <div class="title">
-    <h2>Хиты для Вас</h2>
-    <el-link :href="'/products'" class="more-link" :underline="false">
-      <p>Смотреть больше</p>
-      <el-icon><ArrowRight /></el-icon>
+  <a-space class="title">
+    <a-text>Хиты для Вас</a-text>
+    <el-link :href="'/products'" 
+    class="more-link" 
+    :underline="false">
+      <a-text>Смотреть больше  ></a-text>
     </el-link>
-  </div>
+  </a-space>
 
   <el-scrollbar>
     <div class="product">

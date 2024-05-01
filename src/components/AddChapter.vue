@@ -38,39 +38,41 @@
           accept="image/*, .png, .jpg, gif, .web,"
           class="input"
         />
-        <img
-          v-if="chapterPhotoPreview"
-          :src="chapterPhotoPreview"
-          alt="Предворительный просмотр фото каталога"
-          class="chapter-preview"
-          style="width: 250px; 
-          height: 300px; 
-          margin: 10px; 
-          border-radius: 15px"
-        />
-
-        <button type="submit" 
-        style="background-color: #F56C6C; border-color: #F56C6C"
-        class="button">Добавить раздел</button>
+        <div class="add">
+          <img
+            v-if="chapterPhotoPreview"
+            :src="chapterPhotoPreview"
+            alt="Предворительный просмотр фото каталога"
+            class="chapter-preview"
+            style="width: 250px; 
+            height: 300px; 
+            margin: 10px; 
+            border-radius: 15px"
+          />
+  
+          <button type="submit" 
+          style="background-color: #F56C6C; border-color: #F56C6C"
+          class="button">Добавить раздел</button>
+        </div>
       </form>
     </div>
 
-    <chapter-list></chapter-list>
+    <chapter-list :chapter-added-count="chapterAddedCount"></chapter-list>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {  ref } from "vue";
+import { ref } from "vue";
 import { toast } from "vue3-toastify";
 import ChapterList from '../components/Chapters/ChapterList.vue'
 import { sendChapterToServer } from "@/server/chapter";
-//import { Check, Delete, Edit, Close } from "@element-plus/icons-vue";
-
+const chapterAddedCount = ref(0);
 const description = ref("");
 const chapterName = ref("");
 const chapterPhoto = ref<File | null>(null);
 const chapterPhotoPreview = ref<string | null>(null);
 const photoLink = ref("");
+
 
 const loadPhotoFromLink = () => {
   if (photoLink.value.trim() !== "") {
@@ -111,17 +113,17 @@ const sendChapterData = async () => {
 
     const response = await sendChapterToServer(formData);
 
-    console.log("Server Response:", response);
 
     if (response && response.name) {
-      toast.success("Успешное добавление каталога", { theme: "colored" });
+      chapterAddedCount.value++;
+      toast.success("Успешное добавление раздела", { theme: "colored" });
       chapterName.value = "";
       chapterPhoto.value = null;
       chapterPhotoPreview.value = null;
       photoLink.value = "";
       description.value = "";
     } else {
-      toast.error("Ошибка при добавлении каталога", { theme: "colored" });
+      toast.error("Ошибка при добавлении раздела", { theme: "colored" });
       console.error("Дополнительная информация об ошибке:", response);
     }
   } catch (error) {
@@ -130,3 +132,14 @@ const sendChapterData = async () => {
 };
 
 </script>
+
+<style scoped>
+.heading {
+   color: #F56C6C; ;
+}
+
+.add {
+  display: column;
+  margin: 10px;
+}
+</style>

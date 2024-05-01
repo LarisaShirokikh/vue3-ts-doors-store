@@ -13,56 +13,52 @@
   >
     <el-tab-pane name="profile" label="профиль">Мой профиль</el-tab-pane>
 
-    <el-tab-pane
+    <el-tab-pane v-if="userRole.isAdmin === true"
       name="chapter"
-      v-show="userRole.isSuperAdmin || userRole.isAdmin"
+      
       label="раздел"
     >
       <add-chapter v-if="activeName === 'chapter'"></add-chapter>
     </el-tab-pane>
 
-    <el-tab-pane
+    <el-tab-pane v-if="userRole.isAdmin === true"
       name="catalog"
-      v-show="userRole.isSuperAdmin || userRole.isAdmin"
+      
       label="каталог"
     >
       <add-catalog v-if="activeName === 'catalog'"></add-catalog>
     </el-tab-pane>
 
-    <el-tab-pane
+    <el-tab-pane v-if="userRole.isAdmin === true"
       name="product"
-      v-show="userRole.isSuperAdmin || userRole.isAdmin"
+      
       label="карточка"
     >
       <add-product v-if="activeName === 'product'"></add-product>
     </el-tab-pane>
 
-    <el-tab-pane
+    <el-tab-pane v-if="userRole.isAdmin === true"
       name="services"
-      v-show="userRole.isSuperAdmin || userRole.isAdmin"
       label="сервис"
     >
       <add-services v-if="activeName === 'services'"></add-services>
     </el-tab-pane>
 
-    <el-tab-pane
+    <el-tab-pane v-if="userRole.isAdmin === true"
       name="video"
-      v-show="userRole.isSuperAdmin || userRole.isAdmin || userRole.user"
       label="видео"
     >
       <add-video v-if="activeName === 'video'"></add-video>
     </el-tab-pane>
-    <el-tab-pane 
+    <el-tab-pane  v-if="userRole.isAdmin === true"
     label="файл" 
     name="file"
-    v-show="userRole.isSuperAdmin || userRole.isAdmin || userRole.user"
     >
       <file-uploader v-if="activeName === 'file'"></file-uploader>
     </el-tab-pane>
 
     <el-tab-pane
       name="review"
-      v-show="userRole.isSuperAdmin || userRole.isAdmin || userRole.user"
       label="отзыв"
     >
       <add-review v-if="activeName === 'review'"></add-review>
@@ -71,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import {  onMounted, ref } from "vue";
 import AddCatalog from "@/components/Catalog/AddCatalog.vue";
 import AddProduct from "@/components/Products/AddProduct.vue";
 import AddServices from "@/components/Services/AddServices.vue";
@@ -81,6 +77,7 @@ import AddVideo from "@/components/Video/UploadVideo.vue";
 import FileUploader from "@/components/FileUploader.vue";
 import type { TabsPaneContext } from "element-plus";
 import { getUserInfo } from "@/server/auth";
+import router from "@/router/router";
 
 const activeName = ref("profile");
 const userRole = ref({ isAdmin: false, isSuperAdmin: false, user: false });
@@ -97,13 +94,16 @@ onMounted(async () => {
     const email = tokenData.email;
 
     const userInfo = await getUserInfo(email);
-    console.log("userInfo", userInfo);
 
     if (userInfo) {
       userRole.value = userInfo;
     }
+  } else {
+    router.push("/");
   }
 });
+
+
 </script>
 <style>
 .demo-tabs > .el-tabs__content {
@@ -111,6 +111,7 @@ onMounted(async () => {
   color: var(--el-text-color-danger);
   font-size: 18px;
   font-weight: auto;
+  color: #ff124a; 
 }
 
 

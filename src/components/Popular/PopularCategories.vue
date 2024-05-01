@@ -1,15 +1,14 @@
 <template>
-  <div class="title">
-    <h2>Популярные категории</h2>
-    <el-link 
+  <a-space class="title">
+    <a-text>Популярные категории</a-text>
+    <el-link
     :href="'/catalogs'" 
     class="more-link" 
     :underline="false" >
     
-      <p>Смотреть больше</p>
-      <el-icon><ArrowRight /></el-icon>
+      <a-text>Смотреть больше  ></a-text>
     </el-link>
-  </div>
+  </a-space>
 
   <el-scrollbar>
     <div class="scrollbar">
@@ -47,7 +46,6 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { getCatalogs } from "@/server/catalog";
-import { ArrowRight } from "@element-plus/icons-vue";
 
 const catalogs = ref<Array<any>>([]);
 
@@ -69,7 +67,7 @@ onMounted(async () => {
 <style scoped>
 
 :root {
-  --el-color-primary: red;
+  --a-color-primary: red;
 }
 .scrollbar-flex-content {
   display: flex;
@@ -106,10 +104,10 @@ onMounted(async () => {
 }
 
 .title {
-  color: #333;
-  padding: 20px 20px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  color: #333;
 }
 </style>

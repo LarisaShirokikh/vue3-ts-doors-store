@@ -30,6 +30,32 @@ export const updateChapter = async (data: FormData, chapterId: number) => {
   }
 };
 
+export const deleteChapterId = async (chapterId: number) => {
+  try {
+    const storedToken = sessionStorage.getItem("userToken");
+
+    if (!storedToken) {
+      throw new Error("User token not found.");
+    }
+
+    const { token }: TokenData = JSON.parse(storedToken);
+    const response: AxiosResponse<any> = await axios.delete(
+      `http://localhost:3000/api/chapter/${chapterId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    throw error;
+  }
+};
+
 export const sendChapterToServer = async (data: FormData): Promise<any> => {
   console.log("sendChapterToServer", data);
 
