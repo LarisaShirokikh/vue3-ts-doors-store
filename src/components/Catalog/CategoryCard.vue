@@ -5,7 +5,8 @@
     <el-breadcrumb-item v-if="category" :to="{ path: '/catalog/id' }">{{ category.name }}</el-breadcrumb-item>
   </el-breadcrumb>
   <!--  -->
-  <div class="category-details" v-if="category" style="margin-bottom: 30px; margin: 20px">
+  <div class="category-details" v-if="category" 
+  style="margin-bottom: 30px; margin: 20px">
     <h1>{{ category.name }}</h1>
   </div>
 

@@ -1,7 +1,7 @@
 <template>
     <el-scrollbar >
    
-      <div v-for="chapter in chapters" :key="chapter.id" class="scrollbar">
+      <a-space v-for="chapter in chapters" :key="chapter.id" class="scrollbar">
         <el-link :href="'/chapter/' + chapter.id" :underline="false">
           <el-image
             :src="photoUrl(chapter.photo[0])"
@@ -14,22 +14,21 @@
             "
           >
           </el-image>
-          <div
+          <a-space
             class="chapter-name"
             style="
               /* position: absolute; */
               top: 10px;
               left: 20px;
-              color: #333;
-              font-size: 16px;
-              font-weight: bold;
+              color: #666;
+              font-size: 15px;
               overflow-y: auto;
             "
           >
             {{ chapter.name }}
-          </div>
+          </a-space>
         </el-link>
-      </div>
+      </a-space>
     
     </el-scrollbar>
 </template>

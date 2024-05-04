@@ -68,6 +68,20 @@ export const getCatalogByChapterName = async (chapterName: string): Promise<Cate
   }
 };
 
+export const checkCatalogName = async (newCatalogName: string): Promise<boolean> => {
+  console.log("chapterName", newCatalogName);
+  try {
+    const response: AxiosResponse<Category> = await axios.get(
+      `http://localhost:3000/api/categories/category/${newCatalogName}`
+    );
+
+    return !!response.data;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    throw error;
+  }
+};
+
 
 export const getWiteCategory = async (): Promise<Category[]> => {
   try {

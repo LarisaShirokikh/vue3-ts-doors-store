@@ -26,7 +26,7 @@
 
       <div class="catalogs-name"
       style="
-            color: #333;
+            color: #666;
             top: 5px;
             font-size: 14px;
             font-weight: bold;

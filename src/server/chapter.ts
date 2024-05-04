@@ -137,12 +137,12 @@ export const getChapterForUpdate = async (
   }
 };
 
-export const getCatalogsByChapterId = async (
-  chapterId: number
+export const getCatalogsByChapterName = async (
+  chapterName: string
 ): Promise<Category[]> => {
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `http://localhost:3000/api/categories/by-chapter/${chapterId}`
+      `http://localhost:3000/api/categories/chapter/${chapterName}`
     );
 
     return response.data;

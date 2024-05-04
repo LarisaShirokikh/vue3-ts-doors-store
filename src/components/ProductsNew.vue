@@ -22,13 +22,14 @@
             border-radius: 5px"
           ></el-image>
         </el-link>
+        <br/>
         <div
           class="product-name"
           style="
-            color: #333;
+            color: #666;
             top: 5px;
             font-size: 14px;
-            font-weight: bold;
+            
             margin-top: 10px;
             text-align: center;
             max-width: 100%;
@@ -36,10 +37,23 @@
         >
           {{ product.name }}
         </div>
-        <div class="product-price">{{ product.newPrice }} руб.</div>
+        <div class="product-price"
+        style="
+            color: #666;
+            top: 5px;
+            font-size: 19px;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 100%;
+          "
+        >{{ product.newPrice }} руб.</div>
+        <br/>
         <div>
-          <el-button class="product-button" type="danger" plain size="default"
-            >Подробнее <el-icon><ArrowRight /></el-icon
+          <el-button class="product-button" 
+          type="danger" plain size="default"
+            >Подробнее 
+            <el-icon><ArrowRight /></el-icon
           ></el-button>
         </div>
       </div>

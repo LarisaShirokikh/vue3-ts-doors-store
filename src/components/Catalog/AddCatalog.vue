@@ -87,8 +87,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
-import { sendCatalogToServer } from "@/server/catalog";
+import { onMounted, reactive, ref, watch } from "vue";
+import { checkCatalogName, sendCatalogToServer } from "@/server/catalog";
 import { toast } from "vue3-toastify";
 import { getChapters } from "@/server/chapter";
 import CatalogList from "@/components/Catalog/CatalogList.vue";
@@ -119,6 +119,25 @@ const formState: FormState = reactive({
   photoLink: "",
   selectedChapter: [],
 });
+
+let debouncedCheckCatalogName: ReturnType<typeof setTimeout> | null = null;
+
+watch(() => formState.catalogName, (newCatalogName) => {
+  if (debouncedCheckCatalogName) {
+    clearTimeout(debouncedCheckCatalogName);
+  }
+  debouncedCheckCatalogName = setTimeout(async () => {
+    try {
+      const isCatalogExist = await checkCatalogName(newCatalogName);
+      if (isCatalogExist) {
+        toast.error("Такой каталог уже существует", { theme: "colored" });
+      }
+    } catch (error) {
+      console.error("Ошибка при проверке имени каталога:", error);
+    }
+  }, 1500); // Adjust the delay as needed
+});
+
 
 const checkPrice = (_: any, value: { number: number }) => {
   if (value.number > 0) {
@@ -154,6 +173,7 @@ const sendCatalogData = async () => {
     ) {
       return;
     }
+    
 
     const formData = new FormData();
     formData.append("name", formState.catalogName);

@@ -28,7 +28,7 @@
               border-radius: 15px;
               background-color: white;
               /* overflow-y: auto; */
-              height: calc(100vh - 155px);
+              height: calc(100vh - 120px);
             "
           >
             <el-scrollbar>
@@ -117,6 +117,6 @@ html, body {
 #app {
   font-family: Avenir, Helvetica, sans-serif;
   background-color: #f0f0f0;
-  padding: 10px 10px 10px;
+  padding:  10px;
 }
 </style>

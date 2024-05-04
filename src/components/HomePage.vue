@@ -1,13 +1,34 @@
 <template>
   <searchInput></searchInput>
   <carusel-item></carusel-item>
+  <br />
+  <br />
   <catalog-category />
+  <br />
+  <br />
+  <br />
+  <br />
   <products-new />
+  <br />
+  <br />
+  <br />
+  <br />
   <popular-categories></popular-categories>
-  <ReviewBlog></ReviewBlog>
+  <!-- <ReviewBlog></ReviewBlog> -->
+  <br />
+  <br />
+  <br />
+  <br />
   <product-grid></product-grid>
+  <br />
+  <br />
+  <br />
+  <br />
   <catalog-wite></catalog-wite>
-
+  <br />
+  <br />
+  <br />
+  <br />
   <service-com></service-com>
   <div class="footer">
     <FooterCom class="footer"></FooterCom>
@@ -16,7 +37,7 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import ReviewBlog from "@/components/ReviewBlog.vue";
+//import ReviewBlog from "@/components/ReviewBlog.vue";
 import FooterCom from "@/components/FuterCom.vue";
 import { fetchDataFromServer } from "@/server/catalog";
 import PopularCategories from "@/components/Popular/PopularCategories.vue";
@@ -58,7 +79,6 @@ const fetchData = async () => {
 </script>
 
 <style scoped>
-
 body {
   padding: 0;
   margin: 0;
@@ -70,6 +90,4 @@ body {
   padding: 10px 10px 30px;
   border: none;
 }
-
-
 </style>

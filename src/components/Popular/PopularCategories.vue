@@ -28,10 +28,9 @@
         <div
           class="catalog-name"
           style="
-            color: #333;
+            color: #666;
             top: 5px;
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 16px;
             margin: 2px;
             text-align: center;
           "

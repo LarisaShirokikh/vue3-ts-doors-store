@@ -32,7 +32,16 @@
         >
         </el-image>
       </el-link>
-      <div class="catalog-name">
+      <div
+        class="catalog-name"
+        style="
+          color: #666;
+          top: 5px;
+          font-size: 14px;
+          margin: 2px;
+          text-align: center;
+        "
+      >
         {{ catalog.name }}
       </div>
     </div>
@@ -41,7 +50,8 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getChapterById, getCatalogsByChapterId } from "@/server/chapter";
+import { getChapterById } from "@/server/chapter";
+import { getCatalogByChapterName } from "@/server/catalog";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -59,12 +69,16 @@ const fetchChapter = async () => {
   try {
     const routeParams = router.currentRoute.value.params;
     const chapterId = routeParams ? routeParams.id : null;
+    const chapterName = routeParams ? routeParams.name : null;
 
     if (!chapterId) {
       throw new Error("Product ID not found in the route parameters.");
     }
     chapter.value = await getChapterById(chapterId);
-    catalogs.value = await getCatalogsByChapterId(chapterId);
+    if (!chapterName) {
+      throw new Error("Chapter name not found in the route parameters.");
+    }
+    catalogs.value = await getCatalogByChapterName(chapterName);
   } catch (error) {
     console.error("Ошибка при получении каталога:", error);
   }
