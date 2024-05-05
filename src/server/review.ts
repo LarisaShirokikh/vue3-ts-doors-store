@@ -1,5 +1,6 @@
 import { Review } from "@/types/reviewType";
 import axios, { AxiosResponse } from "axios";
+const API_URL = "http://localhost:3000/api";
 
 export type requestData = {
   rating: number;
@@ -24,7 +25,7 @@ export const sendReview = async (data: FormData): Promise<any> => {
         const { token }: TokenData = JSON.parse(storedToken);
 
         const response: AxiosResponse<any> = await axios.post(
-          "http://localhost:3000/api/review",
+          `${API_URL}/review`,
           data,
           {
             headers: {
@@ -43,8 +44,9 @@ export const sendReview = async (data: FormData): Promise<any> => {
 
 export const getReviews = async () => {
     try {
-        const response: AxiosResponse<Review> = await axios
-            .get(`http://localhost:3000/api/review`);
+        const response: AxiosResponse<Review> = await axios.get(
+          `${API_URL}/review`
+        );
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response && error.response.status === 404) {

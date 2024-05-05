@@ -27,4 +27,4 @@ app
   } as ToastContainerOptions)
   .mount("#app");
 
-  //app.config.globalProperties.$message = message;
+ 

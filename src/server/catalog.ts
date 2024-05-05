@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { createRequestConfig } from "./lib/catalog-lib";
 import { Category } from "@/types/catalogType";
 import { TokenData } from "./video";
+const API_URL = "http://localhost:3000/api";
 
 const getToken = () => {
   const storedToken = sessionStorage.getItem("userToken");
@@ -36,7 +37,7 @@ export const sendCatalogToServer = async (
 ): Promise<CatalogResponse> => {
   console.log("data", data);
   const config = createRequestConfig();
-  return handleRequest("http://localhost:3000/api/categories", "post", data, {
+  return handleRequest(`${API_URL}/categories`, "post", data, {
     headers: config.headers,
   });
 };
@@ -44,7 +45,7 @@ export const sendCatalogToServer = async (
 export const getCategoryById = async (catalogId: number): Promise<Category> => {
   try {
     const response: AxiosResponse<Category> = await axios.get(
-      `http://localhost:3000/api/categories/catalog/${catalogId}`
+      `${API_URL}/categories/catalog/${catalogId}`
     );
 
     return response.data;
@@ -58,7 +59,7 @@ export const getCatalogByChapterName = async (chapterName: string): Promise<Cate
   console.log("chapterName", chapterName);
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `http://localhost:3000/api/chapter/category/${chapterName}`
+      `${API_URL}/chapter/category/${chapterName}`
     );
 
     return response.data;
@@ -72,7 +73,7 @@ export const checkCatalogName = async (newCatalogName: string): Promise<boolean>
   console.log("chapterName", newCatalogName);
   try {
     const response: AxiosResponse<Category> = await axios.get(
-      `http://localhost:3000/api/categories/category/${newCatalogName}`
+      `${API_URL}/categories/category/${newCatalogName}`
     );
 
     return !!response.data;
@@ -86,7 +87,7 @@ export const checkCatalogName = async (newCatalogName: string): Promise<boolean>
 export const getWiteCategory = async (): Promise<Category[]> => {
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `http://localhost:3000/api/categories/categories/category`
+      `${API_URL}/categories/categories/category`
     );
 
     return response.data;
@@ -98,12 +99,9 @@ export const getWiteCategory = async (): Promise<Category[]> => {
 
 export const getCatalogs = async (): Promise<CatalogResponse> => {
   const config = createRequestConfig();
-  return handleRequest(
-    "http://localhost:3000/api/categories",
-    "get",
-    undefined,
-    { headers: config.headers }
-  );
+  return handleRequest(`${API_URL}/categories`, "get", undefined, {
+    headers: config.headers,
+  });
 };
 
 
@@ -120,7 +118,8 @@ export const updateCatalog = async (
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.put(
-      `http://localhost:3000/api/categories/${catalogId}`, data,
+      `${API_URL}/categories/${catalogId}`,
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -145,7 +144,7 @@ export const deleteCatalogId = async (catalogId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.delete(
-      `http://localhost:3000/api/categories/${catalogId}`,
+      `${API_URL}/categories/${catalogId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -161,14 +160,11 @@ export const deleteCatalogId = async (catalogId: number) => {
 
 export const fetchDataFromServer = async (index: any): Promise<any> => {
   const config = createRequestConfig();
-  return handleRequest(
-    `http://localhost:3000/api/categories/${index}`,
-    "get",
-    undefined,
-    { headers: config.headers }
-  );
+  return handleRequest(`${API_URL}/categories/${index}`, "get", undefined, {
+    headers: config.headers,
+  });
 };
 
 export const fetchBestsellers = async (): Promise<any> => {
-  return handleRequest("http://localhost:3000/api/product", "get");
+  return handleRequest(`${API_URL}/product`, "get");
 };

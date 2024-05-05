@@ -1,9 +1,11 @@
 import axios from "axios";
+const API_URL = "http://localhost:3000/api";
+
 
 export const authenticateUser = async (token: string): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/api/auth/verify`,
+      `${API_URL}/auth/verify`,
       {},
       {
         headers: {
@@ -29,7 +31,7 @@ export const authenticateWithEmail = async (
 ): Promise<any | null> => {
   console.log("userDataServer", email);
   try {
-    const response = await axios.post(`http://localhost:3000/api/auth/login`, {
+    const response = await axios.post(`${API_URL}/auth/login`, {
       email,
       password,
     });
@@ -49,7 +51,7 @@ export const registerWithEmail = async (
 ): Promise<any | null> => {
   console.log("userDataServer", email, password, name);
   try {
-    const response = await axios.post(`${process.env.API_URL}/user`, {
+    const response = await axios.post(`${API_URL}/user`, {
       email,
       password,
       name,
@@ -65,7 +67,7 @@ export const registerWithEmail = async (
 
 export const sendConfirmCode = async (code: string): Promise<any | null> => {
   try {
-    const response = await axios.post(`${process.env.API_URL}/auth/login`, {
+    const response = await axios.post(`${API_URL}/auth/login`, {
       code,
     });
     console.log("response.data", response.data);
@@ -79,7 +81,7 @@ export const sendConfirmCode = async (code: string): Promise<any | null> => {
 
 export const getUserInfo = async (email: string) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/user/email`, {
+    const response = await axios.get(`${API_URL}/user/email`, {
       params: {
         email: email,
       },
@@ -92,10 +94,3 @@ export const getUserInfo = async (email: string) => {
   }
 };
 
-// export const  loginPhone = async(phone: string) => {
-//     try {
-//         const response = await axios.post(``)
-//     } catch (error) {
-
-//     }
-// }

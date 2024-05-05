@@ -21,7 +21,7 @@
               top: 10px;
               left: 20px;
               color: #666;
-              font-size: 15px;
+              font-size: 20px;
               overflow-y: auto;
             "
           >

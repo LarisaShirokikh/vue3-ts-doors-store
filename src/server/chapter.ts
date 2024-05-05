@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { TokenData } from "./video";
 import { Category } from "@/types/catalogType";
+const API_URL = "http://localhost:3000/api";
 
 export const updateChapter = async (data: FormData, chapterId: number) => {
   console.log("updateChapter", data, chapterId);
@@ -13,7 +14,7 @@ export const updateChapter = async (data: FormData, chapterId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.put(
-      `http://localhost:3000/api/chapter/${chapterId}`,
+      `${API_URL}/chapter/${chapterId}`,
       data,
       {
         headers: {
@@ -40,7 +41,7 @@ export const deleteChapterId = async (chapterId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.delete(
-      `http://localhost:3000/api/chapter/${chapterId}`,
+      `${API_URL}/chapter/${chapterId}`,
 
       {
         headers: {
@@ -69,7 +70,7 @@ export const sendChapterToServer = async (data: FormData): Promise<any> => {
     const { token }: TokenData = JSON.parse(storedToken);
 
     const response: AxiosResponse<any> = await axios.post(
-      "http://localhost:3000/api/chapter",
+      `${API_URL}/chapter`,
       data,
       {
         headers: {
@@ -90,15 +91,11 @@ export const getChapters = async (): Promise<any> => {
   try {
   
 
-    const response: AxiosResponse<any> = await axios.get(
-      "http://localhost:3000/api/chapter",
-      {
-        headers: {
-          
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response: AxiosResponse<any> = await axios.get(`${API_URL}/chapter`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     // console.log('service after', response.data);
 
     return response.data;
@@ -111,7 +108,7 @@ export const getChapters = async (): Promise<any> => {
 export const getChapterById = async (chapterId: number): Promise<Chapter> => {
   try {
     const response: AxiosResponse<Chapter> = await axios.get(
-      `http://localhost:3000/api/chapter/${chapterId}`
+      `${API_URL}/chapter/${chapterId}`
     );
 
     return response.data;
@@ -126,8 +123,8 @@ export const getChapterForUpdate = async (
 ): Promise<Chapter> => {
   try {
     const response: AxiosResponse<Chapter> = await axios.post(
-      `http://localhost:3000/api/chapter/getchapter`,
-      { chapterId } 
+      `${API_URL}/chapter/getchapter`,
+      { chapterId }
     );
 
     return response.data;
@@ -142,7 +139,7 @@ export const getCatalogsByChapterName = async (
 ): Promise<Category[]> => {
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `http://localhost:3000/api/categories/chapter/${chapterName}`
+      `${API_URL}/categories/chapter/${chapterName}`
     );
 
     return response.data;
