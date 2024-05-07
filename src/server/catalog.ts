@@ -2,7 +2,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { createRequestConfig } from "./lib/catalog-lib";
 import { Category } from "@/types/catalogType";
 import { TokenData } from "./video";
-const API_URL = "http://localhost:3000/api";
+const API_URL = "http://localhost:4200/api";
+const ALLOWED_ORIGIN = "http://localhost:3000";
 
 const getToken = () => {
   const storedToken = sessionStorage.getItem("userToken");
@@ -24,6 +25,9 @@ const handleRequest = async <T>(
       method,
       data: data || undefined,
       ...additionalConfig,
+      headers: {
+        ...additionalConfig?.headers
+      },
     });
     return response.data;
   } catch (error) {
@@ -37,15 +41,17 @@ export const sendCatalogToServer = async (
 ): Promise<CatalogResponse> => {
   console.log("data", data);
   const config = createRequestConfig();
-  return handleRequest(`${API_URL}/categories`, "post", data, {
-    headers: config.headers,
+  return handleRequest(`http://localhost:4200/api/categories`, "post", data, {
+    headers: {
+      ...config.headers,
+    },
   });
 };
 
 export const getCategoryById = async (catalogId: number): Promise<Category> => {
   try {
     const response: AxiosResponse<Category> = await axios.get(
-      `${API_URL}/categories/catalog/${catalogId}`
+      `http://localhost:4200/api/categories/catalog/${catalogId}`
     );
 
     return response.data;
@@ -59,7 +65,7 @@ export const getCatalogByChapterName = async (chapterName: string): Promise<Cate
   console.log("chapterName", chapterName);
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `${API_URL}/chapter/category/${chapterName}`
+      `http://localhost:4200/api/chapter/category/${chapterName}`
     );
 
     return response.data;
@@ -69,11 +75,13 @@ export const getCatalogByChapterName = async (chapterName: string): Promise<Cate
   }
 };
 
-export const checkCatalogName = async (newCatalogName: string): Promise<boolean> => {
+export const checkCatalogName = async (
+  newCatalogName: string
+): Promise<boolean> => {
   console.log("chapterName", newCatalogName);
   try {
     const response: AxiosResponse<Category> = await axios.get(
-      `${API_URL}/categories/category/${newCatalogName}`
+      `http://localhost:4200/api/categories/category/${newCatalogName}`
     );
 
     return !!response.data;
@@ -87,7 +95,7 @@ export const checkCatalogName = async (newCatalogName: string): Promise<boolean>
 export const getWiteCategory = async (): Promise<Category[]> => {
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `${API_URL}/categories/categories/category`
+      `http://localhost:4200/api/categories/categories/category`
     );
 
     return response.data;
@@ -99,16 +107,20 @@ export const getWiteCategory = async (): Promise<Category[]> => {
 
 export const getCatalogs = async (): Promise<CatalogResponse> => {
   const config = createRequestConfig();
-  return handleRequest(`${API_URL}/categories`, "get", undefined, {
-    headers: config.headers,
-  });
+  return handleRequest(
+    `http://localhost:4200/api/categories`,
+    "get",
+    undefined,
+    {
+      headers: {
+        ...config.headers,
+      },
+    }
+  );
 };
 
 
-export const updateCatalog = async (
-  data: CatalogData,
-  catalogId: number
-) => {
+export const updateCatalog = async (data: CatalogData, catalogId: number) => {
   try {
     const storedToken = sessionStorage.getItem("userToken");
 
@@ -118,7 +130,7 @@ export const updateCatalog = async (
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.put(
-      `${API_URL}/categories/${catalogId}`,
+      `http://localhost:4200/api/categories/${catalogId}`,
       data,
       {
         headers: {
@@ -144,7 +156,7 @@ export const deleteCatalogId = async (catalogId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.delete(
-      `${API_URL}/categories/${catalogId}`,
+      `http://localhost:4200/api/categories/${catalogId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -160,11 +172,19 @@ export const deleteCatalogId = async (catalogId: number) => {
 
 export const fetchDataFromServer = async (index: any): Promise<any> => {
   const config = createRequestConfig();
-  return handleRequest(`${API_URL}/categories/${index}`, "get", undefined, {
-    headers: config.headers,
-  });
+  return handleRequest(
+    `http://localhost:4200/api/categories/${index}`,
+    "get",
+    undefined,
+    {
+      headers: {
+        ...config.headers,
+      },
+    }
+  );
 };
 
+
 export const fetchBestsellers = async (): Promise<any> => {
-  return handleRequest(`${API_URL}/product`, "get");
+  return handleRequest(`http://localhost:4200/api/product`, "get", undefined);
 };

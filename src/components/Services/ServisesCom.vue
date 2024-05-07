@@ -25,30 +25,6 @@
           </div>
           <button style="border: none; color: #333; margin: 5px">Подробнее...</button>
         </div>
-          <!-- <el-image
-            :src="photoUrl(service.photo[0])"
-            :alt="service.name"
-            style="
-              width: 120px;
-              height: 150px;
-              margin: 5px;
-              border-radius: 15px;
-            "
-          >
-          </el-image>
-          <div
-            class="service-name"
-            style="
-              position: absolute;
-              top: 10px;
-              left: 15px;
-              color: white;
-              font-size: 12px;
-              font-weight: bold;
-            "
-          >
-            {{ service.name }}
-          </div> -->
         </el-link>
       </div>
     </div>
@@ -56,19 +32,11 @@
 </template>
 
 <script lang="ts" setup>
-//import { sendServiceToServer } from '@/server/service';
 import { getServices } from "@/server/service";
 import { onMounted, ref } from "vue";
-//import { toast } from 'vue3-toastify/index';
+import { photoUrl } from "@/utils/utils";
 
 const servises = ref<Array<any>>([]);
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 onMounted(async () => {
   try {

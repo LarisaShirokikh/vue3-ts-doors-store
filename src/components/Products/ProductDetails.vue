@@ -11,14 +11,29 @@
   </el-breadcrumb>
 
   <div class="product-details">
-    <div v-if="product" class="product-image-container">
-      <img
-        v-if="product.photo && product.photo.length > 0"
-        :src="photoUrl(product.photo[0])"
+    <div v-if="product">
+    <a-image
+      v-if="product.photo && product.photo.length > 0"
+      :src="photoUrl(product.photo[0])"
+      :alt="product.name"
+      class="product-image"
+    />
+    <!-- <div class="additional-images">
+      <a-image
+        v-if="product.photo && product.photo.length > 1"
+        :src="photoUrl(product.photo[1])"
         :alt="product.name"
-        class="product-image"
+        class=" small-image"
       />
-    </div>
+      <a-image
+        v-if="product.photo && product.photo.length > 2"
+        :src="photoUrl(product.photo[2])"
+        :alt="product.name"
+        class=" small-image"
+      />
+    </div> -->
+  </div>
+
     <div v-if="product" class="product-info">
       <a-space direction="vertical">
         <a-text style="font-size: 28px">{{ product.name }}</a-text>
@@ -81,11 +96,7 @@
     <div v-else>Загрузка данных...</div>
   </div>
 
-  <a-drawer
-    v-model:open="dialogFormVisible"
-    title="Заявка на замер"
-    centered
-  >
+  <a-drawer v-model:open="dialogFormVisible" title="Заявка на замер" centered>
     <modal-window />
   </a-drawer>
 
@@ -102,6 +113,7 @@ import { useRouter } from "vue-router";
 import ProductsNew from "@/components/ProductsNew.vue";
 import FooterCom from "@/components/FuterCom.vue";
 import ModalWindow from "../ModalWindow.vue";
+import { photoUrl } from "@/utils/utils";
 const dialogFormVisible = ref(false);
 
 const router = useRouter();
@@ -111,13 +123,6 @@ if (!router) {
 
 const product = ref(null);
 const value = ref(4.7);
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/doorsPhoto/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const fetchDataForProduct = async () => {
   try {
@@ -143,6 +148,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 .old-price {
   font-size: 1.6rem;
   color: #777;
@@ -177,15 +183,19 @@ onMounted(() => {
   margin: 20px;
 }
 
+.product-image {
+  width: 50%; 
+  height: auto;
+  border-radius: 8px; 
+}
+
+
+
 .product-image-container {
   max-width: 50%;
 }
 
-.product-image {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
+
 
 .product-info {
   max-width: 50%;
@@ -217,12 +227,5 @@ h1 {
 
 .additional-info p {
   margin-bottom: 8px;
-}
-
-.loading-message {
-  font-size: 1.6rem;
-  color: #555;
-  text-align: center;
-  margin-top: 20px;
 }
 </style>

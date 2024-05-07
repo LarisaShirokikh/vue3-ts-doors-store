@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-const API_URL = "http://localhost:3000/api";
+const API_URL = "http://localhost:4200/api";
 
 export interface TokenData {
     token: string;

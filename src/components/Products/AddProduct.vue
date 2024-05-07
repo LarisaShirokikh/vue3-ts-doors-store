@@ -247,7 +247,6 @@
 </template>
 
 <script lang="ts" setup>
-//import ProductDetails from "./ProductDetails.vue";
 import ProductList from "./ProductList.vue";
 import { getCatalogs } from "@/server/catalog";
 import {
@@ -282,19 +281,13 @@ const productPhoto = ref<File | null>(null);
 const selectedCatalog = ref("");
 const catalogs = ref([]);
 const photoLinks = ref<string[]>([]);
-// const products = ref<Array<any>>([]);
-// const editedProductId = ref<number | null>(null);
-// const currentPage = ref(1);
-// const pageSize = ref(10);
-// const totalProducts: Ref<number> = ref(0);
-// const editedProductName = ref<string>("");
-// const editedProductPhoto = ref<File | null>(null);
+
 
 const addPhotoLink = () => {
   if (photoLink.value.trim() !== "") {
     photoLinks.value.push(photoLink.value.trim());
     loadPhotoPreviews();
-    photoLink.value = ""; // Очищаем поле ввода
+    photoLink.value = ""; 
   }
 };
 
@@ -307,7 +300,7 @@ const loadPhotoFromLink = () => {
 };
 
 const removePhoto = (index: number) => {
-  productPhotoPreview.value.splice(index, 1); // Удаляем превью по индексу из массива
+  productPhotoPreview.value.splice(index, 1); 
 };
 
 const handleProductPhotoChange = (event: Event) => {
@@ -326,12 +319,6 @@ const handleProductPhotoChange = (event: Event) => {
   }
 };
 
-// const photoUrl = (path: string) => {
-//   if (path.startsWith("/doorsPhoto/")) {
-//     return `http://localhost:3000${path}`;
-//   }
-//   return path;
-// };
 
 const sendProductData = async () => {
   console.log("Отправка данных продукта на сервер...");

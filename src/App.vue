@@ -27,7 +27,6 @@
               
               border-radius: 15px;
               background-color: white;
-              /* overflow-y: auto; */
               height: calc(100vh - 120px);
             "
           >
@@ -35,7 +34,6 @@
               <router-view class="router"/>
             </el-scrollbar>
           </div>
-          <!-- <el-footer><FooterCom></FooterCom></el-footer> -->
         </el-main>
       </el-container>
     
@@ -60,7 +58,7 @@ const handleResize = () => {
 };
 
 const showSidebars = computed(() => {
-  return screenWidth.value >= 1300;
+  return screenWidth.value >= 1000;
 });
 </script>
 
@@ -74,7 +72,7 @@ html, body {
   cursor: pointer;
 }
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1000px) {
   .common-layout .el-aside,
   .common-layout .login-button {
     display: none;
@@ -89,7 +87,7 @@ html, body {
   }
 }
 
-@media screen and (min-width: 1300px) {
+@media screen and (min-width: 1000px) {
   .common-layout .login-button-main {
     display: none;
   }
@@ -109,10 +107,6 @@ html, body {
   width: 300px;
 }
 
-
-/* .dialog-footer button:first-child {
-  margin-right: 10px;
-} */
 
 #app {
   font-family: Avenir, Helvetica, sans-serif;

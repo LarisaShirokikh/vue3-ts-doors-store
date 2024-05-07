@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { TokenData } from "./video";
 import { Category } from "@/types/catalogType";
-const API_URL = "http://localhost:3000/api";
+const API_URL = "http://localhost:4200/api";
 
 export const updateChapter = async (data: FormData, chapterId: number) => {
   console.log("updateChapter", data, chapterId);

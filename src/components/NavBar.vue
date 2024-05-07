@@ -54,9 +54,9 @@
     </a-space>
 
     <div v-if="shouldShowExpandIcon" link @click="phoneClick">
-      <el-icon style="font-size: 34px; color: #333">
-        <PhoneOutlined />
-      </el-icon>
+      
+        <Phone style="font-size: 34px; color: #333"/>
+      
     </div>
     <div v-if="!shouldShowExpandIcon" link @click="phoneClick">
       <a-space style="font-size: 12px; color: #333">+7 (999) 999 99 99</a-space>
@@ -125,11 +125,11 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref, computed } from "vue";
 import { ElDrawer } from "element-plus";
+import { Phone } from 'lucide-vue-next';
 import {
   MenuOutlined,
   CloseOutlined,
   UserOutlined,
-  PhoneOutlined,
 } from "@ant-design/icons-vue";
 import { authenticateUser } from "@/server/auth";
 import router from "@/router/router";
@@ -170,12 +170,12 @@ const toggleIcon = () => {
 
 // Функция для проверки ширины экрана
 const checkWindowWidth = () => {
-  return window.innerWidth < 1300;
+  return window.innerWidth < 1000;
 };
 const shouldShowExpandIcon = ref(checkWindowWidth());
 
 const showSidebars = computed(() => {
-  return screenWidth.value >= 1300;
+  return screenWidth.value >= 1000;
 });
 
 // Обновление показа иконки при изменении ширины окна

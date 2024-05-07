@@ -1,23 +1,25 @@
 import axios from "axios";
-const API_URL = "http://localhost:3000/api";
+const API_URL = "http://localhost:4200/api";
+const ALLOWED_ORIGIN = "http://localhost:3000";
 
 
 export const authenticateUser = async (token: string): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${API_URL}/auth/verify`,
+      `http://localhost:4200/api/auth/verify`,
       {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          Origin: ALLOWED_ORIGIN,
         },
       }
     );
     console.log("response", response);
     if (response.status === 201) {
-      return true; // Токен верифицирован
+      return true; 
     } else {
-      return false; // Токен не верифицирован
+      return false; 
     }
   } catch (error) {
     console.error("Ошибка при верификации токена:", error);
@@ -31,10 +33,18 @@ export const authenticateWithEmail = async (
 ): Promise<any | null> => {
   console.log("userDataServer", email);
   try {
-    const response = await axios.post(`${API_URL}/auth/login`, {
-      email,
-      password,
-    });
+    const response = await axios.post(
+      `http://localhost:4200/api/auth/login`,
+      {
+        email,
+        password,
+      },
+      {
+        headers: {
+          Origin: ALLOWED_ORIGIN,
+        },
+      }
+    );
     console.log("response.data", response.data);
     const data = response.data;
     return data;
@@ -51,11 +61,19 @@ export const registerWithEmail = async (
 ): Promise<any | null> => {
   console.log("userDataServer", email, password, name);
   try {
-    const response = await axios.post(`${API_URL}/user`, {
-      email,
-      password,
-      name,
-    });
+    const response = await axios.post(
+      `http://localhost:4200/api/user`,
+      {
+        email,
+        password,
+        name,
+      },
+      {
+        headers: {
+          Origin: ALLOWED_ORIGIN,
+        },
+      }
+    );
     console.log("response.data", response.data);
     const data = response.data;
     return data;
@@ -67,9 +85,17 @@ export const registerWithEmail = async (
 
 export const sendConfirmCode = async (code: string): Promise<any | null> => {
   try {
-    const response = await axios.post(`${API_URL}/auth/login`, {
-      code,
-    });
+    const response = await axios.post(
+      `http://localhost:4200/api/auth/login`,
+      {
+        code,
+      },
+      {
+        headers: {
+          Origin: ALLOWED_ORIGIN,
+        },
+      }
+    );
     console.log("response.data", response.data);
     const data = response.data;
     return data;
@@ -81,7 +107,7 @@ export const sendConfirmCode = async (code: string): Promise<any | null> => {
 
 export const getUserInfo = async (email: string) => {
   try {
-    const response = await axios.get(`${API_URL}/user/email`, {
+    const response = await axios.get(`http://localhost:4200/api/user/email`, {
       params: {
         email: email,
       },
