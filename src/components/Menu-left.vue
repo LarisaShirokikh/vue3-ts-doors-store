@@ -1,12 +1,14 @@
 <template>
   <el-scrollbar>
-    <a-space v-for="chapter in chapters" :key="chapter.id" class="scrollbar">
+    <a-space v-for="chapter in chapters" 
+    :key="chapter.id" class="scrollbar">
       <el-link :href="'/chapter/' + chapter.id" :underline="false">
         <a-image
           :src="photoUrl(chapter.photo[0])"
           :alt="chapter.name"
           :preview="false"
-          style="width: 60px; height: 60px; margin: 10px; border-radius: 10px"
+          style="width: 60px; 
+          height: 60px; margin: 10px; border-radius: 10px"
         />
         
         <a-space
@@ -45,6 +47,5 @@ onMounted(async () => {
 <style scoped>
 .scrollbar {
   height: 100%;
-  direction: flex;
 }
 </style>

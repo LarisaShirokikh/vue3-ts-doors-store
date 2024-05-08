@@ -2,8 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { createRequestConfig } from "./lib/catalog-lib";
 import { Category } from "@/types/catalogType";
 import { TokenData } from "./video";
-const API_URL = "http://localhost:4200/api";
-const ALLOWED_ORIGIN = "http://localhost:3000";
+import config from "@/config/urlConfig";
 
 const getToken = () => {
   const storedToken = sessionStorage.getItem("userToken");
@@ -40,10 +39,10 @@ export const sendCatalogToServer = async (
   data: CatalogData
 ): Promise<CatalogResponse> => {
   console.log("data", data);
-  const config = createRequestConfig();
-  return handleRequest(`http://localhost:4200/api/categories`, "post", data, {
+  const configReq = createRequestConfig();
+  return handleRequest(`${config.API_URL}/categories`, "post", data, {
     headers: {
-      ...config.headers,
+      ...configReq.headers,
     },
   });
 };
@@ -51,7 +50,7 @@ export const sendCatalogToServer = async (
 export const getCategoryById = async (catalogId: number): Promise<Category> => {
   try {
     const response: AxiosResponse<Category> = await axios.get(
-      `http://localhost:4200/api/categories/catalog/${catalogId}`
+      `${config.API_URL}/categories/catalog/${catalogId}`
     );
 
     return response.data;
@@ -65,7 +64,7 @@ export const getCatalogByChapterName = async (chapterName: string): Promise<Cate
   console.log("chapterName", chapterName);
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `http://localhost:4200/api/chapter/category/${chapterName}`
+      `${config.API_URL}/chapter/category/${chapterName}`
     );
 
     return response.data;
@@ -81,7 +80,7 @@ export const checkCatalogName = async (
   console.log("chapterName", newCatalogName);
   try {
     const response: AxiosResponse<Category> = await axios.get(
-      `http://localhost:4200/api/categories/category/${newCatalogName}`
+      `${config.API_URL}/categories/category/${newCatalogName}`
     );
 
     return !!response.data;
@@ -95,7 +94,7 @@ export const checkCatalogName = async (
 export const getWiteCategory = async (): Promise<Category[]> => {
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `http://localhost:4200/api/categories/categories/category`
+      `${config.API_URL}/categories/categories/category`
     );
 
     return response.data;
@@ -106,17 +105,12 @@ export const getWiteCategory = async (): Promise<Category[]> => {
 };
 
 export const getCatalogs = async (): Promise<CatalogResponse> => {
-  const config = createRequestConfig();
-  return handleRequest(
-    `http://localhost:4200/api/categories`,
-    "get",
-    undefined,
-    {
-      headers: {
-        ...config.headers,
-      },
-    }
-  );
+  const configReq = createRequestConfig();
+  return handleRequest(`${config.API_URL}/categories`, "get", undefined, {
+    headers: {
+      ...configReq.headers,
+    },
+  });
 };
 
 
@@ -130,7 +124,7 @@ export const updateCatalog = async (data: CatalogData, catalogId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.put(
-      `http://localhost:4200/api/categories/${catalogId}`,
+      `${config.API_URL}/categories/${catalogId}`,
       data,
       {
         headers: {
@@ -156,7 +150,7 @@ export const deleteCatalogId = async (catalogId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.delete(
-      `http://localhost:4200/api/categories/${catalogId}`,
+      `${config.API_URL}/categories/${catalogId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -171,14 +165,14 @@ export const deleteCatalogId = async (catalogId: number) => {
 };
 
 export const fetchDataFromServer = async (index: any): Promise<any> => {
-  const config = createRequestConfig();
+  const configReq = createRequestConfig();
   return handleRequest(
-    `http://localhost:4200/api/categories/${index}`,
+    `${config.API_URL}/categories/${index}`,
     "get",
     undefined,
     {
       headers: {
-        ...config.headers,
+        ...configReq.headers,
       },
     }
   );
@@ -186,5 +180,5 @@ export const fetchDataFromServer = async (index: any): Promise<any> => {
 
 
 export const fetchBestsellers = async (): Promise<any> => {
-  return handleRequest(`http://localhost:4200/api/product`, "get", undefined);
+  return handleRequest(`${config.API_URL}/product`, "get", undefined);
 };

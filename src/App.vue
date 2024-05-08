@@ -4,7 +4,7 @@
       <el-container >
         <el-aside
           v-if="showSidebars"
-          width="auto"
+          width="300px"
           :span="4"
           style="
             border-radius: 15px;
@@ -17,21 +17,21 @@
           <menu-left></menu-left>
         </el-aside>
 
-        <el-main style="padding: 5px">
+        <el-main style="padding: 1px">
           <div style="width: auto">
             <nav-bar class="nav"></nav-bar>
           </div>
 
           <div
-            style="
-              
+            style=
+            "
               border-radius: 15px;
               background-color: white;
               height: calc(100vh - 120px);
             "
           >
             <el-scrollbar>
-              <router-view class="router"/>
+              <router-view />
             </el-scrollbar>
           </div>
         </el-main>
@@ -44,8 +44,6 @@
 import { ref, onMounted, computed } from "vue";
 import MenuLeft from "@/components/Menu-left.vue";
 import NavBar from "@/components/NavBar.vue";
-//import FooterCom from "@/components/FuterCom.vue";
-//import SearchInput from '@/components/Search-input.vue'
 
 const screenWidth = ref(window.innerWidth);
 
@@ -111,6 +109,6 @@ html, body {
 #app {
   font-family: Avenir, Helvetica, sans-serif;
   background-color: #f0f0f0;
-  padding:  2px;
+  padding: 2px;
 }
 </style>

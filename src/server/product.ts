@@ -1,7 +1,7 @@
 import { Category } from "@/types/catalogType";
 import { Product } from "@/types/productType";
 import axios, { AxiosResponse } from "axios";
-const API_URL = "http://localhost:4200/api";
+import config from "@/config/urlConfig";
 
 interface TokenData {
   token: string;
@@ -20,7 +20,7 @@ export const sendProductToServer = async (data: FormData): Promise<any> => {
     const { token }: TokenData = JSON.parse(storedToken);
 
     const response: AxiosResponse<any> = await axios.post(
-      `${API_URL}/product`,
+      `${config.API_URL}/product`,
       data,
       {
         headers: {
@@ -40,7 +40,7 @@ export const sendProductToServer = async (data: FormData): Promise<any> => {
 export const getProductById = async (productId: number): Promise<Product> => {
   try {
     const response: AxiosResponse<Product> = await axios.get(
-      `${API_URL}/product/${productId}`
+      `${config.API_URL}/product/${productId}`
     );
     return response.data;
   } catch (error) {
@@ -60,7 +60,7 @@ export const getProductById = async (productId: number): Promise<Product> => {
 export const getProducts = async () => {
   try {
     const response: AxiosResponse<Product> = await axios.get(
-      `${API_URL}/product`
+      `${config.API_URL}/product`
     );
     return response.data;
   } catch (error) {
@@ -78,7 +78,7 @@ export const getProductsWithPagination = async (
   endIndex: number
 ) => {
   const response = await axios.get(
-    `${API_URL}/product/pagination?startIndex=${startIndex}&endIndex=${endIndex}`
+    `${config.API_URL}/product/pagination?startIndex=${startIndex}&endIndex=${endIndex}`
   );
   return response.data;
 };
@@ -86,7 +86,7 @@ export const getProductsWithPagination = async (
 export const getProductsByCatalogId = async (catalogId: number): Promise<Product> => {
   try {
     const response: AxiosResponse<Product> = await axios.get(
-      `${API_URL}/product/${catalogId}`
+      `${config.API_URL}/product/${catalogId}`
     );
 
     return response.data;

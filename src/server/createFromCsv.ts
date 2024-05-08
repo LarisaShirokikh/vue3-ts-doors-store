@@ -1,10 +1,10 @@
 import axios from 'axios';
-const API_URL = "http://localhost:4200/api";
+import config from "@/config/urlConfig";
 
 export const uploadCsvData = async (formData: any) => {
   try {
     const response = await axios.post(
-      `${API_URL}/product/createMany`,
+      `${config.API_URL}/product/createMany`,
       formData,
       {
         headers: {
@@ -13,11 +13,9 @@ export const uploadCsvData = async (formData: any) => {
       }
     );
     console.log('Данные успешно отправлены на сервер', response.data);
-    // Дополнительные действия после успешной отправки, если нужно
   } catch (error) {
     console.error('Ошибка при отправке данных на сервер', error);
-    // Дополнительные действия при ошибке
-    throw error; // Можно выбросить ошибку для дальнейшей обработки в компоненте
+    throw error; 
   }
 };
     

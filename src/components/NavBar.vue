@@ -114,8 +114,8 @@
   <el-space direction="vertical">
     <el-drawer
       v-model="dialogFormVisible"
-      size="auto"
-      style="border-radius: 30px; height: auto"
+      size="200px"
+      style="border-radius: 30px; height: 100%"
     >
       <LoginForm :loggedIn="loggedIn" @loggedIn="handleLoginFormSubmit" />
     </el-drawer>

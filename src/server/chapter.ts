@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { TokenData } from "./video";
 import { Category } from "@/types/catalogType";
-const API_URL = "http://localhost:4200/api";
+import config from "@/config/urlConfig";
 
 export const updateChapter = async (data: FormData, chapterId: number) => {
   console.log("updateChapter", data, chapterId);
@@ -14,7 +14,7 @@ export const updateChapter = async (data: FormData, chapterId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.put(
-      `${API_URL}/chapter/${chapterId}`,
+      `${config.API_URL}/chapter/${chapterId}`,
       data,
       {
         headers: {
@@ -41,11 +41,11 @@ export const deleteChapterId = async (chapterId: number) => {
 
     const { token }: TokenData = JSON.parse(storedToken);
     const response: AxiosResponse<any> = await axios.delete(
-      `${API_URL}/chapter/${chapterId}`,
+      `${config.API_URL}/chapter/${chapterId}`,
 
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`
         },
       }
     );
@@ -70,11 +70,12 @@ export const sendChapterToServer = async (data: FormData): Promise<any> => {
     const { token }: TokenData = JSON.parse(storedToken);
 
     const response: AxiosResponse<any> = await axios.post(
-      `${API_URL}/chapter`,
+      `${config.API_URL}/chapter`,
       data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          Origin: config.ALLOWED_ORIGIN,
           "Content-Type": "multipart/form-data",
         },
       }
@@ -91,12 +92,14 @@ export const getChapters = async (): Promise<any> => {
   try {
   
 
-    const response: AxiosResponse<any> = await axios.get(`${API_URL}/chapter`, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    // console.log('service after', response.data);
+    const response: AxiosResponse<any> = await axios.get(
+      `${config.API_URL}/chapter`,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {
@@ -108,7 +111,7 @@ export const getChapters = async (): Promise<any> => {
 export const getChapterById = async (chapterId: number): Promise<Chapter> => {
   try {
     const response: AxiosResponse<Chapter> = await axios.get(
-      `${API_URL}/chapter/${chapterId}`
+      `${config.API_URL}/chapter/${chapterId}`
     );
 
     return response.data;
@@ -123,7 +126,7 @@ export const getChapterForUpdate = async (
 ): Promise<Chapter> => {
   try {
     const response: AxiosResponse<Chapter> = await axios.post(
-      `${API_URL}/chapter/getchapter`,
+      `${config.API_URL}/chapter/getchapter`,
       { chapterId }
     );
 
@@ -139,7 +142,12 @@ export const getCatalogsByChapterName = async (
 ): Promise<Category[]> => {
   try {
     const response: AxiosResponse<Category[]> = await axios.get(
-      `${API_URL}/categories/chapter/${chapterName}`
+      `${config.API_URL}/categories/chapter/${chapterName}`,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
 
     return response.data;

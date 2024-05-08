@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-const API_URL = "http://localhost:4200/api";
+import config from "@/config/urlConfig";
 
 export interface TokenData {
     token: string;
@@ -18,7 +18,7 @@ export const addVideo = async (data: FormData): Promise<any> => {
         const { token }: TokenData = JSON.parse(storedToken);
 
         const response: AxiosResponse<any> = await axios.post(
-          `${API_URL}/videos`,
+          `${config.API_URL}/videos`,
           data,
           {
             headers: {
@@ -38,7 +38,7 @@ export const addVideo = async (data: FormData): Promise<any> => {
 export const getVideo = async (): Promise<any> => {
     try {
         const response: AxiosResponse<any> = await axios.get(
-          `${API_URL}/videos`
+          `${config.API_URL}/videos`
         );
         return response.data;
     } catch (error) {
