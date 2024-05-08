@@ -34,15 +34,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { getCatalogs } from "@/server/catalog";
-
+import { photoUrl } from "@/utils/photoService";
 const catalogs = ref<Array<any>>([]);
 
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
+
 
 onMounted(async () => {
   try {

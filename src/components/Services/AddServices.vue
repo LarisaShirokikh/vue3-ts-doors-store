@@ -45,7 +45,7 @@
           :src="servicePhotoPreview"
           alt="Предворительный просмотр фото"
           class="service-preview"
-          style="max-width: 80px; max-height: 80px;"
+          style="max-width: 80px; max-height: 80px"
         />
 
         <button type="submit" class="button">Добавить сервис</button>
@@ -55,61 +55,61 @@
     <div>
       <h2 class="heading">Список сервисов</h2>
 
-      <el-table :data="services" :key="index" style="width: 100%" >
-      <el-table-column prop="id" label="id" width="50"/>
-      <el-table-column label="Фото" width="100">
-        <template v-slot="scope">
-          <img
-            :src="photoUrl(scope.row.photo[0])"
-            :alt="scope.row.name"
-            style="max-width: 80px; max-height: 80px;"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column prop="serviceName" label="Название" />
-      <el-table-column label="Действия" width="100">
-        <template v-slot="scope">
-          <el-button
-            v-if="!isEditing(scope.row.id)"
-            @click="startEditing(scope.row.id)"
-            icon="el-icon-edit"
-            circle
-            size="small"
-            type="primary"
-          ></el-button>
-          <el-button
-            v-if="isEditing(scope.row.id)"
-            @click="saveChanges(scope.row.id)"
-            icon="el-icon-check"
-            circle
-            size="small"
-            type="success"
-          ></el-button>
-          <el-button
-            v-if="isEditing(scope.row.id)"
-            @click="cancelEditing(scope.row.id)"
-            icon="el-icon-close"
-            circle
-            size="small"
-            type="danger"
-          ></el-button>
-          <el-button
-            @click="deleteCatalog(scope.row.id)"
-            icon="el-icon-delete"
-            circle
-            size="small"
-            type="danger"
-          ></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-      </div>
-    
+      <el-table :data="services" :key="index" style="width: 100%">
+        <el-table-column prop="id" label="id" width="50" />
+        <el-table-column label="Фото" width="100">
+          <template v-slot="scope">
+            <img
+              :src="photoUrl(scope.row.photo[0])"
+              :alt="scope.row.name"
+              style="max-width: 80px; max-height: 80px"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="serviceName" label="Название" />
+        <el-table-column label="Действия" width="100">
+          <template v-slot="scope">
+            <el-button
+              v-if="!isEditing(scope.row.id)"
+              @click="startEditing(scope.row.id)"
+              icon="el-icon-edit"
+              circle
+              size="small"
+              type="primary"
+            ></el-button>
+            <el-button
+              v-if="isEditing(scope.row.id)"
+              @click="saveChanges(scope.row.id)"
+              icon="el-icon-check"
+              circle
+              size="small"
+              type="success"
+            ></el-button>
+            <el-button
+              v-if="isEditing(scope.row.id)"
+              @click="cancelEditing(scope.row.id)"
+              icon="el-icon-close"
+              circle
+              size="small"
+              type="danger"
+            ></el-button>
+            <el-button
+              @click="deleteCatalog(scope.row.id)"
+              icon="el-icon-delete"
+              circle
+              size="small"
+              type="danger"
+            ></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
+import { photoUrl } from "@/utils/photoService";
 import { toast } from "vue3-toastify";
 import { getServices, sendServiceToServer } from "@/server/service";
 
@@ -134,12 +134,6 @@ const startEditing = (serviceId: number) => {
     services.value.find((service) => service.id === serviceId)?.name || "";
 };
 
-    const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 const handleServicePhotoChange = (event: Event) => {
   const fileInput = event.target as HTMLInputElement;
   const file = fileInput.files?.[0];

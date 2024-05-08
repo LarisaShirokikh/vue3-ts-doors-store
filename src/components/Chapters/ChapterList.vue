@@ -128,7 +128,9 @@
 <script setup>
 import { ref, onMounted, defineProps, watch } from "vue";
 import { toast } from "vue3-toastify";
-import { getChapters, updateChapter, deleteChapterId } from "@/server/chapter";
+import {photoUrl} from "@/utils/photoService"
+import ChapterService from "@/server/chapter";
+const chapterService = new ChapterService();
 import { Delete, Edit } from "@element-plus/icons-vue";
 const drawer = ref(false);
 const chapters = ref([]);
@@ -169,12 +171,6 @@ const editedChapter = ref({
   photo: null,
 });
 
-const photoUrl = (path) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const startEditing = (chapter) => {
   console.log("Editing chapter:", chapter);
@@ -201,7 +197,7 @@ const saveEditedChapter = async () => {
       formData.append("photo", photoLink.value.trim());
     }
 
-    const response = await updateChapter(formData, editedChapter.value.id);
+    const response = await chapterService.updateChapter(formData, editedChapter.value.id);
     if (response && response.id) {
       toast.success("Раздел успешно обновлен", { theme: "colored" });
       editDrawerVisible.value = false;
@@ -225,7 +221,7 @@ const resetEditedChapter = () => {
 
 const fetchChapters = async () => {
   try {
-    const fetchedChapters = await getChapters();
+    const fetchedChapters = await chapterService.getChapters();
     chapters.value = fetchedChapters.reverse();
   } catch (error) {
     console.error("Ошибка при получении списка разделов:", error);
@@ -241,7 +237,7 @@ watch(() => props.chapterAddedCount, async () => {
 const deleteChapter = async (chapterId) => {
   try {
     // Отправить запрос на удаление раздела к серверу
-    await deleteChapterId(chapterId);
+    await chapterService.deleteChapterId(chapterId);
     toast.success("Раздел успешно удален", { theme: "colored" });
     // Обновить список разделов после успешного удаления
     await fetchChapters();

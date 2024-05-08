@@ -76,7 +76,8 @@ import AddChapter from "@/components/AddChapter.vue";
 import AddVideo from "@/components/Video/UploadVideo.vue";
 import FileUploader from "@/components/FileUploader.vue";
 import type { TabsPaneContext } from "element-plus";
-import { getUserInfo } from "@/server/auth";
+import AuthService from "@/server/auth";
+const authService = new AuthService();
 import router from "@/router/router";
 
 const activeName = ref("profile");
@@ -93,7 +94,7 @@ onMounted(async () => {
     const tokenData = JSON.parse(storedToken);
     const email = tokenData.email;
 
-    const userInfo = await getUserInfo(email);
+    const userInfo = await authService.getUserInfo(email);
 
     if (userInfo) {
       userRole.value = userInfo;

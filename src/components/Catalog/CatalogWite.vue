@@ -1,20 +1,18 @@
 <template>
   <a-space class="title">
     <a-text>Входные двери для домов ПИК</a-text>
-    <el-link 
-    to="/catalogs" 
-    class="more-link" 
-    :underline="false" 
-    >
-      <a-text>Смотреть больше  ></a-text>
+    <el-link to="/catalogs" class="more-link" :underline="false">
+      <a-text>Смотреть больше ></a-text>
     </el-link>
   </a-space>
-  
 
   <el-scrollbar>
     <div class="catalogs">
-      <div v-for="catalog in catalogs.slice(0, 8)" 
-      :key="catalog.id" class="catalog-item">
+      <div
+        v-for="catalog in catalogs.slice(0, 8)"
+        :key="catalog.id"
+        class="catalog-item"
+      >
         <el-link :href="'/catalog/' + catalog.id" :underline="false">
           <el-image
             :src="photoUrl(catalog.photo[0])"
@@ -27,8 +25,9 @@
             "
           ></el-image>
         </el-link>
-        <div class="catalog-name"
-        style="
+        <div
+          class="catalog-name"
+          style="
             color: #666;
             top: 5px;
             font-size: 15px;
@@ -45,16 +44,10 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { photoUrl } from "@/utils/photoService";
 import { getCatalogByChapterName } from "@/server/catalog";
 const chapterName = "Белые";
 const catalogs = ref<Array<any>>([]);
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 onMounted(async () => {
   try {
@@ -66,7 +59,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
 .title {
   display: flex;
   justify-content: space-between;

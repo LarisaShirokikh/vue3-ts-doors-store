@@ -24,16 +24,17 @@
         </el-image>
       </el-link>
 
-      <div class="catalogs-name"
-      style="
-            color: #666;
-            top: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            margin: 2px;
-            text-align: center;
-            width: 50%;
-          "
+      <div
+        class="catalogs-name"
+        style="
+          color: #666;
+          top: 5px;
+          font-size: 14px;
+          font-weight: bold;
+          margin: 2px;
+          text-align: center;
+          width: 50%;
+        "
       >
         <h1>{{ catalog.name }}</h1>
       </div>
@@ -43,15 +44,9 @@
 
 <script lang="ts" setup>
 import { getCatalogs } from "@/server/catalog";
+import { photoUrl } from "@/utils/photoService";
 import { ref, onMounted } from "vue";
 const catalogs = ref<Array<any>>([]);
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const fetchCatalogs = async () => {
   try {

@@ -107,7 +107,8 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 import { toast } from "vue3-toastify";
-import { authenticateWithEmail, registerWithEmail } from "@/server/auth";
+import AuthService from "@/server/auth";
+const authService = new AuthService()
 const emits = defineEmits(["loggedIn"]);
 const isLoginForm = ref(true);
 
@@ -150,7 +151,7 @@ const submitRegistrationForm = async () => {
       return;
     }
 
-    const login = await registerWithEmail(
+    const login = await authService.registerWithEmail(
       registrationForm.email,
       registrationForm.password,
       registrationForm.name
@@ -173,7 +174,7 @@ const submitForm = async () => {
       toast.error("Пожалуйста, заполните все обязательные поля");
       return;
     }
-    const login = await authenticateWithEmail(form.email, form.password);
+    const login = await authService.authenticateWithEmail(form.email, form.password);
 
     if (login) {
       sessionStorage.setItem("userToken", JSON.stringify(login));

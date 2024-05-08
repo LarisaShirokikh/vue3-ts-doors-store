@@ -69,7 +69,6 @@
           <!-- Отображение текущего фото и возможность его удалить -->
           <label class="label">Текущее фото:</label>
           <div class="foto">
-
             <img
               v-if="editedCatalog.photo"
               :src="editedCatalog.photo"
@@ -126,11 +125,8 @@
 
 <script setup>
 import { onMounted, ref, defineProps, watch } from "vue";
-import {
-  deleteCatalogId,
-  getCatalogs,
-  updateCatalog,
-} from "@/server/catalog";
+import { photoUrl } from "@/utils/photoService";
+import { deleteCatalogId, getCatalogs, updateCatalog } from "@/server/catalog";
 import { toast } from "vue3-toastify";
 import { Delete, Edit } from "@element-plus/icons-vue";
 
@@ -141,7 +137,7 @@ const catalogs = ref([]);
 const photoLink = ref("");
 const editDrawerVisible = ref(false);
 const props = defineProps({
-  catalogAddedCount: Number
+  catalogAddedCount: Number,
 });
 
 const removePhoto = () => {
@@ -185,13 +181,11 @@ const saveChanges = async () => {
     formData.append("description", editedCatalog.value.description);
     // Проверяем, есть ли изменения в фото каталога
     if (editedCatalog.value.photo) {
-      
-        formData.append("photo", 
+      formData.append(
+        "photo",
         new Blob([editedCatalog.value.photo], { type: "image/jpeg" }),
         editedCatalog.value.name
-        );
-     
-      
+      );
     } else if (photoLink.value) {
       formData.append("photo", photoLink.value.trim());
     }
@@ -202,7 +196,6 @@ const saveChanges = async () => {
       editDrawerVisible.value = false;
       resetEditedCatalog();
       await fetchCatalogs();
-      
     } else {
       toast.error("Ошибка при обновлении каталога", { theme: "colored" });
     }
@@ -214,10 +207,10 @@ const saveChanges = async () => {
 const deleteCatalog = async (catalogId) => {
   try {
     await deleteCatalogId(catalogId);
-   
-      toast.success("Успешное удаление каталога", { theme: "colored" });
-   
-    await fetchCatalogs()
+
+    toast.success("Успешное удаление каталога", { theme: "colored" });
+
+    await fetchCatalogs();
   } catch (error) {
     toast.error("Ошибка при удалении каталога", { theme: "colored" });
     console.error("Ошибка при удалении каталога:", error);
@@ -234,25 +227,22 @@ const handleCatalogPhotoChange = (event) => {
   }
 };
 
-const photoUrl = (path) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
-
 const fetchCatalogs = async () => {
   try {
-  const fetchedCatalog = await getCatalogs();
+    const fetchedCatalog = await getCatalogs();
     catalogs.value = fetchedCatalog.reverse();
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }
 };
 
-watch(() => props.catalogAddedCount, async () => {
-  await fetchCatalogs();
-}, { immediate: true });
+watch(
+  () => props.catalogAddedCount,
+  async () => {
+    await fetchCatalogs();
+  },
+  { immediate: true }
+);
 
 onMounted(fetchCatalogs);
 </script>

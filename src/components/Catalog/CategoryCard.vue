@@ -1,12 +1,19 @@
 <template>
   <el-breadcrumb separator="/" style="margin-bottom: 30px; margin: 20px">
     <el-breadcrumb-item :to="{ path: '/' }">Главная</el-breadcrumb-item>
-    <el-breadcrumb-item :to="{ path: '/category' }">Категории</el-breadcrumb-item>
-    <el-breadcrumb-item v-if="category" :to="{ path: '/catalog/id' }">{{ category.name }}</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/category' }"
+      >Категории</el-breadcrumb-item
+    >
+    <el-breadcrumb-item v-if="category" :to="{ path: '/catalog/id' }">{{
+      category.name
+    }}</el-breadcrumb-item>
   </el-breadcrumb>
   <!--  -->
-  <div class="category-details" v-if="category" 
-  style="margin-bottom: 30px; margin: 20px">
+  <div
+    class="category-details"
+    v-if="category"
+    style="margin-bottom: 30px; margin: 20px"
+  >
     <h1>{{ category.name }}</h1>
   </div>
 
@@ -57,6 +64,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { photoUrl } from "@/utils/photoService";
 import { getProductsByCatalogId } from "@/server/product";
 import { getCategoryById } from "@/server/catalog";
 import { useRouter } from "vue-router";
@@ -64,13 +72,6 @@ const router = useRouter();
 
 const category = ref(null);
 const products = ref([]);
-
-const photoUrl = (path) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const fetchCategories = async () => {
   try {

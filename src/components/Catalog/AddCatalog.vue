@@ -7,16 +7,17 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-      <a-form-item>
+        <a-form-item>
           <label for="catalogName" class="label">Название каталога:</label>
           <a-input v-model:value="formState.catalogName" required allow-clear />
         </a-form-item>
 
         <a-form-item>
           <label for="price" class="label">Стоимость от:</label>
-          <a-input v-model:value="formState.price" 
-          :rules="[{ validator: checkPrice }]"
-          allow-clear 
+          <a-input
+            v-model:value="formState.price"
+            :rules="[{ validator: checkPrice }]"
+            allow-clear
           />
         </a-form-item>
 
@@ -90,11 +91,12 @@
 import { onMounted, reactive, ref, watch } from "vue";
 import { checkCatalogName, sendCatalogToServer } from "@/server/catalog";
 import { toast } from "vue3-toastify";
-import { getChapters } from "@/server/chapter";
 import CatalogList from "@/components/Catalog/CatalogList.vue";
 import { message } from "ant-design-vue";
 import { UploadOutlined } from "@ant-design/icons-vue";
 import type { UploadChangeParam } from "ant-design-vue";
+import ChapterService from "@/server/chapter";
+const chapterService = new ChapterService();
 const catalogAddedCount = ref(0);
 const catalogPhoto = ref<File | null>(null);
 const catalogPhotoPreview = ref<string | null>(null);
@@ -106,7 +108,7 @@ const headers = {
 
 interface FormState {
   catalogName: string;
-  price:   number;
+  price: number;
   description: string;
   photoLink: string;
   selectedChapter: string[];
@@ -122,28 +124,30 @@ const formState: FormState = reactive({
 
 let debouncedCheckCatalogName: ReturnType<typeof setTimeout> | null = null;
 
-watch(() => formState.catalogName, (newCatalogName) => {
-  if (debouncedCheckCatalogName) {
-    clearTimeout(debouncedCheckCatalogName);
-  }
-  debouncedCheckCatalogName = setTimeout(async () => {
-    try {
-      const isCatalogExist = await checkCatalogName(newCatalogName);
-      if (isCatalogExist) {
-        toast.error("Такой каталог уже существует", { theme: "colored" });
-      }
-    } catch (error) {
-      console.error("Ошибка при проверке имени каталога:", error);
+watch(
+  () => formState.catalogName,
+  (newCatalogName) => {
+    if (debouncedCheckCatalogName) {
+      clearTimeout(debouncedCheckCatalogName);
     }
-  }, 1500); // Adjust the delay as needed
-});
-
+    debouncedCheckCatalogName = setTimeout(async () => {
+      try {
+        const isCatalogExist = await checkCatalogName(newCatalogName);
+        if (isCatalogExist) {
+          toast.error("Такой каталог уже существует", { theme: "colored" });
+        }
+      } catch (error) {
+        console.error("Ошибка при проверке имени каталога:", error);
+      }
+    }, 1500); // Adjust the delay as needed
+  }
+);
 
 const checkPrice = (_: any, value: { number: number }) => {
   if (value.number > 0) {
     return Promise.resolve();
   }
-  return Promise.reject(new Error('Цена должна быть больше 0!'));
+  return Promise.reject(new Error("Цена должна быть больше 0!"));
 };
 
 const loadPhotoFromLink = () => {
@@ -173,7 +177,6 @@ const sendCatalogData = async () => {
     ) {
       return;
     }
-    
 
     const formData = new FormData();
     formData.append("name", formState.catalogName);
@@ -183,7 +186,7 @@ const sendCatalogData = async () => {
       formData.append("photo", formState.photoLink.trim());
     }
     formData.append("description", formState.description);
-    if (formState.price ) {
+    if (formState.price) {
       formData.append("price", formState.price.toString());
     }
     formData.append("chapterName", formState.selectedChapter.join(", "));
@@ -198,7 +201,7 @@ const sendCatalogData = async () => {
       catalogPhotoPreview.value = null;
       formState.photoLink = "";
       formState.description = "";
-      formState.price =  0;
+      formState.price = 0;
       formState.selectedChapter = [];
     } else {
       toast.error("Ошибка при добавлении каталога", { theme: "colored" });
@@ -211,7 +214,7 @@ const sendCatalogData = async () => {
 
 const fetchChapters = async () => {
   try {
-    chapters.value = await getChapters();
+    chapters.value = await chapterService.getChapters();
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }

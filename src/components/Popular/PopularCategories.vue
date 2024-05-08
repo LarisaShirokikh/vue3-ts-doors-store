@@ -1,12 +1,8 @@
 <template>
   <a-space class="title">
     <a-text>Популярные категории</a-text>
-    <el-link
-    :href="'/catalogs'" 
-    class="more-link" 
-    :underline="false" >
-    
-      <a-text>Смотреть больше  ></a-text>
+    <el-link :href="'/catalogs'" class="more-link" :underline="false">
+      <a-text>Смотреть больше ></a-text>
     </el-link>
   </a-space>
 
@@ -44,16 +40,10 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { photoUrl } from "@/utils/photoService";
 import { getCatalogs } from "@/server/catalog";
 
 const catalogs = ref<Array<any>>([]);
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 onMounted(async () => {
   try {
@@ -64,7 +54,6 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-
 :root {
   --a-color-primary: red;
 }

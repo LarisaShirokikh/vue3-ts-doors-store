@@ -1,46 +1,44 @@
 <template>
   <div class="common-layout" id="app">
-    
-      <el-container >
-        <el-aside
-          v-if="showSidebars"
-          width="300px"
-          :span="4"
+    <el-container>
+      <el-aside
+        v-if="showSidebars"
+        width="300px"
+        :span="4"
+        style="
+          border-radius: 15px;
+          margin-left: 2px;
+          background-color: white;
+          margin-right: 5px;
+          height: calc(100vh - 40px);
+        "
+      >
+        <menu-left></menu-left>
+      </el-aside>
+
+      <el-main style="padding: 3px;">
+        <div class="nav-container" style="padding: 2px; weight: 100%">
+          <nav-bar class="nav"></nav-bar>
+        </div>
+
+        <div
+          class="content-container"
           style="
             border-radius: 15px;
-            margin-left: 2px;
             background-color: white;
-            margin-right: 5px;
-            height: calc(100vh - 40px);
+            height: calc(100vh - 120px);
           "
         >
-          <menu-left></menu-left>
-        </el-aside>
-
-        <el-main style="padding: 1px">
-          <div style="width: auto">
-            <nav-bar class="nav"></nav-bar>
-          </div>
-
-          <div
-            style=
-            "
-              border-radius: 15px;
-              background-color: white;
-              height: calc(100vh - 120px);
-            "
-          >
-            <el-scrollbar>
-              <router-view />
-            </el-scrollbar>
-          </div>
-        </el-main>
-      </el-container>
-    
+          <el-scrollbar>
+            <router-view />
+          </el-scrollbar>
+        </div>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import MenuLeft from "@/components/Menu-left.vue";
 import NavBar from "@/components/NavBar.vue";
@@ -56,12 +54,14 @@ const handleResize = () => {
 };
 
 const showSidebars = computed(() => {
-  return screenWidth.value >= 1000;
+  return screenWidth.value >= 768;
 });
 </script>
 
-<style>
-html, body {
+<style scoped>
+html,
+body {
+  height: 100%; 
   padding: 0;
   margin: 0;
 }
@@ -70,7 +70,25 @@ html, body {
   cursor: pointer;
 }
 
-@media screen and (max-width: 1000px) {
+.common-layout {
+  height: 100%; /* Устанавливаем высоту на 100% */
+}
+
+.el-scrollbar__wrap {
+  height: calc(100vh - 120px); /* Высчитываем высоту для скроллбара */
+}
+
+.common-layout .nav-container {
+  width: 100%;
+  display: flex;
+}
+
+.common-layout .content-container {
+  width: 100%;
+  margin-top: 10px;
+}
+
+@media screen and (max-width: 768px) {
   .common-layout .el-aside,
   .common-layout .login-button {
     display: none;
@@ -85,30 +103,19 @@ html, body {
   }
 }
 
-@media screen and (min-width: 1000px) {
-  .common-layout .login-button-main {
-    display: none;
-  }
-
-  .common-layout .el-aside,
-  .common-layout .login-button {
-    display: flex;
-  }
-}
 
 .el-button--text {
   margin-right: 15px;
 }
 
-
 .el-select {
   width: 300px;
 }
 
-
 #app {
   font-family: Avenir, Helvetica, sans-serif;
   background-color: #f0f0f0;
-  padding: 2px;
+  padding: 5px;
+  min-height: 100%;
 }
 </style>

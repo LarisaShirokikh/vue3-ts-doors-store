@@ -2,7 +2,7 @@
   <a-space
     class="navbar"
     style="
-      width: auto;
+      width: 100%;
       padding: 5px;
       border-radius: 15px;
       background-color: white;
@@ -54,9 +54,7 @@
     </a-space>
 
     <div v-if="shouldShowExpandIcon" link @click="phoneClick">
-      
-        <Phone style="font-size: 30px; color: #333"/>
-      
+      <Phone style="font-size: 30px; color: #333" />
     </div>
     <div v-if="!shouldShowExpandIcon" link @click="phoneClick">
       <a-space style="font-size: 10px; color: #333">+7 (999) 999 99 99</a-space>
@@ -125,13 +123,14 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref, computed } from "vue";
 import { ElDrawer } from "element-plus";
-import { Phone } from 'lucide-vue-next';
+import { Phone } from "lucide-vue-next";
 import {
   MenuOutlined,
   CloseOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
-import { authenticateUser } from "@/server/auth";
+import AuthService from "@/server/auth";
+const authService = new AuthService();
 import router from "@/router/router";
 import MenuLeft from "./Menu-left.vue";
 import LoginForm from "@/components/Auth/LoginForm.vue";
@@ -170,12 +169,12 @@ const toggleIcon = () => {
 
 // Функция для проверки ширины экрана
 const checkWindowWidth = () => {
-  return window.innerWidth < 1000;
+  return window.innerWidth < 768;
 };
 const shouldShowExpandIcon = ref(checkWindowWidth());
 
 const showSidebars = computed(() => {
-  return screenWidth.value >= 1000;
+  return screenWidth.value >= 768;
 });
 
 // Обновление показа иконки при изменении ширины окна
@@ -210,7 +209,7 @@ const checkLoggedIn = async () => {
     const token = tokenData.token;
 
     try {
-      const isAuthenticated = await authenticateUser(token);
+      const isAuthenticated = await authService.authenticateUser(token);
       if (isAuthenticated) {
         loggedIn.value = true;
         user.email = tokenData.email;
@@ -235,5 +234,6 @@ onMounted(() => {
 .title {
   font-size: 28px;
   text-decoration: none;
+  align-items: center;
 }
 </style>

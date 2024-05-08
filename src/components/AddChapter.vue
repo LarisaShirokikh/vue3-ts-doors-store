@@ -64,8 +64,10 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { toast } from "vue3-toastify";
-import ChapterList from '../components/Chapters/ChapterList.vue'
-import { sendChapterToServer } from "@/server/chapter";
+import ChapterList from '@/components/Chapters/ChapterList.vue'
+import ChapterService from "@/server/chapter";
+const chapterService = new ChapterService();
+
 const chapterAddedCount = ref(0);
 const description = ref("");
 const chapterName = ref("");
@@ -111,7 +113,7 @@ const sendChapterData = async () => {
     }
     formData.append("description", description.value);
 
-    const response = await sendChapterToServer(formData);
+    const response = await chapterService.sendChapterToServer(formData);
 
 
     if (response && response.name) {

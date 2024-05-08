@@ -1,10 +1,8 @@
 <template>
   <a-space class="title">
     <a-text>Хиты для Вас</a-text>
-    <el-link :href="'/products'" 
-    class="more-link" 
-    :underline="false">
-      <a-text>Смотреть больше  ></a-text>
+    <el-link :href="'/products'" class="more-link" :underline="false">
+      <a-text>Смотреть больше ></a-text>
     </el-link>
   </a-space>
 
@@ -35,6 +33,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { photoUrl } from "@/utils/photoService";
 import { getProducts } from "@/server/product";
 import { ArrowRight } from "@element-plus/icons-vue";
 
@@ -57,13 +56,6 @@ onMounted(async () => {
     console.error("Error fetching data from the server:", error);
   }
 });
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/doorsPhoto/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 </script>
 
 <style scoped>

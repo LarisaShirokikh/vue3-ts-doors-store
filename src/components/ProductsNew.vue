@@ -1,77 +1,42 @@
 <template>
-  <a-space class="title">
-    <a-text>Новинки</a-text>
-    <el-link href="/review" class="more-link" :underline="false">
-      <p>Смотреть больше  ></p>
-      
-    </el-link>
-  </a-space>
+  <div class="container">
+    <a-space class="title">
+      <a-text>Новинки</a-text>
+      <el-link href="/catalogs" class="more-link" :underline="false">
+        <p>Смотреть больше  ></p>
+      </el-link>
+    </a-space>
 
-  <el-scrollbar>
-    <div class="products">
-      <div
-        v-for="product in products.slice(0, 7)"
-        :key="product.id"
-        class="product-item"
-      >
-        <el-link :href="'/product/' + product.id" :underline="false">
-          <el-image
-            :src="photoUrl(product.photo[0])"
-            :alt="product.name"
-            style="width: 200px; height: 100%; margin: 10px; 
-            border-radius: 5px"
-          ></el-image>
-        </el-link>
-        <br/>
+    <el-scrollbar>
+      <div class="products">
         <div
-          class="product-name"
-          style="
-            color: #666;
-            top: 5px;
-            font-size: 14px;
-            
-            margin-top: 10px;
-            text-align: center;
-            max-width: 100%;
-          "
+          v-for="product in products.slice(0, 4)"
+          :key="product.id"
+          class="product-item"
         >
-          {{ product.name }}
-        </div>
-        <div class="product-price"
-        style="
-            color: #666;
-            top: 5px;
-            font-size: 19px;
-            font-weight: bold;
-            margin-top: 10px;
-            text-align: center;
-            max-width: 100%;
-          "
-        >{{ product.newPrice }} руб.</div>
-        <br/>
-        <div>
-          <el-button class="product-button" 
-          type="danger" plain size="default"
-            >Подробнее 
-            <el-icon><ArrowRight /></el-icon
-          ></el-button>
+          <el-link :href="'/product/' + product.id" :underline="false">
+            <el-image
+              :src="photoUrl(product.photo[0])"
+              :alt="product.name"
+              class="product-image"
+            ></el-image>
+          </el-link>
+          <div class="product-details">
+            <div class="product-name">{{ product.name }}</div>
+            <div class="product-price">{{ product.newPrice }} руб.</div>
+            <a-button danger class="product-button"  size="default">Подробнее</a-button>
+          </div>
         </div>
       </div>
-    </div>
-  </el-scrollbar>
+    </el-scrollbar>
+  </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { getProducts } from "@/server/product";
+import { photoUrl } from "@/utils/photoService";
 const products = ref<Array<any>>([]);
-
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 onMounted(async () => {
   try {
@@ -84,31 +49,53 @@ onMounted(async () => {
   }
 });
 </script>
-<style scoped>
-.products {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-</style>
 
-<style>
+<style scoped>
+.container {
+  padding: 20px;
+}
+
 .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
   color: #333;
+}
+
+.products {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .product-item {
   text-align: center;
   margin: 10px;
-  flex: 0 0 calc(33.3333% - 20px);
+  width: 100%;
+  max-width: 300px; /* Максимальная ширина для мобильных устройств */
+}
+
+.product-image {
+  width: 100%; /* Сделать изображение растягиваемым на всю ширину блока */
+}
+
+.product-details {
+  margin-top: 10px;
+}
+
+.product-name {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 5px;
 }
 
 .product-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.product-button {
   margin-top: 10px;
 }
 </style>

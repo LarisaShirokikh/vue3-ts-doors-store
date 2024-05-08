@@ -6,3 +6,10 @@ export const photoUrl = (path: string) => {
   }
   return path;
 };
+
+export const videoUrl = (path: string) => {
+  if (path.startsWith("/video/")) {
+    return `${config.apiUrl}${path}`;
+  }
+  return path;
+};

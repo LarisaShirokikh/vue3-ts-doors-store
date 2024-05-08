@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column prop="name" label="Название" />
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="newPrice" label="Цена" width="100"/>
+      <el-table-column prop="newPrice" label="Цена" width="100" />
       <el-table-column label="Действия" width="100">
         <template v-slot="scope">
           <el-button
@@ -72,7 +72,6 @@
           <!-- Отображение текущего фото и возможность его удалить -->
           <label class="label">Текущее фото:</label>
           <div class="foto">
-
             <img
               v-if="editedProduct.photo"
               :src="editedProduct.photo"
@@ -129,13 +128,10 @@
 
 <script setup>
 import { onMounted, ref, defineProps, watch } from "vue";
-import {
-  deleteProductId,
-  getProducts,
-  updateProduct,
-} from "@/server/product";
+import { deleteProductId, getProducts, updateProduct } from "@/server/product";
 import { toast } from "vue3-toastify";
-import { ElTable } from 'element-plus'
+import { ElTable } from "element-plus";
+import { photoUrl } from "@/utils/photoService";
 import { Delete, Edit } from "@element-plus/icons-vue";
 //const newPriceForAllProducts = ref(0);
 const drawer = ref(false);
@@ -145,7 +141,7 @@ const products = ref([]);
 const photoLink = ref("");
 const editDrawerVisible = ref(false);
 const props = defineProps({
-  productAddedCount: Number
+  productAddedCount: Number,
 });
 
 const removePhoto = () => {
@@ -189,13 +185,11 @@ const saveChanges = async () => {
     formData.append("description", editedProduct.value.description);
     // Проверяем, есть ли изменения в фото каталога
     if (editedProduct.value.photo) {
-      
-        formData.append("photo", 
+      formData.append(
+        "photo",
         new Blob([editedProduct.value.photo], { type: "image/jpeg" }),
         editedProduct.value.name
-        );
-     
-      
+      );
     } else if (photoLink.value) {
       formData.append("photo", photoLink.value.trim());
     }
@@ -206,7 +200,6 @@ const saveChanges = async () => {
       editDrawerVisible.value = false;
       resetEditedProduct();
       await fetchProducts();
-      
     } else {
       toast.error("Ошибка при обновлении каталога", { theme: "colored" });
     }
@@ -218,10 +211,10 @@ const saveChanges = async () => {
 const deleteProduct = async (productId) => {
   try {
     await deleteProductId(productId);
-   
-      toast.success("Успешное удаление каталога", { theme: "colored" });
-   
-    await fetchProducts()
+
+    toast.success("Успешное удаление каталога", { theme: "colored" });
+
+    await fetchProducts();
   } catch (error) {
     toast.error("Ошибка при удалении каталога", { theme: "colored" });
     console.error("Ошибка при удалении каталога:", error);
@@ -238,25 +231,22 @@ const handleProductPhotoChange = (event) => {
   }
 };
 
-const photoUrl = (path) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
-
 const fetchProducts = async () => {
   try {
-  const fetchedProduct = await getProducts();
+    const fetchedProduct = await getProducts();
     products.value = fetchedProduct.reverse();
   } catch (error) {
     console.error("Ошибка при получении списка каталогов:", error);
   }
 };
 
-watch(() => props.productAddedCount, async () => {
-  await fetchProducts();
-}, { immediate: true });
+watch(
+  () => props.productAddedCount,
+  async () => {
+    await fetchProducts();
+  },
+  { immediate: true }
+);
 
 onMounted(fetchProducts);
 </script>

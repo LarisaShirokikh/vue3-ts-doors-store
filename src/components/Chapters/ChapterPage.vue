@@ -50,20 +50,14 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getChapterById } from "@/server/chapter";
-import { getCatalogByChapterName } from "@/server/catalog";
 import { useRouter } from "vue-router";
+import { photoUrl } from "@/utils/photoService";
+import ChapterService from "@/server/chapter";
+const chapterService = new ChapterService();
 const router = useRouter();
 
 const chapter = ref(null);
 const catalogs = ref([]);
-
-const photoUrl = (path) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const fetchChapter = async () => {
   try {
@@ -74,11 +68,11 @@ const fetchChapter = async () => {
     if (!chapterId) {
       throw new Error("Product ID not found in the route parameters.");
     }
-    chapter.value = await getChapterById(chapterId);
+    chapter.value = await chapterService.getChapterById(chapterId);
     if (!chapterName) {
       throw new Error("Chapter name not found in the route parameters.");
     }
-    catalogs.value = await getCatalogByChapterName(chapterName);
+    catalogs.value = await chapterService.getCatalogByChapterName(chapterName);
   } catch (error) {
     console.error("Ошибка при получении каталога:", error);
   }

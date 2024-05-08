@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import { getServices } from "@/server/service";
 import { onMounted, ref } from "vue";
-import { photoUrl } from "@/utils/utils";
+import { photoUrl } from "@/utils/photoService";
 
 const servises = ref<Array<any>>([]);
 

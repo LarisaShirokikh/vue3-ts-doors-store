@@ -113,7 +113,7 @@ import { useRouter } from "vue-router";
 import ProductsNew from "@/components/ProductsNew.vue";
 import FooterCom from "@/components/FuterCom.vue";
 import ModalWindow from "../ModalWindow.vue";
-import { photoUrl } from "@/utils/utils";
+import { photoUrl } from "@/utils/photoService";
 const dialogFormVisible = ref(false);
 
 const router = useRouter();

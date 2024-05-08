@@ -2,26 +2,26 @@
   <div>
     <h2 class="heading">Все отзывы</h2>
     <el-table
-    :data="reviews"
+      :data="reviews"
       :key="index"
       style="width: 100%; max-height: 500px; overflow-y: auto"
       :page-size="5"
     >
-<el-table-column prop="id" label="ID" width="50" />
+      <el-table-column prop="id" label="ID" width="50" />
       <el-table-column label="Фото" width="100">
         <template #default="scope">
-            <img
+          <img
             v-if="scope.row.photo && scope.row.photo.length > 0"
             :src="photoUrl(scope.row.photo[0])"
             :alt="scope.row.name"
             style="max-width: 80px; max-height: 80px"
           />
         </template>
-        </el-table-column>
-        <el-table-column prop="reviewName" label="Название" />
+      </el-table-column>
+      <el-table-column prop="reviewName" label="Название" />
       <el-table-column label="Действия" width="200">
         <template #default="scope">
-            <el-button
+          <el-button
             @click="(drawer = true), startEditing(scope.row)"
             :icon="Edit"
             circle
@@ -36,7 +36,7 @@
             type="danger"
           ></el-button>
         </template>
-        </el-table-column>
+      </el-table-column>
     </el-table>
 
     <el-drawer
@@ -125,6 +125,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { photoUrl } from "@/utils/photoService";
 import { toast } from "vue3-toastify";
 const drawer = ref(false);
 const reviews = ref([]);
@@ -132,7 +133,7 @@ const editDrawerVisible = ref(false);
 const reviewPhotoPreview = ref(null);
 const photoLink = ref("");
 const reviewPhoto = ref(null);
-import {getReviews} from "@/server/review";
+import { getReviews } from "@/server/review";
 import { Delete, Edit } from "@element-plus/icons-vue";
 
 const removePhoto = () => {
@@ -154,13 +155,6 @@ const editedReview = ref({
   description: "",
   photo: null,
 });
-
-const photoUrl = (path) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const startEditing = (review) => {
   console.log("Editing review:", review);

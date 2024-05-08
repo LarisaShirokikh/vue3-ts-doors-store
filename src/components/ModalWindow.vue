@@ -62,7 +62,5 @@ const formState = reactive({
     desc: '',
   },
 });
-// const onFinish = (values: any) => {
-//   console.log('Success:', values);
-// };
+
 </script>

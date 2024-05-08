@@ -26,20 +26,16 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import { getChapters } from "@/server/chapter";
-
+import {photoUrl} from "@/utils/photoService"
+import ChapterService from "@/server/chapter";
+const chapterService = new ChapterService();
 const chapters = ref<Array<any>>([]);
 
-const photoUrl = (path: string) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
+
 
 const fetchChapters = async () => {
   try {
-    chapters.value = await getChapters();
+    chapters.value = await chapterService.getChapters();
   } catch (error) {
     console.error("Ошибка при получении каталога:", error);
   }

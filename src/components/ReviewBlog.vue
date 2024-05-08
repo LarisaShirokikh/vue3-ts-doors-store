@@ -61,16 +61,9 @@
 <script setup>
 import { getReviews } from "@/server/review";
 import { onMounted, ref } from "vue";
-
+import { photoUrl } from "@/utils/photoService";
 const reviews = ref([]);
 
-
-const photoUrl = (path) => {
-  if (path.startsWith("/uploads/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 onMounted(async () => {
   try {

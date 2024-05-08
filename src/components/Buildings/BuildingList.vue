@@ -2,22 +2,18 @@
   <div class="title">
     <h2>Наши установки</h2>
   </div>
-  
-    <div class="horizontal-scroll">
-      <div v-for="video in videos" :key="video.id">
-        <video 
-        width="200" 
-        height="auto" 
+
+  <div class="horizontal-scroll">
+    <div v-for="video in videos" :key="video.id">
+      <video
+        width="200"
+        height="auto"
         preload="auto"
-        style="border-radius: 15px;"
+        style="border-radius: 15px"
         @click="toggleVideo(video)"
-        >
-          <source
-            :src="videoUrl(video.video[0])"
-            :poster="video.thumbnail"
-          />
-        </video>
-      
+      >
+        <source :src="videoUrl(video.video[0])" :poster="video.thumbnail" />
+      </video>
     </div>
   </div>
 </template>
@@ -25,14 +21,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getVideo } from "@/server/video";
+import { videoUrl } from "@/utils/photoService";
 const videos = ref([]);
-
-const videoUrl = (path) => {
-  if (path.startsWith("/video/")) {
-    return `http://localhost:3000${path}`;
-  }
-  return path;
-};
 
 const fetchData = async () => {
   try {
@@ -44,7 +34,7 @@ const fetchData = async () => {
 };
 
 onMounted(() => {
-    fetchData();
+  fetchData();
 });
 
 const toggleVideo = (video) => {
@@ -75,8 +65,6 @@ const toggleVideo = (video) => {
   padding: 20px 30px 20px;
   color: #333;
 }
-
-
 
 /* Добавьте стили по желанию для горизонтальной прокрутки */
 </style>

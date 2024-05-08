@@ -54,7 +54,7 @@ class ChapterService {
     }
   }
 
-  public async getChapters(): Promise<any> {
+   async getChapters(): Promise<any[]> {
     try {
       const response: AxiosResponse<any> = await axiosService.get("/chapter");
       return response.data;

@@ -1,48 +1,56 @@
-
 <template>
-  <a-space direction="vertical" 
-  style="width: 98%;"
-  class="search-input"
-  >
+  <div class="search-container">
     <a-input
-      type="text"
       v-model="searchQuery"
       placeholder="Найти дверь..."
       @search="handleSearch"
-      status="error"
+      class="search-input"
+      suffix-icon="search"
     />
-    <template #enterButton>
-        <a-button type="error">Custom</a-button>
-      </template>
-  </a-space>
+    <a-button danger class="search-button" @click="handleSearch">Поиск</a-button>
+  </div>
 </template>
 
-<script lang="ts" setup>
-// const input = ref("");
-
+<script setup lang="ts">
 import { ref } from 'vue';
 
 const searchQuery = ref<string>('');
 
 const handleSearch = () => {
-  // Здесь можете реализовать логику поиска
   console.log('Выполняется поиск: ', searchQuery.value);
-  // Например, вызов функции для выполнения поиска на основе searchQuery.value
 };
 </script>
 
-
 <style scoped>
-
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
 
 .search-input {
-  padding: 10px;
-  margin: 10px;
-  font-size: 16px;
-  border-radius: 15px;
-  border:none;
-  outline: none !important;
-  width: 90%;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.search-button {
+  width: 100px;
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .search-button {
+    width: 100%;
+  }
 }
 </style>
-
