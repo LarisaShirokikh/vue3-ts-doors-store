@@ -31,40 +31,6 @@
       <div style="font-size: large; margin-bottom: 10px;">ПН-ВС с 9.00 до 21.00</div>
       <div>© Двери Эталон, 2024</div>
     </div>
-    <!-- <div class="footer-column">
-      <div class="title2">Магазин</div>
-      <div class="social-link">
-        <a href="/category" type="default" class="social-link">Все разделы</a>
-        <a href="/catalogs" type="default" class="social-link">Все каталоги</a>
-        <a href="/" type="default" class="social-link">Популярные категории</a>
-        <a href="/" type="default" class="social-link">Акции</a>
-        <a href="/" type="default" class="social-link">Отзывы</a>
-        <a href="/" type="default" class="social-link">Отзывы</a>
-        <a href="/" type="default" class="social-link">Специальное предложение</a>
-      </div>
-    </div>
-    <div class="footer-column">
-      <div class="title2">Клиентам</div>
-      <div class="social-link">
-      <a href="/category" type="default" class="social-link">Наши установки</a>
-        <a href="/" type="default" class="social-link">Отзывы</a>
-        <a href="/" type="default" class="social-link">Отзывы</a>
-        <a href="/" type="default" class="social-link">Отзывы</a>
-        <a href="/" type="default" class="social-link">Вызвать замерщика</a>
-        <a href="/" type="default" class="social-link">Услуги и сервисы</a>
-        <a href="/" type="default" class="social-link">Получить консультацию</a>
-      </div>
-    </div> -->
-    <!-- <div class="footer-column">
-      <div class="title2">Соцсети</div>
-      <div>
-        <a href="/" type="default" class="social-link">Каталог дверей</a>
-        <a href="/" type="default" class="social-link">Каталог дверей</a>
-        <a href="/" type="default" class="social-link">Каталог дверей</a>
-        <a href="/" type="default" class="social-link">Каталог дверей</a>
-        <a href="/" type="default" class="social-link">Каталог дверей</a>
-      </div>
-    </div> -->
   </footer>
 </template>
 
