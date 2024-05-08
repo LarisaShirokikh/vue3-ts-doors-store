@@ -14,9 +14,9 @@
           style="
             /* position: absolute; */
             top: 10px;
-            left: 20px;
+            left: 10px;
             color: #666;
-            font-size: 20px;
+            font-size: 16px;
             overflow-y: auto;
           "
         >
@@ -45,5 +45,6 @@ onMounted(async () => {
 <style scoped>
 .scrollbar {
   height: 100%;
+  direction: flex;
 }
 </style>

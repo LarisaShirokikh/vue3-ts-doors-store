@@ -4,26 +4,26 @@
       
         <el-link href="/" type="danger" class="title"> Двери Эталон </el-link>
       
-      <div style="display:flex; align-items: center; gap: 30px; margin-bottom: 10px;">
+      <div style="display:flex; align-items: center; gap: 10px; margin-bottom: 10px;">
         <img
           src="https://img.icons8.com/ios-filled/50/000000/vk-com.png"
           alt="VK Icon"
-          style="width: 28px; color: #777;"
+          style="width: 15px; color: #777;"
         />
         <img
           src="https://img.icons8.com/ios-filled/50/000000/telegram-app.png"
           alt="Telegram Icon"
-          style="width: 28px"
+          style="width: 15px"
         />
         <img
           src="https://img.icons8.com/ios-filled/50/000000/youtube-play.png"
           alt="YouTube Icon"
-          style="width: 28px"
+          style="width: 15px"
         />
         <img
           src="https://img.icons8.com/ios-filled/50/000000/whatsapp.png"
           alt="WhatsApp Icon"
-          style="width: 28px"
+          style="width: 15px"
         />
       </div>
       <el-link class="social-link" style="font-size: 28px">+7 (495) 999-99-99</el-link>
@@ -31,7 +31,7 @@
       <div style="font-size: large; margin-bottom: 10px;">ПН-ВС с 9.00 до 21.00</div>
       <div>© Двери Эталон, 2024</div>
     </div>
-    <div class="footer-column">
+    <!-- <div class="footer-column">
       <div class="title2">Магазин</div>
       <div class="social-link">
         <a href="/category" type="default" class="social-link">Все разделы</a>
@@ -54,7 +54,7 @@
         <a href="/" type="default" class="social-link">Услуги и сервисы</a>
         <a href="/" type="default" class="social-link">Получить консультацию</a>
       </div>
-    </div>
+    </div> -->
     <!-- <div class="footer-column">
       <div class="title2">Соцсети</div>
       <div>
@@ -89,7 +89,7 @@
 .title {
   font-weight: bold;
   margin-bottom: 5px;
-  font-size: 34px;
+  font-size: 28px;
   padding: 10px;
   margin: 10px;
 }

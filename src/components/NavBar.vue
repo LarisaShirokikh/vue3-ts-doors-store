@@ -3,7 +3,7 @@
     class="navbar"
     style="
       width: auto;
-      padding: 10px;
+      padding: 5px;
       border-radius: 15px;
       background-color: white;
       height: 50px;
@@ -17,9 +17,9 @@
       <template v-if="shouldShowExpandIcon">
         <icon
           style="
-            font-size: 34px;
-            margin: 10px;
-            margin-right: 30px;
+            font-size: 30px;
+            margin: 5px;
+            margin-right: 5px;
             color: #606266;
             border: none;
             cursor: pointer;
@@ -55,11 +55,11 @@
 
     <div v-if="shouldShowExpandIcon" link @click="phoneClick">
       
-        <Phone style="font-size: 34px; color: #333"/>
+        <Phone style="font-size: 30px; color: #333"/>
       
     </div>
     <div v-if="!shouldShowExpandIcon" link @click="phoneClick">
-      <a-space style="font-size: 12px; color: #333">+7 (999) 999 99 99</a-space>
+      <a-space style="font-size: 10px; color: #333">+7 (999) 999 99 99</a-space>
     </div>
 
     <el-button
@@ -88,7 +88,7 @@
       class="login-button-main"
       style="
         border-radius: 15px;
-        margin: 5px;
+        margin: 2px;
         background-color: white;
         display: flex;
         justify-content: flex-end;
@@ -106,7 +106,7 @@
         v-if="user.avatar"
         :src="user.avatar"
         alt="Аватарка"
-        style="margin-left: 10px"
+        style="margin-left: 5px"
       />
       <el-text v-if="loggedIn" @click="logout">/ Выйти</el-text>
     </div>
@@ -114,8 +114,8 @@
   <el-space direction="vertical">
     <el-drawer
       v-model="dialogFormVisible"
-      size="40%"
-      style="border-radius: 30px; height: 600px"
+      size="auto"
+      style="border-radius: 30px; height: auto"
     >
       <LoginForm :loggedIn="loggedIn" @loggedIn="handleLoginFormSubmit" />
     </el-drawer>
@@ -229,11 +229,11 @@ onMounted(() => {
 
 <style>
 .dropdown-menu {
-  font-size: 36px;
+  font-size: 24px;
 }
 
 .title {
-  font-size: 30px;
+  font-size: 28px;
   text-decoration: none;
 }
 </style>

@@ -199,21 +199,21 @@ const submitForm = async () => {
 .input {
   border: none;
   outline: none;
-  font-size: 22px;
+  font-size: 18px;
   background-color: rgb(247, 244, 249);
   border-radius: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .back-arrow {
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .futer-botton {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 </style>

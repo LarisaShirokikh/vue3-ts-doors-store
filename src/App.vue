@@ -4,13 +4,13 @@
       <el-container >
         <el-aside
           v-if="showSidebars"
-          width="300px"
+          width="auto"
           :span="4"
           style="
             border-radius: 15px;
-            margin-left: 5px;
+            margin-left: 2px;
             background-color: white;
-            margin-right: 15px;
+            margin-right: 5px;
             height: calc(100vh - 40px);
           "
         >
@@ -111,6 +111,6 @@ html, body {
 #app {
   font-family: Avenir, Helvetica, sans-serif;
   background-color: #f0f0f0;
-  padding:  10px;
+  padding:  2px;
 }
 </style>
