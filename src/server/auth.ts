@@ -1,103 +1,83 @@
-import axios from "axios";
-import config from "@/config/urlConfig";
+import axiosService from "@/utils/axiosService";
 
-export const authenticateUser = async (token: string): Promise<boolean> => {
-  try {
-    const response = await axios.post(
-      `${config.API_URL}/auth/verify`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    console.log("response", response);
-    if (response.status === 201) {
-      return true;
-    } else {
+class AuthService {
+  constructor() {}
+
+  async authenticateUser(token: string): Promise<boolean> {
+    try {
+      const response = await axiosService.post("/auth/verify", {});
+      console.log("response", response);
+      return response.status === 201;
+    } catch (error) {
+      console.error("Ошибка при верификации токена:", error);
       return false;
     }
-  } catch (error) {
-    console.error("Ошибка при верификации токена:", error);
-    return false;
   }
-};
 
-export const authenticateWithEmail = async (
-  email: string,
-  password: string
-): Promise<any | null> => {
-  console.log("userDataServer", email);
-  try {
-    const response = await axios.post(
-      `${config.API_URL}/auth/login`,
-      {
+  async authenticateWithEmail(
+    email: string,
+    password: string
+  ): Promise<any | null> {
+    console.log("userDataServer", email);
+    try {
+      const response = await axiosService.post("/auth/login", {
         email,
         password,
-      }
-    );
-    console.log("response.data", response.data);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.error("Ошибка при аутентификации:", error);
-    return null;
+      });
+      console.log("response.data", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Ошибка при аутентификации:", error);
+      return null;
+    }
   }
-};
 
-export const registerWithEmail = async (
-  email: string,
-  password: string,
-  name: string
-): Promise<any | null> => {
-  console.log("userDataServer", email, password, name);
-  try {
-    const response = await axios.post(
-      `${config.API_URL}/user`,
-      {
+  async registerWithEmail(
+    email: string,
+    password: string,
+    name: string
+  ): Promise<any | null> {
+    console.log("userDataServer", email, password, name);
+    try {
+      const response = await axiosService.post("/user", {
         email,
         password,
         name,
-      }
-    );
-    console.log("response.data", response.data);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.error("Ошибка при аутентификации:", error);
-    return null;
+      });
+      console.log("response.data", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Ошибка при регистрации пользователя:", error);
+      return null;
+    }
   }
-};
 
-export const sendConfirmCode = async (code: string): Promise<any | null> => {
-  try {
-    const response = await axios.post(
-      `${config.API_URL}/auth/login`,
-      {
-        code,
-      }
-    );
-    console.log("response.data", response.data);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.error("Ошибка при аутентификации:", error);
-    return null;
+  async sendConfirmCode(code: string): Promise<any | null> {
+    try {
+      const response = await axiosService.post("/auth/login", { code });
+      console.log("response.data", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Ошибка при отправке кода подтверждения:", error);
+      return null;
+    }
   }
-};
 
-export const getUserInfo = async (email: string) => {
-  try {
-    const response = await axios.get(`${config.API_URL}/user/email`, {
-      params: {
-        email: email,
-      }
-    });
-    console.log("response.data verify", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Ошибка при получении информации о пользователе:", error);
-    throw error;
+  async getUserInfo(email: string): Promise<any> {
+    try {
+      const response = await axiosService.get("/user/email", {
+        params: { email },
+      });
+      console.log("response.data verify", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Ошибка при получении информации о пользователе по email:",
+        error
+      );
+      throw error;
+    }
   }
-};
+}
+
+export default AuthService;

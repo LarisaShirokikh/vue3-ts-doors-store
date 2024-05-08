@@ -1,10 +1,10 @@
 <template>
   <footer class="footer">
-    <div class="footer-column">
+    <a-space >
       
         <el-link href="/" type="danger" class="title"> Двери Эталон </el-link>
       
-      <div style="display:flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+      <div style="display:flex; align-items: center; gap: 10px;">
         <img
           src="https://img.icons8.com/ios-filled/50/000000/vk-com.png"
           alt="VK Icon"
@@ -30,7 +30,7 @@
       <div>Режим работы</div>
       <div style="font-size: large; margin-bottom: 10px;">ПН-ВС с 9.00 до 21.00</div>
       <div>© Двери Эталон, 2024</div>
-    </div>
+    </a-space>
   </footer>
 </template>
 
@@ -42,15 +42,10 @@
 }
 .footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background-color: #f0f0f0;
-  width: 100%;
 }
 
-.footer-column {
-  flex: 1;
-}
 
 .title {
   font-weight: bold;
@@ -64,8 +59,6 @@
   font-weight: bold;
   margin-bottom: 1px;
   font-size: 24px;
-  padding: 10px;
-  margin: 10px;
 }
 
 .social-link {
