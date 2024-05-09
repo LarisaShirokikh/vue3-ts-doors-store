@@ -6,7 +6,6 @@ const config: UrlConfig = {
 
 export default config;
 
-
 interface UrlConfig {
   apiUrl: string;
   API_URL: string;
