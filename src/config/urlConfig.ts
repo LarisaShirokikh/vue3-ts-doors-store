@@ -1,6 +1,6 @@
 const config: UrlConfig = {
-  apiUrl: "https://api.dverietalon.ru:4200",
-  API_URL: "https://api.dverietalon.ru:4200/api",
+  apiUrl: "https://api.dverietalon.ru",
+  API_URL: "https://api.dverietalon.ru/api",
   ALLOWED_ORIGIN: "https://api.dverietalon.ru",
 };
 
