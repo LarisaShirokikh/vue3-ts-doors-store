@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-text class="heading">Список каталогов</el-text>
+    <a-text >Список каталогов</a-text>
 
     <el-table
       :data="catalogs"
@@ -66,7 +66,7 @@
             required
           ></textarea>
 
-          <!-- Отображение текущего фото и возможность его удалить -->
+          
           <label class="label">Текущее фото:</label>
           <div class="foto">
             <img
@@ -236,13 +236,9 @@ const fetchCatalogs = async () => {
   }
 };
 
-watch(
-  () => props.catalogAddedCount,
-  async () => {
+watch(() => props.catalogAddedCount, async () => {
     await fetchCatalogs();
-  },
-  { immediate: true }
-);
+  }, { immediate: true });
 
 onMounted(fetchCatalogs);
 </script>
@@ -265,10 +261,10 @@ onMounted(fetchCatalogs);
 .form {
   max-width: 100%;
   margin: auto;
-  background-color: #f8f9fa; /* Цвет фона */
+  background-color: #f8f9fa;
   padding: 2rem;
-  border-radius: 15px; /* Радиус скругления углов */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+  border-radius: 15px; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
   padding-left: 20px;
 }
 
@@ -302,7 +298,5 @@ onMounted(fetchCatalogs);
   transform: translateY(-50%);
 }
 
-.heading {
-  color: #f56c6c;
-}
+
 </style>

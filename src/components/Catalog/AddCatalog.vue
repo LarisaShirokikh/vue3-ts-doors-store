@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <el-text class="heading">Добавить каталог</el-text>
+      <a-text>Добавить каталог</a-text>
       <a-form
         :model="formState"
         :label-col="labelCol"
@@ -9,7 +9,7 @@
       >
         <a-form-item>
           <label for="catalogName" class="label">Название каталога:</label>
-          <a-input v-model:value="formState.catalogName" required allow-clear />
+          <a-input v-model:value="formState.name" required allow-clear />
         </a-form-item>
 
         <a-form-item>
@@ -56,7 +56,7 @@
           allow-clear
         />
 
-        <label for="catalogPhoto" class="label">Загрузить фото:</label>
+        <label for="photo" class="label">Загрузить фото:</label>
         <a-upload
           v-model:file-list="fileList"
           list-type="picture"
@@ -71,8 +71,8 @@
           </a-button>
         </a-upload>
         <img
-          v-if="catalogPhotoPreview"
-          :src="catalogPhotoPreview"
+          v-if="photoPreview"
+          :src="photoPreview"
           alt="Предворительный просмотр фото каталога"
           class="catalog-preview"
           style="width: auto; height: 300px; margin: 10px; border-radius: 15px"
@@ -89,33 +89,30 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from "vue";
+import { useForm, FormStateCatalogs } from "@/utils/formHelpers";
 import { checkCatalogName, sendCatalogToServer } from "@/server/catalog";
 import { toast } from "vue3-toastify";
 import CatalogList from "@/components/Catalog/CatalogList.vue";
-import { message } from "ant-design-vue";
 import { UploadOutlined } from "@ant-design/icons-vue";
-import type { UploadChangeParam } from "ant-design-vue";
 import ChapterService from "@/server/chapter";
 const chapterService = new ChapterService();
 const catalogAddedCount = ref(0);
-const catalogPhoto = ref<File | null>(null);
-const catalogPhotoPreview = ref<string | null>(null);
 const chapters = ref([]);
-const fileList = ref([]);
 const headers = {
   authorization: "authorization-text",
 };
 
-interface FormState {
-  catalogName: string;
-  price: number;
-  description: string;
-  photoLink: string;
-  selectedChapter: string[];
-}
+const {
+  fileList,
+  photo,
+  photoPreview,
+  handleChange,
+  loadPhotoFromLink,
+  resetFormCatalogs,
+} = useForm();
 
-const formState: FormState = reactive({
-  catalogName: "",
+const formState: FormStateCatalogs = reactive({
+  name: "",
   price: 0,
   description: "",
   photoLink: "",
@@ -125,7 +122,7 @@ const formState: FormState = reactive({
 let debouncedCheckCatalogName: ReturnType<typeof setTimeout> | null = null;
 
 watch(
-  () => formState.catalogName,
+  () => formState.name,
   (newCatalogName) => {
     if (debouncedCheckCatalogName) {
       clearTimeout(debouncedCheckCatalogName);
@@ -139,7 +136,7 @@ watch(
       } catch (error) {
         console.error("Ошибка при проверке имени каталога:", error);
       }
-    }, 1500); // Adjust the delay as needed
+    }, 1500);
   }
 );
 
@@ -150,38 +147,20 @@ const checkPrice = (_: any, value: { number: number }) => {
   return Promise.reject(new Error("Цена должна быть больше 0!"));
 };
 
-const loadPhotoFromLink = () => {
-  if (formState.photoLink.trim() !== "") {
-    catalogPhotoPreview.value = formState.photoLink.trim();
-  } else {
-    catalogPhotoPreview.value = null;
-  }
-};
-
-const handleChange = (info: UploadChangeParam) => {
-  if (info.file.status !== "uploading") {
-    console.log(info.file, info.fileList);
-  }
-  if (info.file.status === "done") {
-    message.success(`${info.file.name} file uploaded successfully`);
-  } else if (info.file.status === "error") {
-    message.error(`${info.file.name} file upload failed.`);
-  }
-};
 
 const sendCatalogData = async () => {
   try {
     if (
-      !formState.catalogName ||
-      (!catalogPhoto.value && !formState.photoLink.trim())
+      !formState.name ||
+      (!photo.value && !formState.photoLink.trim())
     ) {
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", formState.catalogName);
-    if (catalogPhoto.value) {
-      formData.append("photo", catalogPhoto.value, catalogPhoto.value.name);
+    formData.append("name", formState.name);
+    if (photo.value) {
+      formData.append("photo", photo.value, photo.value.name);
     } else if (formState.photoLink) {
       formData.append("photo", formState.photoLink.trim());
     }
@@ -196,13 +175,14 @@ const sendCatalogData = async () => {
     if (response && response.name) {
       catalogAddedCount.value++;
       toast.success("Успешное добавление каталога", { theme: "colored" });
-      formState.catalogName = "";
-      catalogPhoto.value = null;
-      catalogPhotoPreview.value = null;
-      formState.photoLink = "";
-      formState.description = "";
-      formState.price = 0;
-      formState.selectedChapter = [];
+      resetFormCatalogs(formState);
+      // formState.catalogName = "";
+      // catalogPhoto.value = null;
+      // catalogPhotoPreview.value = null;
+      // formState.photoLink = "";
+      // formState.description = "";
+      // formState.price = 0;
+      // formState.selectedChapter = [];
     } else {
       toast.error("Ошибка при добавлении каталога", { theme: "colored" });
       console.error("Дополнительная информация об ошибке:", response);
@@ -225,7 +205,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   flex-direction: column;
@@ -233,20 +213,20 @@ onMounted(async () => {
   width: auto;
 }
 
-.form {
+/* .form {
   max-width: 100%;
   margin: auto;
-  background-color: #f8f9fa; /* Цвет фона */
+  background-color: #f8f9fa; 
   padding: 2rem;
-  border-radius: 8px; /* Радиус скругления углов */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+  border-radius: 8px; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
   padding-left: 20px;
-}
+} */
 
 .label {
   display: block;
-  color: #495057; /* Цвет текста */
-  font-size: 0, 5rem; /* Размер шрифта */
+  color: #495057;
+  font-size: 0, 5rem;
   margin: 0.5rem;
 }
 
@@ -254,10 +234,10 @@ onMounted(async () => {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin: 1rem; /* Анимация при наведении */
+  margin: 1rem;
 }
 
-.heading {
+/* .heading {
   color: #f56c6c;
-}
+} */
 </style>

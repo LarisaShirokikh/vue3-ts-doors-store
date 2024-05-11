@@ -1,38 +1,8 @@
 <template>
-  <a-space
-    class="navbar"
-    style="
-      width: 100%;
-      padding: 5px;
-      border-radius: 15px;
-      background-color: white;
-      height: 50px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-    "
-  >
-    <a-space style="display: flex; align-items: center">
+  <div class="navbar">
+    <div class="brand-container">
       <template v-if="shouldShowExpandIcon">
-        <icon
-          style="
-            font-size: 30px;
-            margin: 5px;
-            margin-right: 5px;
-            color: #606266;
-            border: none;
-            cursor: pointer;
-          "
-          @click="toggleIcon"
-        >
-          <template v-if="!expanded">
-            <MenuOutlined />
-          </template>
-          <template v-else>
-            <CloseOutlined />
-          </template>
-        </icon>
+        <Menu class="menu-icon" @click="toggleIcon" />
       </template>
 
       <a-drawer
@@ -48,107 +18,81 @@
         </div>
       </a-drawer>
 
-      <a-button type="link" href="/" danger class="title">
-        Двери Эталон
-      </a-button>
-    </a-space>
-
-    <div v-if="shouldShowExpandIcon" link @click="phoneClick">
-      <Phone style="font-size: 30px; color: #333" />
-    </div>
-    <div v-if="!shouldShowExpandIcon" link @click="phoneClick">
-      <a-space style="font-size: 10px; color: #333">+7 (999) 999 99 99</a-space>
+      <router-link to="/" class="brand-title">Двери Эталон</router-link>
     </div>
 
-    <el-button
-      v-if="showSidebars"
-      @click="handleButtonClick"
-      link
-      :span="4"
-      class="login-button"
-      style="
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-      "
-    >
-      <a-text v-if="!loggedIn">Войти</a-text>
-      <a-text v-else>{{ user.email }}</a-text>
-      <img :src="user.avatar" alt="Аватарка" v-if="user.avatar" />
-    </el-button>
+    <div class="contact-info" v-if="shouldShowExpandIcon" @click="phoneClick">
+      <Phone class="phone-icon" />
+    </div>
+    <div class="contact-info" v-else @click="phoneClick">
+      <span class="phone-number">+7 (926) 021-73-65</span>
+    </div>
 
-    <div
-      v-if="!showSidebars"
-      @click="handleButtonClick"
-      link
-      class="login-button-main"
-      style="
-        border-radius: 15px;
-        margin: 2px;
-        background-color: white;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-      "
-    >
-      <icon size="large" color="#f56c6c" class="no-inherit">
-        <UserOutlined />
-      </icon>
-      <a-text size="large" style="margin: 10px">
-        {{ loggedIn ? user.email : "Войти" }}
+    <div class="auth-container">
+      <a-text v-if="!loggedIn" @click="handleButtonClick" class="auth-link">
+        <Plus class="auth-icon" />
+        Войти
       </a-text>
-
-      <img
+      <a-text v-if="loggedIn" class="user-info">
+        <a-avatar
         v-if="user.avatar"
         :src="user.avatar"
         alt="Аватарка"
-        style="margin-left: 5px"
-      />
-      <el-text v-if="loggedIn" @click="logout">/ Выйти</el-text>
+        class="user-avatar"
+        >
+        <User class="auth-icon" />
+      </a-avatar>
+      <User v-else class="auth-icon" />
+      <router-link :to="{ path: '/myProfile' }" class="email-link">
+        {{ user.email }}
+      </router-link>
+      </a-text>
+      <a-button
+        v-if="loggedIn"
+        @click="logout"
+        dashed
+        type="link"
+        class="logout-button"
+      >
+        <LogOut class="auth-icon" />
+      </a-button>
     </div>
-  </a-space>
-  <el-space direction="vertical">
-    <el-drawer
-      v-model="dialogFormVisible"
-      size="200px"
-      style="border-radius: 30px; height: 100%"
-    >
-      <LoginForm :loggedIn="loggedIn" @loggedIn="handleLoginFormSubmit" />
-    </el-drawer>
-  </el-space>
+  </div>
+
+  <a-drawer v-model:open="dialogFormVisible" class="login-drawer">
+    <LoginForm :loggedIn="loggedIn" @loggedIn="handleLoginFormSubmit" />
+  </a-drawer>
 </template>
 
-<script lang="ts" setup>
-import { reactive, onMounted, ref, computed } from "vue";
-import { ElDrawer } from "element-plus";
-import { Phone } from "lucide-vue-next";
-import {
-  MenuOutlined,
-  CloseOutlined,
-  UserOutlined,
-} from "@ant-design/icons-vue";
+<script setup lang="ts">
+import { reactive, onMounted, ref } from "vue";
+import { Menu, Phone, Plus, LogOut, User } from "lucide-vue-next";
 import AuthService from "@/server/auth";
-const authService = new AuthService();
 import router from "@/router/router";
 import MenuLeft from "./Menu-left.vue";
 import LoginForm from "@/components/Auth/LoginForm.vue";
 import type { DrawerProps } from "ant-design-vue";
+
+const authService = new AuthService();
 const placement = ref<DrawerProps["placement"]>("left");
 const open = ref<boolean>(false);
 const loggedIn = ref(false);
 const dialogFormVisible = ref(false);
-const menuOpened = ref(false);
 const expanded = ref(false);
-const screenWidth = ref(window.innerWidth);
 
-const showDrawer = () => {
-  open.value = true;
+const user = reactive({
+  email: "",
+  avatar: "",
+});
+
+const checkWindowWidth = () => {
+  return window.innerWidth < 768;
 };
-const onClose = () => {
-  open.value = false;
-};
+
+const shouldShowExpandIcon = ref(checkWindowWidth());
+window.addEventListener("resize", () => {
+  shouldShowExpandIcon.value = checkWindowWidth();
+});
 
 const handleLoginFormSubmit = (login: any) => {
   dialogFormVisible.value = false;
@@ -163,36 +107,18 @@ const logout = () => {
 };
 
 const toggleIcon = () => {
-  showDrawer();
+  open.value = !open.value;
   expanded.value = !expanded.value;
 };
 
-// Функция для проверки ширины экрана
-const checkWindowWidth = () => {
-  return window.innerWidth < 768;
+const onClose = () => {
+  open.value = false;
 };
-const shouldShowExpandIcon = ref(checkWindowWidth());
 
-const showSidebars = computed(() => {
-  return screenWidth.value >= 768;
-});
+const phoneClick = () => {
+  // Your logic for phone click
+};
 
-// Обновление показа иконки при изменении ширины окна
-window.addEventListener("resize", () => {
-  shouldShowExpandIcon.value = checkWindowWidth();
-});
-
-// Закрываем меню при клике вне его области
-window.addEventListener("click", (event) => {
-  if (!event.target.closest(".navbar")) {
-    menuOpened.value = false;
-  }
-});
-
-const user = reactive({
-  email: "",
-  avatar: "",
-});
 const handleButtonClick = () => {
   if (!loggedIn.value) {
     dialogFormVisible.value = true;
@@ -221,19 +147,91 @@ const checkLoggedIn = async () => {
 };
 
 onMounted(() => {
-  console.log("Component is mounted loggin");
   checkLoggedIn();
 });
 </script>
 
-<style>
-.dropdown-menu {
-  font-size: 24px;
+<style scoped>
+.navbar {
+  width: 100%;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.title {
-  font-size: 28px;
-  text-decoration: none;
+.brand-container {
+  display: flex;
   align-items: center;
+}
+
+.brand-title {
+  font-size: 24px;
+  margin-left: 10px;
+  color: #F56C6C;
+}
+
+.menu-icon {
+  color: #606266;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+}
+
+.phone-icon {
+  font-size: 24px;
+  color: #606266;
+}
+
+.phone-number {
+  font-size: 20px;
+  color: #606266;
+  cursor: pointer;
+}
+
+.auth-container {
+  display: flex;
+  align-items: center;
+}
+
+.auth-link,
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+
+.email-link {
+  color: inherit;
+  text-decoration: none; 
+  cursor: pointer;
+}
+
+.auth-icon {
+  margin-right: 5px;
+  color: #606266;
+}
+
+.logout-button {
+  margin-left: 8px;
+  color: #606266;
+}
+
+.user-avatar {
+  margin-left: 8px; /* Отступ слева, если есть аватар */
+  margin-right: 5px; /* Отступ справа, если есть аватар */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.login-drawer {
+  border-radius: 30px;
+  height: 100%;
 }
 </style>

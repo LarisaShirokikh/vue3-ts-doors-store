@@ -35,10 +35,7 @@ const handleRequest = async <T>(
   }
 };
 
-export const sendCatalogToServer = async (
-  data: CatalogData
-): Promise<CatalogResponse> => {
-  console.log("data", data);
+export const sendCatalogToServer = async (data: CatalogData): Promise<CatalogResponse> => {
   const configReq = createRequestConfig();
   return handleRequest(`${config.API_URL}/categories`, "post", data, {
     headers: {
@@ -105,12 +102,13 @@ export const getWiteCategory = async (): Promise<Category[]> => {
 };
 
 export const getCatalogs = async (): Promise<CatalogResponse> => {
-  const configReq = createRequestConfig();
-  return handleRequest(`${config.API_URL}/categories`, "get", undefined, {
-    headers: {
-      ...configReq.headers,
-    },
-  });
+try {
+  const response = await axios.get(`${config.API_URL}/categories`, {});
+  return response.data;
+} catch (error) {
+  console.error("Ошибка при отправке запроса:", error);
+  throw error;
+}
 };
 
 

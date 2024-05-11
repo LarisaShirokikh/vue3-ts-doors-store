@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h2 class="heading">Список разделов</h2>
+    <a-text >Список разделов</a-text>
+
     <el-table
       :data="chapters"
       :key="index"
@@ -66,7 +67,7 @@
             required
           ></textarea>
 
-          <!-- Отображение текущего фото и возможность его удалить -->
+          
           <label class="label">Текущее фото:</label>
           <div class="foto">
             <img
@@ -230,16 +231,13 @@ const fetchChapters = async () => {
 };
 
 watch(() => props.chapterAddedCount, async () => {
-  // Функция для получения обновленного списка глав
   await fetchChapters();
 }, { immediate: true });
 
 const deleteChapter = async (chapterId) => {
   try {
-    // Отправить запрос на удаление раздела к серверу
     await chapterService.deleteChapterId(chapterId);
     toast.success("Раздел успешно удален", { theme: "colored" });
-    // Обновить список разделов после успешного удаления
     await fetchChapters();
   } catch (error) {
     console.error("Ошибка при удалении раздела:", error);
@@ -268,10 +266,10 @@ onMounted(fetchChapters);
 .form {
   max-width: 100%;
   margin: auto;
-  background-color: #f8f9fa; /* Цвет фона */
+  background-color: #f8f9fa; 
   padding: 2rem;
-  border-radius: 15px; /* Радиус скругления углов */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+  border-radius: 15px; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
   padding-left: 20px;
 }
 
@@ -305,7 +303,5 @@ onMounted(fetchChapters);
   transform: translateY(-50%);
 }
 
-.heading {
-  color: #f56c6c;
-}
+
 </style>

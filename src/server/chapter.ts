@@ -37,6 +37,7 @@ class ChapterService {
   }
 
   public async sendChapterToServer(data: FormData): Promise<any> {
+    console.log("Sending chapter data 2", data);
     try {
       const response: AxiosResponse<any> = await axiosService.post(
         "/chapter",
