@@ -1,11 +1,9 @@
 <template>
   <div class="container">
     <div>
-      <a-text>Добавить раздел</a-text>
+      <span>Добавить раздел</span>
       <a-form
         :model="formState"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
       >
         <a-form-item>
           <label for="name" class="label">Название раздела:</label>
@@ -16,35 +14,33 @@
           <label for="description" class="label">Описание:</label>
           <a-textarea
             v-model:value="formState.description"
-            :autosize="{ minRows: 2 }"
+            :autoSize="{ minRows: 2 }"
             allow-clear
             required
           ></a-textarea>
         </a-form-item>
 
-        <label for="photoLink" class="label">Ссылка на фото:</label>
-        <a-input
-          v-model:value="formState.photoLink"
-          @input="addPhotoLink"
-          allow-clear
-        />
-
-        <label for="photo" class="label"
-          >Загрузить фото:
-          
-          <input
-          ref="fileInput"
-          type="file"
-          id="photo"
-          style="display: none"
-          @change="handleChange"
-          accept="image/*"
+        <a-form-item>
+          <label for="photoLink" class="label">Ссылка на фото:</label>
+          <a-input
+            v-model:value="formState.photoLink"
+            @input="addPhotoLink"
+            allow-clear
           />
-          <a-button>
-            <upload-outlined></upload-outlined>
-            Загрузить...
-          </a-button>
-        </label>
+        </a-form-item>
+
+        <a-form-item>
+          <label for="photo" class="label">Загрузить фото:
+          <a-input
+            ref="fileInput"
+            type="file"
+            id="photo"
+            @change="handleChange"
+            accept="image/*"
+            />
+          </label>
+        </a-form-item>
+
 
         <img
           v-if="photoPreview"
@@ -54,9 +50,11 @@
           style="max-width: 150px; max-height: 200px; margin: 5px; border-radius: 5px"
         />
 
-        <a-button danger @click="sendChapterData" class="button">
-          Добавить раздел
-        </a-button>
+        <a-form-item>
+          <a-button danger @click="sendChapterData" class="button">
+            Добавить раздел
+          </a-button>
+        </a-form-item>
       </a-form>
     </div>
   </div>
@@ -65,11 +63,10 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
-
 import { useForm, FormStateChapters } from "@/utils/formHelpers";
 import { toast } from "vue3-toastify";
 import ChapterList from "@/components/Chapters/ChapterList.vue";
-import { UploadOutlined } from "@ant-design/icons-vue";
+// import { UploadOutlined } from "@ant-design/icons-vue";
 import ChapterService from "@/server/chapter";
 const chapterService = new ChapterService();
 const chapterAddedCount = ref(0);
@@ -90,11 +87,14 @@ const formState: FormStateChapters = reactive({
   photo: null,
 });
 
+
+
 const sendChapterData = async () => {
   console.log("Sending chapter data 1", formState);
   try {
-    if (!formState.name || !formState.name || photo.value.length === 0) {
+    if (!formState.name || !formState.name || (photo.value && photo.value.length === 0)) {
       console.log("Необходимо указать имя и загрузить файл");
+      toast.error("Необходимо заполнить все поля", { theme: "colored" });
       return;
     }
 

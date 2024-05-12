@@ -5,7 +5,7 @@
     <el-table
       :data="chapters"
       :key="index"
-      style="width: 100%; max-height: 800px; overflow-y: auto"
+      style="max-width: 100%; max-height: 800px; overflow-y: auto"
       :page-size="5"
     >
       <el-table-column prop="id" label="ID" width="50" />

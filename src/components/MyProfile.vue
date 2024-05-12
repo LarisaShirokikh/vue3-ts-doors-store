@@ -114,7 +114,6 @@ import {
   FileInput,
   MessageCircleCode,
 } from "lucide-vue-next";
-import type { TabsPaneContext } from "element-plus";
 import AuthService from "@/server/auth";
 const authService = new AuthService();
 import router from "@/router/router";
@@ -122,7 +121,7 @@ import router from "@/router/router";
 const activeName = ref("profile");
 const userRole = ref({ isAdmin: false, isSuperAdmin: false, user: false });
 
-const handleClick = (tab: TabsPaneContext) => {
+const handleClick = (tab: { key: string; }) => {
   activeName.value = tab.key;
 };
 

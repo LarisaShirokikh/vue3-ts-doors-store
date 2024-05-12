@@ -116,7 +116,7 @@ const onClose = () => {
 };
 
 const phoneClick = () => {
-  // Your logic for phone click
+   window.location.href = "tel:+79260217365";
 };
 
 const handleButtonClick = () => {
@@ -175,6 +175,7 @@ onMounted(() => {
 
 .menu-icon {
   color: #606266;
+  font-size: 32px;
 }
 
 .contact-info {
